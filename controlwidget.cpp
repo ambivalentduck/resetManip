@@ -23,8 +23,6 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	//state=acquireTarget;
 	
 	min=.288; //Screen diameter (shortest dimension) known from direct observation, do not change
-	targets = new TargetControl(.99l*min/2.5l, min/2.5l, min/2l, 7, 3);
-		    //TargetControl(double spawndist, double innerRadius, double maxRadius)
 	target=point(5,5);
 	
 	//Snag a UDP Socket and call a function (readPending) every time there's a new packet.
@@ -220,11 +218,9 @@ void ControlWidget::readPending()
 				userWidget->setBars(times); */
 				
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else target=targets->genTarget(sphere.position-center)+center;
+				else target=(target==point(0,0)?point(0,min/2)+center:point(0,0));
 				origin=sphere.position;
 				state=acquireTarget;
-				normal=(target-origin).unit();
-				normal=point(-normal.Y(),normal.X());
 				leftOrigin=false;
 			}
 		}
@@ -275,45 +271,7 @@ void ControlWidget::startClicked()
 		if(trialFile.exists()) {trialFile.open(QIODevice::ReadOnly); target=loadTrial(trial);}
 		else
 		{
-			//Generate experiment
-			//format is: trialStream << trial number TAB treatment TAB stimuli TAB target constraints;
-			trialFile.open(QIODevice::WriteOnly);
-			bool unshuffled[100];
-			bool sporadic[100];
-			int perm[100];
-			for(int k=0; k<100; k++) unshuffled[k]=(k<=21?true:false);
-	
-			//30 "warm up" reaches
-			for(int k=1; k<=50; k++) trialStream << k TAB UNTREATED TAB UNSTIMULATED TAB false << endl;
-			
-			//100 "warm up" reaches with sporadic introduction of curl to gauge skill level
-			randperm(perm,100);
-			for(int k=0; k<100; k++) sporadic[k]=unshuffled[perm[k]];
-			noConsecutive(sporadic, 100);
-			trialStream << "reset targets 7" << endl;
-			for(int k=51; k<=150; k++) trialStream << k TAB UNTREATED TAB (sporadic[k-31]?CURL:UNSTIMULATED) TAB (sporadic[k-31]?true:false) << endl;
-			
-			//100 treated reaches in curl
-			for(int k=151; k<=250; k++) trialStream << k TAB int(treatment) TAB CURL TAB false << endl; //Should be randomized later
-			
-			//100 treated reaches with sporadic assessment trials that are untreated
-			randperm(perm,100);
-			for(int k=0; k<100; k++) sporadic[k]=unshuffled[perm[k]];
-			noConsecutive(sporadic, 100);
-			trialStream << "reset targets 7" << endl;
-			for(int k=251; k<=350; k++) trialStream << k TAB (sporadic[k-231]?UNTREATED:int(treatment)) TAB CURL TAB (sporadic[k-231]?true:false) << endl;
-			
-			//30 untreated curl trials, look at "steady state" final error levels
-			trialStream << "reset targets 7" << endl;
-			for(int k=351; k<=380; k++) trialStream << k TAB UNTREATED TAB CURL TAB true << endl;
-			
-			//50 "blank" trials to gauge after-effects
-			for(int k=381; k<=430; k++) trialStream << k TAB UNTREATED TAB UNSTIMULATED TAB false << endl;
-			
-			trialFile.close();
-			trialFile.open(QIODevice::ReadOnly);
-			trialNumBox->setValue(1);
-			target=loadTrial(1);
+			QMessageBox::critical(this, "File Not Found!", "File not found, please select a different file.");
 		}
 	}
 	else
@@ -354,17 +312,18 @@ point ControlWidget::loadTrial(int T)
 	
 	char line[200];
 	std::string qline;
-	int temptrial, temptreat, tempstim, tempconstrain;
+	int temptrial, temptreat, tempstim;
+	double tempx, tempy;
 	std::cout << "Loading Trial " << T << std::endl;
 	do
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%d\t%d\t%d",&temptrial,&temptreat,&tempstim,&tempconstrain));
+		if(sscanf(line, "%d\t%d\t%d\t%e\t%e",&temptrial,&temptreat,&tempstim,&tempx,&tempy));
 		else
 		{
 			if(sscanf(line, "reset targets %d",&temptrial)) targets->reset(temptrial);
-			else {std::cout << "Complete failure to read line: " << line << std::endl; return point(0,0);}
+			else {std::cout << "Complete failure to read line: " << line << std::endl; return center;}
 		}
 	} while ((temptrial < T)&&(!trialFile.atEnd()));
 	
@@ -374,7 +333,7 @@ point ControlWidget::loadTrial(int T)
 	stimulusBox->setCurrentIndex(tempstim);
 	treatmentBox->setCurrentIndex(temptreat);
 	std::cout << "Finished Loading Trial " << temptrial << std::endl;	
-	return targets->genTarget(cursor-center, tempconstrain)+center;
+	return point(tempx,tempy)/min+center;
 }
 
 void ControlWidget::noConsecutive(bool * array, int n)

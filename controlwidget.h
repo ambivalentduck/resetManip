@@ -56,7 +56,7 @@ private:
 	timespec zero, now, trialStart, targetAcquired;
 	bool ExperimentRunning, inputReady, outputReady, ignoreInput, leftOrigin;
 	int trial, subject;
-	point origin, cursor, velocity, accel, target, force, center, normal, lastNormal;
+	point origin, cursor, velocity, accel, target, force, center;
 	double min;
 	
 signals:

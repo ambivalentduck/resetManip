@@ -14,5 +14,5 @@ LIBS += -lm
 #QMAKE_LIBDIR += $$CUDA_DIR/lib
  
 # Input
-HEADERS += displaywidget.h timestuff.h point.h targetcontrol.h randb.h controlwidget.h
-SOURCES += main.cpp displaywidget.cpp timestuff.cpp targetcontrol.cpp randb.cpp controlwidget.cpp
+HEADERS += displaywidget.h timestuff.h point.h randb.h controlwidget.h
+SOURCES += main.cpp displaywidget.cpp timestuff.cpp randb.cpp controlwidget.cpp
