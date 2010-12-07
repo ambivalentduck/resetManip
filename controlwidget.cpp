@@ -10,17 +10,17 @@
 #define CURLVAL -20
 #define SADDLEVAL 10
 #define TIME_OFFSET .25l
+#define KICKMAG 10
+#define KICKDURATION .01
 
 ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->primaryScreen()))
 {
 	//Take care of window and input initialization.
-	
 	setFocus(); //Foreground window that gets all X input
 	
 	center=point(-0.019,0.53); //Known from direct observation, do not change
 	cursor=center;
 	origin=center;
-	//state=acquireTarget;
 	
 	min=.288; //Screen diameter (shortest dimension) known from direct observation, do not change
 	target=point(5,5);
@@ -31,8 +31,9 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	us->bind(QHostAddress("192.168.0.1"),25000,QUdpSocket::DontShareAddress); //Bind the IP and socket you expect packets to be received from XPC on.
 	connect(us, SIGNAL(readyRead()),this, SLOT(readPending()));
 	
+	//Develop GUI window
 	layout = new QFormLayout(this);
-	
+
 	layout->addRow(startButton=new QPushButton("Start"));
 	connect(startButton, SIGNAL(clicked()), this, SLOT(startClicked()));
 	
@@ -45,7 +46,7 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	
 	layout->addRow(tr("Trial Number:"), trialNumBox=new QSpinBox(this));
 	trialNumBox->setValue(0);
-	trialNumBox->setMaximum(1000);
+	trialNumBox->setMaximum(10000);
 	trialNumBox->setMinimum(0);
 	grayList.push_back(trialNumBox);
 	connect(trialNumBox, SIGNAL(valueChanged(int)), this, SLOT(setTrialNum(int)));
@@ -58,30 +59,23 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	stimulus=UNSTIMULATED;
 	connect(stimulusBox, SIGNAL(activated(int)), this, SLOT(setStimulus(int)));
 	
-	layout->addRow("Treatment:",treatmentBox=new QComboBox(this));
-	treatmentBox->insertItem(0,"Unstimulated");
-	treatmentBox->insertItem(1,"EA");
-	treatmentBox->insertItem(2,"2X");
-	grayList.push_back(treatmentBox);
-	treatment=UNTREATED;
-	connect(treatmentBox, SIGNAL(activated(int)), this, SLOT(setTreatment(int)));
-	
-	
 	setLayout(layout);
 	
-	
+	//Plop window in a sane place on the primary screen	
 	QRect geo=qdw->screenGeometry();
 	geo.setWidth(2*geo.width()/3);
 	geo.setHeight(4*geo.height()/5);
 	geo.translate(80,80);
 	setGeometry(geo);
 	
+	//Take care of plopping subject's interface onto the secondary screen.
 	int notprimary=qdw->primaryScreen()==0?1:0;
 	
 	userWidget=new DisplayWidget(qdw->screen(notprimary), true);
 	userWidget->setGeometry(qdw->screenGeometry(notprimary));
 	userWidget->show();
 	
+	//Set up a "calibration" field. Should be a 1/4 circle in each corner
 	sphereVec.clear();
 	sphere.color=point(.5,.5,.5);
 	sphere.position=center;
@@ -104,14 +98,16 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	sphere.radius=oRadius;
 	sphereVec.push_back(sphere);
 	userWidget->setSpheres(sphereVec);
+	sphereVec.clear();
 	
+	//Initialize everything UPD-related to values that prevent problems
 	curl=0;
 	saddle=0;
 	trial=0;
 	subject=0;
+	kickDelay=1000;
+	kickMag=0;
 	ExperimentRunning=false;
-	
-	sphereVec.clear();
 }
 
 void ControlWidget::readPending()
@@ -122,7 +118,7 @@ void ControlWidget::readPending()
 	if(inSize != s) in.resize(s);
 	us->readDatagram(in.data(), in.size());
 	
-	if(ignoreInput)
+	if(ignoreInput) //Send something back out so that XPC doesn't choke/stall/worse
 	{
 		out=QByteArray(in.data(),sizeof(double));//Copy the timestamp from the input
 		switch(stimulus)
@@ -143,7 +139,9 @@ void ControlWidget::readPending()
 		}
 		out.append(reinterpret_cast<char*>(&curl),sizeof(double));
 		out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
-		//This will require additional appends for other stimuli
+		out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
+		out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
+		out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
 		us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.0.2"),25000);
 		return;
 	}
@@ -154,22 +152,16 @@ void ControlWidget::readPending()
 	velocity.Y()=*reinterpret_cast<double*>(in.data()+4*sizeof(double));
 	accel.X()=*reinterpret_cast<double*>(in.data()+5*sizeof(double));
 	accel.Y()=*reinterpret_cast<double*>(in.data()+6*sizeof(double));
-
 	
-	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB origin.X() TAB origin.Y() TAB target.X() TAB target.Y();
+	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() << endl;
 	
 	if (!leftOrigin) trialStart=now;
 	if(!leftOrigin) if (cursor.dist(origin)>(oRadius+cRadius)) leftOrigin=true;
 	
 	sphereVec.clear();
-	//origin
-	sphere.color=point(.5,.5,.5); //Grey
-	sphere.position=origin;
-	sphere.radius=oRadius;
-	sphereVec.push_back(sphere);
 	//Target
 	if(state!=inTarget) sphere.color=point(1,0,0); //Red
-	else
+	else //Yellow -> too slow, White -> too fast
 	{
 		double acquire_time=targetAcquired-trialStart+TIME_OFFSET;
 		//double color=exp(-pow(((targetAcquired-trialStart+TIME_OFFSET)-(UPPERBAR+LOWERBAR)/2l)*5l,2));
@@ -183,19 +175,7 @@ void ControlWidget::readPending()
 	sphereVec.push_back(sphere);
 	//Cursor
 	sphere.color=point(0,0,1); //Blue
-	switch(treatment)
-	{
-		case UNTREATED:
-			sphere.position=cursor;
-			break;
-		case EA:
-			sphere.position=cursor+cursor.linepointvec(origin, target); //That 0 is origin-origin
-			break;
-		case X2:
-			sphere.position=cursor*2-center; //Doubles the distance between the cursor and origin
-			break;
-	}
-	outStream << sphere.position.X() TAB sphere.position.Y() << endl;
+	sphere.position=cursor;
 	sphere.radius=cRadius;
 	sphereVec.push_back(sphere);
 	userWidget->setSpheres(sphereVec);
@@ -218,7 +198,7 @@ void ControlWidget::readPending()
 				userWidget->setBars(times); */
 				
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else target=(target==point(0,0)?point(0,min/2)+center:point(0,0));
+				else target=(target==point(0,0)?point(0,2*min/3)+center:point(0,0)+center);
 				origin=sphere.position;
 				state=acquireTarget;
 				leftOrigin=false;
@@ -227,6 +207,11 @@ void ControlWidget::readPending()
 		else state=acquireTarget;
 		break;
 	}
+	
+	double delay=now-trialStart;
+	kickMag=((delay>=kickDelay)&&(delay<=(kickDelay+KICKDURATION)))?KICKMAG:0;
+	
+	//out = {most recent timestamp, curl mag, saddle mag, target x, target y (both in robot coordinates), and kickmag}
 	
 	out=QByteArray(in.data(),sizeof(double));//Copy the timestamp from the input
 	switch(stimulus)
@@ -247,6 +232,9 @@ void ControlWidget::readPending()
 	}
 	out.append(reinterpret_cast<char*>(&curl),sizeof(double));
 	out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
+	out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
+	out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
+	out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
 	//This will require additional appends for other stimuli
 	us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.0.2"),25000);
 }
@@ -282,7 +270,7 @@ void ControlWidget::startClicked()
 		contFile.open(QIODevice::Append);
 		outStream.setDevice(&contFile);
 		trialStream.setDevice(&trialFile);	
-		target=targets->genTarget(cursor-center)+center;
+		target=center;
 	}
 	ExperimentRunning=true;
 	ignoreInput=false;
@@ -312,49 +300,26 @@ point ControlWidget::loadTrial(int T)
 	
 	char line[200];
 	std::string qline;
-	int temptrial, temptreat, tempstim;
+	int temptrial,tempstim;
 	double tempx, tempy;
 	std::cout << "Loading Trial " << T << std::endl;
 	do
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%d\t%d\t%e\t%e",&temptrial,&temptreat,&tempstim,&tempx,&tempy));
+		if(sscanf(line, "%d\t%d\t%lf\t%lf\t%lf",&temptrial,&tempstim,&tempx,&tempy,&kickDelay));
 		else
 		{
-			if(sscanf(line, "reset targets %d",&temptrial)) targets->reset(temptrial);
-			else {std::cout << "Complete failure to read line: " << line << std::endl; return center;}
+			std::cout << "Complete failure to read line: " << line << std::endl; return center;
 		}
 	} while ((temptrial < T)&&(!trialFile.atEnd()));
 	
 	stimulus=stimuli(tempstim);
-	treatment=treatments(temptreat);
 	trialNumBox->setValue(T);
 	stimulusBox->setCurrentIndex(tempstim);
-	treatmentBox->setCurrentIndex(temptreat);
-	std::cout << "Finished Loading Trial " << temptrial << std::endl;	
-	return point(tempx,tempy)/min+center;
-}
-
-void ControlWidget::noConsecutive(bool * array, int n)
-{
-	bool swap;
-	int r;
-	bool fail=false;
-	do
-	{
-		fail=false;
-		for(int k=0;k<(n-1);k++)
-			if(array[k]&&array[k+1])
-			{
-				fail = true;
-				r=randint(0,n-1);
-				swap=array[k];
-				array[k]=array[r];
-				array[r]=swap;
-				break;
-			}
-	} while(fail);
+	std::cout << "Finished Loading Trial " << temptrial << std::endl;
+	double min23=.45*min;	
+	return point(tempx,-tempy)*min23+center-point(0,min*.01);
 }
 
 

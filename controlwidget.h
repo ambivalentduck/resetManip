@@ -10,7 +10,6 @@
 #include <vector>
 #include <deque>
 #include <iostream>
-#include "targetcontrol.h"
 #include "displaywidget.h"
 #include "timestuff.h"
 
@@ -25,7 +24,7 @@ public:
 private:
 	QSpinBox *trialNumBox, *subjectBox;
 	QPushButton *startButton; 	
-	QComboBox *stimulusBox, *treatmentBox;
+	QComboBox *stimulusBox;
 	QFormLayout * layout;
 		
 	DisplayWidget * userWidget;
@@ -39,13 +38,11 @@ private:
 	QByteArray in,out;
 	int inSize, outSize;
 	QUdpSocket * us;
-	TargetControl * targets;
 	QFile contFile, trialFile;
 	QTextStream outStream, trialStream;
 	
 	double * minJerkParams[6];
-	double viscousity,curl,saddle, inertia,KSpring, kickP, kickD, offsetMag, offsetTau;
-	enum treatments {UNTREATED=0, EA=1, X2=2} treatment;
+	double viscousity,curl,saddle, inertia,KSpring, kickMag, kickDelay;
 	enum stimuli {UNSTIMULATED=0, CURL=1, SADDLE=2} stimulus;
 	enum GameState {acquireTarget=0, inTarget=1} state;
 	std::vector<QWidget*> grayList;
@@ -68,7 +65,6 @@ public slots:
 	void setTrialNum(int i) {trial=i;}
 	void setSubject(int i) {subject=i;}
 	
-	void setTreatment(int i) {treatment=treatments(i);}
 	void setStimulus(int i) {stimulus=stimuli(i);}
 	
 };
