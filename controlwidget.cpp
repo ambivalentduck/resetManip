@@ -153,8 +153,6 @@ void ControlWidget::readPending()
 	accel.X()=*reinterpret_cast<double*>(in.data()+5*sizeof(double));
 	accel.Y()=*reinterpret_cast<double*>(in.data()+6*sizeof(double));
 	
-	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() << endl;
-	
 	if (!leftOrigin) trialStart=now;
 	if(!leftOrigin) if (cursor.dist(origin)>(oRadius+cRadius)) leftOrigin=true;
 	
@@ -237,6 +235,8 @@ void ControlWidget::readPending()
 	out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
 	//This will require additional appends for other stimuli
 	us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.0.2"),25000);
+	
+	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB kickMag << endl;
 }
 
 void ControlWidget::startClicked()

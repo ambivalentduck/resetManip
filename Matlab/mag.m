@@ -1,2 +1,3 @@
 function out=mag(in)
-out=sqrt(sum(in.^2,2));
+
+out=sqrt(in(:,1).^2+in(:,2).^2);
