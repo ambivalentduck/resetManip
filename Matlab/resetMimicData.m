@@ -48,12 +48,12 @@ resetT=[.4 inf]; %how many reset times, last must ALWAYS be inf
 
 h = waitbar(0,'Starting');
 
-for TRIAL=5 %1:length(trials)
+for TRIAL=3 %1:length(trials)
     pf=trials{TRIAL}.target;
     waitbar(TRIAL/length(trials),h,'Starting');
 
     data(1).resetT=resetT;
-    forces_in=trials{TRIAL}.force*0;
+    forces_in=trials{TRIAL}.force/2;
     forces_in_time=trials{TRIAL}.time;
 
     [val,tzero]=min(abs(trials{TRIAL}.time));
@@ -62,7 +62,7 @@ for TRIAL=5 %1:length(trials)
     
     %Get basic unreset but curled movement
     ini=ikin(p0);
-    coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],ti,tf);
+    coeff0.vals=calcminjerk(p0,pf,v0,[0 0],[0 0],[0 0],ti,tf);
     coeff0.expiration=tf;
     coeffFF=coeff0;
     coeffFB=coeff0;
@@ -120,3 +120,5 @@ for TRIAL=5 %1:length(trials)
 end
 close(h)
 save('../Data/145withsim.mat','trials');
+
+plotresetMimic

@@ -4,3 +4,4 @@ makefile
 Makefile
 moc*
 *.o
+*.mat

@@ -1,4 +1,3 @@
-clc
 clear all
 
 color=['rgb'];
