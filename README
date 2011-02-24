@@ -1,0 +1,13 @@
+All information and code in here is provided as is with no implied or expressed suitability for anything.
+Nobody should ever execute it for any reason as failure to avoid doing so may cause chronic constipation.
+
+License: if you change this code and/or data, use it to make money (even indirectly), or attempt to use results to obtain publications in peer-reviewed journals, you must contact the author for permission to do so.  
+Otherwise, you agree to dress in a purple hippopotamus costume every day for the rest of your life with a $50k (US$) fee payable to the author for every day that you cannot demonstrate that you were wearing it.
+
+The project consists of 3 main parts:
+1. C++ code for controlling a manipulandum via UDP communication to XPC...with some weak drawing algorithms for rendering cursors and targets.
+2. Data that is completely human-readable...and completely non-descript.
+---Since the source of the data (artificial/vegetable/mineral/human) cannot be determined from it, the IRB office can't whine too loudly.
+3. MATLAB code for simulating the process that created the data (or creating it!) as well as doing basic analytics.
+
+If you simply copy this code, I can promise that it will produce results completely unsuitable for use and publication.  After I use it for publication, the analysis utilities will be brought up to date.
