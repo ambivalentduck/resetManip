@@ -34,9 +34,9 @@ p0=[-0.01 .48]';
 %Consequence: Workspace is a circle with center at 0, radius .67
 
 ti=0;
-tf=.8;
+tf=.6;
 tp=1.2;
-step=0.05;
+step=0.025;
 smallstep=0.01;
 
 %Command torques based on Jacobian, so build one
@@ -44,11 +44,11 @@ smallstep=0.01;
 toc
 disp('Jacobians complete.')
 
-resetT=[.4 inf]; %how many reset times, last must ALWAYS be inf
+resetT=[.1650 inf]; %how many reset times, last must ALWAYS be inf
 
 h = waitbar(0,'Starting');
 
-for TRIAL=3 %1:length(trials)
+for TRIAL=2; %1:length(trials)
     pf=trials{TRIAL}.target;
     waitbar(TRIAL/length(trials),h,'Starting');
 
@@ -59,10 +59,11 @@ for TRIAL=3 %1:length(trials)
     [val,tzero]=min(abs(trials{TRIAL}.time));
     p0=trials{TRIAL}.pos(tzero,:)';
     v0=trials{TRIAL}.vel(tzero,:)';
+    a0=trials{TRIAL}.accel(tzero,:)';
     
     %Get basic unreset but curled movement
     ini=ikin(p0);
-    coeff0.vals=calcminjerk(p0,pf,v0,[0 0],[0 0],[0 0],ti,tf);
+    coeff0.vals=calcminjerk(p0,pf,v0,[0 0],a0,[0 0],ti,tf);
     coeff0.expiration=tf;
     coeffFF=coeff0;
     coeffFB=coeff0;

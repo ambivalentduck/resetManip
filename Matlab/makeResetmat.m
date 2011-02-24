@@ -20,6 +20,7 @@ for k=1:length(f)
     fo=find(output(:,1)==fk);
     trials{k}.pos=output(fo,[3 4]);
     trials{k}.vel=output(fo,[5 6]);
+    trials{k}.accel=output(fo,[7 8]);
     speed=mag(trials{k}.vel);
     %one=ones(size(trials{k}.pos,1),1);
     %trials{k}.pos=trials{k}.pos-[trials{k}.pos(1,1)*one trials{k}.pos(1,2)*one];
@@ -29,8 +30,14 @@ for k=1:length(f)
     trials{k}.delay=input(fk,5);
     trials{k}.time=output(fo,2);
     [pkv, pks]=findpeaks(speed,'minpeakheight',.4);
-    trials{k}.time=trials{k}.time-trials{k}.time(pks(1))+.4;
-    trials{k}.force(trials{k}.time>1)=0;
+    ff=find(speed>pkv(1)*.1);
+    %trials{k}.time=trials{k}.time-trials{k}.time(pks(1))+.4; %Peak alignment
+
+    %Assume that intended reach time is 600 ms, align and scale!
+    trials{k}.time=trials{k}.time-trials{k}.time(ff(1));
+    trials{k}.time=.6*trials{k}.time/(2*trials{k}.time(pks(1)));
+    
+    trials{k}.force(trials{k}.time>1)=0; %Nothing relevant happens this far out?
     
     fa=find(categories==categories(fk));
     faa=find(fa==fk);

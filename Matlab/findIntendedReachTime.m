@@ -22,11 +22,16 @@ time=l(:,2);
 % worked out to .8ish
 
 %fi=find(i(:,5)>0);
-fi=1:840
+fi=1:840;
 for k=1:length(fi)
     f=find(n==fi(k));
-    [pkv, pks]=findpeaks(speed(f),'minpeakheight',.4);
-    time(f)=time(f)-time(f(pks(1)))+.4;
-    plot(time(f), speed(f))
+    speedf=speed(f);
+    timef=time(f);
+    [pkv, pks]=findpeaks(speedf,'minpeakheight',.4);
+    first=find(speedf(1:pks(1))>pkv(1)*.1);
+    timef=timef-timef(first(1));
+    timef=.8*timef/(2*timef(pks(1)));
+    
+    plot(timef, speedf)
 end
     
