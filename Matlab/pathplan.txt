@@ -1,9 +1,0 @@
-Generate unkicked, unreset path
-For each kick time
--Record the path following kick
--Prepend results of base path pre-kick
-
-For each type of reset
--For each reset time
---For each kick time
-    

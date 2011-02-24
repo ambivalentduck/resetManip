@@ -11,9 +11,9 @@ tic
 
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB Jt fJ getAlpha getAccel forces_in forces_in_time
 
-load(['../Data/144.mat']);
+load(['../Data/145.mat']);
 
-kp=[15 6; 6 16];
+kp=[15 6; 6 16]*1;
 kd=[2.3 .09; .09 2.4];
 
 %%assume two link
@@ -27,7 +27,7 @@ m2=1.52;
 I1=.0141;
 I2=.0188;
 
-x0=[-0.019; 0.2420+.33+.34+.05]; %Shoulder location, just assume that they're an inch from fully outstretched
+x0=[-0.019; 1]; %Shoulder location, just assume that they're an inch from fully outstretched
 
 p0=[-0.01 .48]';
 
@@ -44,18 +44,22 @@ smallstep=0.01;
 toc
 disp('Jacobians complete.')
 
-resetT=[.4:.1:.8 inf]; %how many reset times, last must ALWAYS be inf
+resetT=[.4 inf]; %how many reset times, last must ALWAYS be inf
 
 h = waitbar(0,'Starting');
 
-for TRIAL=1:10 %length(trials)
+for TRIAL=5 %1:length(trials)
     pf=trials{TRIAL}.target;
     waitbar(TRIAL/length(trials),h,'Starting');
 
     data(1).resetT=resetT;
-    forces_in=trials{TRIAL}.force;
+    forces_in=trials{TRIAL}.force*0;
     forces_in_time=trials{TRIAL}.time;
 
+    [val,tzero]=min(abs(trials{TRIAL}.time));
+    p0=trials{TRIAL}.pos(tzero,:)';
+    v0=trials{TRIAL}.vel(tzero,:)';
+    
     %Get basic unreset but curled movement
     ini=ikin(p0);
     coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],ti,tf);
@@ -115,4 +119,4 @@ for TRIAL=1:10 %length(trials)
     toc
 end
 close(h)
-save('../Data/144withsim.mat','trials');
+save('../Data/145withsim.mat','trials');

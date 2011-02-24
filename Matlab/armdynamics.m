@@ -72,7 +72,7 @@ torque_outside=Jt(x(1:2))*F;
 
 dx=[x(3);
     x(4);
-    alpha + D_real\(torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
+    D_real\(torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
 
 if nargout>3
     a_real=getAccel(x(1:2),x(3:4),dx(3:4));

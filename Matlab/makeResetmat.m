@@ -1,5 +1,5 @@
 function makeResetmat(name)
-name='144';
+name='145';
 
 input=load(['../Data/input',name,'.dat']);
 output=load(['../Data/output',name,'.dat']);
@@ -24,6 +24,7 @@ for k=1:length(f)
     %one=ones(size(trials{k}.pos,1),1);
     %trials{k}.pos=trials{k}.pos-[trials{k}.pos(1,1)*one trials{k}.pos(1,2)*one];
     trials{k}.force=output(fo,[9 10]);
+    trials{k}.requested=output(fo,11);
     trials{k}.mag=input(fk,2);
     trials{k}.delay=input(fk,5);
     trials{k}.time=output(fo,2);
