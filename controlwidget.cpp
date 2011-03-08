@@ -10,8 +10,8 @@
 #define CURLVAL -20
 #define SADDLEVAL 10
 #define TIME_OFFSET .25l
-#define KICKMAG 40
-#define KICKDURATION .2
+#define VISCOUS_MAG 40
+#define VISCOUS_DURATION .2
 
 ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->primaryScreen()))
 {
@@ -106,8 +106,8 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	saddle=0;
 	trial=0;
 	subject=0;
-	kickDelay=1000;
-	kickMag=0;
+	probeDelay=9999999; //Several months ~ infinity without the messiness of picking the numerical limit
+	pillowVec=point(0,0,0);
 	ExperimentRunning=false;
 }
 
@@ -142,7 +142,8 @@ void ControlWidget::readPending()
 		out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-		out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
+		out.append(reinterpret_cast<char*>(&pillowVec.X()),sizeof(double));
+		out.append(reinterpret_cast<char*>(&pillowVec.Y()),sizeof(double));
 		us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 		return;
 	}
@@ -184,10 +185,10 @@ void ControlWidget::readPending()
 	switch(state)
 	{
 	case acquireTarget:
-		if (sphere.position.dist(target)<(tRadius+cRadius)) {state=inTarget; targetAcquired=now;}
+		if (cursor.dist(target)<(tRadius+cRadius)) {state=inTarget; targetAcquired=now;}
 		break;
 	case inTarget:
-		if (sphere.position.dist(target)<(tRadius+cRadius))
+		if (cursor.dist(target)<(tRadius+cRadius))
 		{
 			if((now-targetAcquired)>=targetDuration)
 			{
@@ -197,10 +198,13 @@ void ControlWidget::readPending()
 				times.push_front(movetime+TIME_OFFSET);
 				while (times.size()>5) times.erase(times.end());
 				userWidget->setBars(times); */
-				
+				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else target=(target==point(0,0)?point(0,2*min/3)+center:point(0,0)+center);
-				origin=sphere.position;
+				else 
+				{
+					target=(target==point(0,0)?point(0,2*min/3)+center:point(0,0)+center);
+					pillowVec=point(0,1);	
+				}
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -210,20 +214,24 @@ void ControlWidget::readPending()
 	}
 	
 	double delay=now-trialStart;
-	kickMag=((delay>=kickDelay)&&(delay<=(kickDelay+KICKDURATION)))?KICKMAG:0;
-	
-	//out = {most recent timestamp, curl mag, saddle mag, target x, target y (both in robot coordinates), and kickmag}
+	if ((delay>=probeDelay)&&(delay<=(probeDelay+VISCOUS_DURATION)))
+		pillowVec=(target-cursor).unit()*VISCOUS_MAG;
+	else
+		pillowVec=point(0,0);
+		
+	//out = {most recent timestamp, curl mag, saddle mag, target x, target y (both in robot coordinates), and pillowvec}
 	
 	out=QByteArray(in.data(),sizeof(double));//Copy the timestamp from the input
 	out.append(reinterpret_cast<char*>(&curl),sizeof(double));
 	out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-	out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
+	out.append(reinterpret_cast<char*>(&pillowVec.X()),sizeof(double));
+	out.append(reinterpret_cast<char*>(&pillowVec.Y()),sizeof(double));
 	//This will require additional appends for other stimuli
 	us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 	
-	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB kickMag << endl;
+	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB pillowVec.X() TAB pillowVec.Y() << endl;
 }
 
 void ControlWidget::startClicked()
@@ -294,7 +302,7 @@ point ControlWidget::loadTrial(int T)
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf",&temptrial,&tempstim,&tempx,&tempy,&kickDelay));
+		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf",&temptrial,&tempstim,&tempx,&tempy,&probeDelay));
 		else
 		{
 			std::cout << "Complete failure to read line: " << line << std::endl; return center;
