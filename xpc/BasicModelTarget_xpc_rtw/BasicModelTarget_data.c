@@ -3,9 +3,9 @@
  *
  * Real-Time Workshop code generation for Simulink model "BasicModelTarget.mdl".
  *
- * Model version              : 1.972
+ * Model version              : 1.978
  * Real-Time Workshop version : 7.5  (R2010a)  25-Jan-2010
- * C source code generated on : Wed Feb 16 12:11:02 2011
+ * C source code generated on : Tue Mar 08 13:52:40 2011
  *
  * Target selection: xpctarget.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -112,6 +112,15 @@ Parameters_BasicModelTarget BasicModelTarget_P = {
                                         */
   1.0,                                 /* Expression: 1
                                         * Referenced by: '<S2>/One'
+                                        */
+  0.0,                                 /* Expression: inf
+                                        * Referenced by: '<S1>/Saturation'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S1>/Saturation'
+                                        */
+  -1.0,                                /* Expression: -1
+                                        * Referenced by: '<S1>/Gain1'
                                         */
   0.0,                                 /* Expression: inf
                                         * Referenced by: '<S2>/Saturation1'
@@ -272,7 +281,7 @@ Parameters_BasicModelTarget BasicModelTarget_P = {
    * Referenced by: '<S1>/Receive'
    */
   { 1.0, 1.0 },
-  48.0,                                /* Expression: width
+  56.0,                                /* Expression: width
                                         * Referenced by: '<S1>/Receive'
                                         */
 

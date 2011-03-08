@@ -27,12 +27,36 @@ Calculate Additional Forces from UDP input</Name>
 			</parameter>
 		</block>
 		<block>
+			<blkName>Gain1</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Gain1</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Gain1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
 			<blkName>Rate Transition3</blkName>
 			<xpcblkName> Calculate Additional Forces from UDP input/Rate Transition3</xpcblkName>
 			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Rate Transition3</SLblockPath>
 			<isSrc>[0 1 1]</isSrc>
 			<parameter>
 				<paramName>X0</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Saturation</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Saturation</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Saturation</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>UpperLimit</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>LowerLimit</paramName>
 				<dim>[1, 1]</dim>
 			</parameter>
 		</block>
@@ -75,6 +99,12 @@ Calculate Additional Forces from UDP input</Name>
 			<sigDim>[1, 1]</sigDim>
 		</signal>
 		<signal>
+			<sigName>Gain1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Gain1</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
 			<sigName>Divide</sigName>
 			<xpcsigName> Calculate Additional Forces from UDP input/Divide</xpcsigName>
 			<sigWidth>2</sigWidth>
@@ -99,10 +129,22 @@ Calculate Additional Forces from UDP input</Name>
 			<sigDim>[1, 1]</sigDim>
 		</signal>
 		<signal>
+			<sigName>Product4</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product4</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
 			<sigName>Product5</sigName>
 			<xpcsigName> Calculate Additional Forces from UDP input/Product5</xpcsigName>
 			<sigWidth>1</sigWidth>
 			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product6</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product6</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
 		</signal>
 		<signal>
 			<sigName>Product7</sigName>
@@ -125,14 +167,20 @@ Calculate Additional Forces from UDP input</Name>
 		<signal>
 			<sigName>Rate Transition3</sigName>
 			<xpcsigName> Calculate Additional Forces from UDP input/Rate Transition3</xpcsigName>
-			<sigWidth>48</sigWidth>
-			<sigDim>[48, 1]</sigDim>
+			<sigWidth>56</sigWidth>
+			<sigDim>[56, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Saturation</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Saturation</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
 		</signal>
 		<signal>
 			<sigName>Receive/p1</sigName>
 			<xpcsigName> Calculate Additional Forces from UDP input/Receive/p1</xpcsigName>
-			<sigWidth>48</sigWidth>
-			<sigDim>[48, 1]</sigDim>
+			<sigWidth>56</sigWidth>
+			<sigDim>[56, 1]</sigDim>
 		</signal>
 		<signal>
 			<sigName>Receive/p2</sigName>
@@ -177,6 +225,12 @@ Calculate Additional Forces from UDP input</Name>
 			<sigDim>[1, 1]</sigDim>
 		</signal>
 		<signal>
+			<sigName>Unpack/p7</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p7</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
 			<sigName>Subtract1</sigName>
 			<xpcsigName> Calculate Additional Forces from UDP input/Subtract1</xpcsigName>
 			<sigWidth>1</sigWidth>
@@ -209,6 +263,12 @@ Calculate Additional Forces from UDP input</Name>
 		<signal>
 			<sigName>Sum2</sigName>
 			<xpcsigName> Calculate Additional Forces from UDP input/Sum2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Dot Product</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Dot Product</xpcsigName>
 			<sigWidth>1</sigWidth>
 			<sigDim>[1, 1]</sigDim>
 		</signal>

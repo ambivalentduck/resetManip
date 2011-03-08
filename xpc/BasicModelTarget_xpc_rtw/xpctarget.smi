@@ -12,6 +12,6 @@ const xpc_SigMappingInfo xpcMMI[] =
       "",
       "BasicModelTarget",
       0,
-      510,
+      535,
     },
   };

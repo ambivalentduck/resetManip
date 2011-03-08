@@ -3,9 +3,9 @@
  *
  * Real-Time Workshop code generation for Simulink model "BasicModelTarget.mdl".
  *
- * Model version              : 1.972
+ * Model version              : 1.978
  * Real-Time Workshop version : 7.5  (R2010a)  25-Jan-2010
- * C source code generated on : Wed Feb 16 12:11:02 2011
+ * C source code generated on : Tue Mar 08 13:52:40 2011
  *
  * Target selection: xpctarget.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -841,6 +841,7 @@ typedef struct {
   real_T Unpack_o4;                    /* '<S1>/Unpack' */
   real_T Unpack_o5;                    /* '<S1>/Unpack' */
   real_T Unpack_o6;                    /* '<S1>/Unpack' */
+  real_T Unpack_o7;                    /* '<S1>/Unpack' */
   real_T Product5;                     /* '<S1>/Product5' */
   real_T Product2;                     /* '<S1>/Product2' */
   real_T Product3;                     /* '<S1>/Product3' */
@@ -848,15 +849,21 @@ typedef struct {
   real_T Sum1_a[2];                    /* '<S1>/Sum1' */
   real_T Fcn3_n;                       /* '<S1>/Fcn3' */
   real_T Divide[2];                    /* '<S1>/Divide' */
+  real_T TmpSignalConversionAtDotProduct[2];
+  real_T DotProduct_a;                 /* '<S1>/Dot Product' */
+  real_T Saturation;                   /* '<S1>/Saturation' */
+  real_T Product4[2];                  /* '<S1>/Product4' */
+  real_T Gain1_o[2];                   /* '<S1>/Gain1' */
+  real_T Product6[2];                  /* '<S1>/Product6' */
   real_T Product1_h[2];                /* '<S1>/Product1' */
   real_T SumofForcesX;                 /* '<S1>/Sum of Forces - X' */
-  real_T Product4;                     /* '<S2>/Product4' */
+  real_T Product4_i;                   /* '<S2>/Product4' */
   real_T Fcn4;                         /* '<S2>/Fcn4' */
   real_T Divide_m[2];                  /* '<S2>/Divide' */
-  real_T DotProduct_a;                 /* '<S2>/Dot Product' */
+  real_T DotProduct_az;                /* '<S2>/Dot Product' */
   real_T Saturation1;                  /* '<S2>/Saturation1' */
   real_T Product5_o;                   /* '<S2>/Product5' */
-  real_T Product6;                     /* '<S2>/Product6' */
+  real_T Product6_b;                   /* '<S2>/Product6' */
   real_T Gain3;                        /* '<S2>/Gain3' */
   real_T Product2_l[2];                /* '<S2>/Product2' */
   real_T AveX2;                        /* '<S2>/Ave X2' */
@@ -941,7 +948,7 @@ typedef struct {
   real_T Saturation1_p;                /* '<Root>/Saturation1' */
   real_T SGain3;                       /* '<Root>/S Gain3' */
   real_T Integrator_g;                 /* '<S8>/Integrator' */
-  real_T Saturation;                   /* '<Root>/Saturation' */
+  real_T Saturation_b;                 /* '<Root>/Saturation' */
   real_T SGain4;                       /* '<Root>/S Gain4' */
   real_T Bit1_o1;                      /* '<S14>/Bit1' */
   real_T Bit1_o2;                      /* '<S14>/Bit1' */
@@ -999,10 +1006,10 @@ typedef struct {
   real_T Function2Canbeafunctionofstat_n;/* '<S8>/Function2: Can be a function of states and parameters' */
   real_T FilterCutoffFreq;             /* '<Root>/FilterCutoffFreq' */
   real_T FilterZeta;                   /* '<Root>/FilterZeta' */
-  uint8_T RateTransition3[48];         /* '<S1>/Rate Transition3' */
+  uint8_T RateTransition3[56];         /* '<S1>/Rate Transition3' */
   uint8_T Pack1[72];                   /* '<Root>/Pack1' */
   uint8_T RateTransition_i[72];        /* '<Root>/Rate Transition' */
-  uint8_T Receive_o1[48];              /* '<S1>/Receive' */
+  uint8_T Receive_o1[56];              /* '<S1>/Receive' */
 } BlockIO_BasicModelTarget;
 
 /* Block states (auto storage) for system '<Root>' */
@@ -1099,7 +1106,7 @@ typedef struct {
   int_T Bits18_IWORK[2];               /* '<S16>/Bits1-8 ' */
   int_T Bits916_IWORK[2];              /* '<S16>/Bits9-16' */
   int_T IntOE_IWORK[2];                /* '<S16>/Int & OE' */
-  uint8_T RateTransition3_Buffer0[48]; /* '<S1>/Rate Transition3' */
+  uint8_T RateTransition3_Buffer0[56]; /* '<S1>/Rate Transition3' */
 } D_Work_BasicModelTarget;
 
 /* Continuous states (auto storage) */
@@ -1256,6 +1263,15 @@ struct Parameters_BasicModelTarget_ {
   real_T One_Value;                    /* Expression: 1
                                         * Referenced by: '<S2>/One'
                                         */
+  real_T Saturation_UpperSat;          /* Expression: inf
+                                        * Referenced by: '<S1>/Saturation'
+                                        */
+  real_T Saturation_LowerSat;          /* Expression: 0
+                                        * Referenced by: '<S1>/Saturation'
+                                        */
+  real_T Gain1_Gain_g;                 /* Expression: -1
+                                        * Referenced by: '<S1>/Gain1'
+                                        */
   real_T Saturation1_UpperSat;         /* Expression: inf
                                         * Referenced by: '<S2>/Saturation1'
                                         */
@@ -1403,7 +1419,7 @@ struct Parameters_BasicModelTarget_ {
   real_T B_Value;                      /* Expression: .046586
                                         * Referenced by: '<S5>/B'
                                         */
-  real_T Gain1_Gain_g[4];              /* Expression: [0, 1; 0, 0]
+  real_T Gain1_Gain_ga[4];             /* Expression: [0, 1; 0, 0]
                                         * Referenced by: '<S12>/Gain1'
                                         */
   real_T Gain2_Gain_e[4];              /* Expression: [0, 0; 1, 0]
@@ -1478,10 +1494,10 @@ struct Parameters_BasicModelTarget_ {
   real_T Integrator_IC_k;              /* Expression: 0
                                         * Referenced by: '<S8>/Integrator'
                                         */
-  real_T Saturation_UpperSat;          /* Expression: 20
+  real_T Saturation_UpperSat_m;        /* Expression: 20
                                         * Referenced by: '<Root>/Saturation'
                                         */
-  real_T Saturation_LowerSat;          /* Expression: -20
+  real_T Saturation_LowerSat_n;        /* Expression: -20
                                         * Referenced by: '<Root>/Saturation'
                                         */
   real_T SGain4_Gain;                  /* Expression: 0

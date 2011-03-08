@@ -10,7 +10,7 @@
 #define CURLVAL -20
 #define SADDLEVAL 10
 #define TIME_OFFSET .25l
-#define VISCOUS_MAG 40
+#define VISCOUS_MAG 150
 #define VISCOUS_DURATION .2
 
 ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->primaryScreen()))
@@ -107,8 +107,9 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	trial=0;
 	subject=0;
 	probeDelay=9999999; //Several months ~ infinity without the messiness of picking the numerical limit
-	pillowVec=point(0,0,0);
+	pillowMag=0;
 	ExperimentRunning=false;
+	kickMag=0;
 }
 
 void ControlWidget::readPending()
@@ -142,8 +143,8 @@ void ControlWidget::readPending()
 		out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-		out.append(reinterpret_cast<char*>(&pillowVec.X()),sizeof(double));
-		out.append(reinterpret_cast<char*>(&pillowVec.Y()),sizeof(double));
+		out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
+		out.append(reinterpret_cast<char*>(&pillowMag),sizeof(double));
 		us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 		return;
 	}
@@ -200,11 +201,7 @@ void ControlWidget::readPending()
 				userWidget->setBars(times); */
 				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else 
-				{
-					target=(target==point(0,0)?point(0,2*min/3)+center:point(0,0)+center);
-					pillowVec=point(0,1);	
-				}
+				else target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center);
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -215,9 +212,9 @@ void ControlWidget::readPending()
 	
 	double delay=now-trialStart;
 	if ((delay>=probeDelay)&&(delay<=(probeDelay+VISCOUS_DURATION)))
-		pillowVec=(target-cursor).unit()*VISCOUS_MAG;
+		pillowMag=VISCOUS_MAG;
 	else
-		pillowVec=point(0,0);
+		pillowMag=0;
 		
 	//out = {most recent timestamp, curl mag, saddle mag, target x, target y (both in robot coordinates), and pillowvec}
 	
@@ -226,12 +223,12 @@ void ControlWidget::readPending()
 	out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-	out.append(reinterpret_cast<char*>(&pillowVec.X()),sizeof(double));
-	out.append(reinterpret_cast<char*>(&pillowVec.Y()),sizeof(double));
+	out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
+	out.append(reinterpret_cast<char*>(&pillowMag),sizeof(double));
 	//This will require additional appends for other stimuli
 	us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 	
-	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB pillowVec.X() TAB pillowVec.Y() << endl;
+	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB kickMag TAB pillowMag << endl;
 }
 
 void ControlWidget::startClicked()

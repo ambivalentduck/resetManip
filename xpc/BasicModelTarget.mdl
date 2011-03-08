@@ -51,7 +51,7 @@ Model {
       Name		      ""
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.972"
+    ComputedModelVersion    "1.978"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -71,9 +71,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Justin"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Feb 16 12:10:54 2011"
-  RTWModifiedTimeStamp	  219759005
-  ModelVersionFormat	  "1.%<AutoIncrement:972>"
+  LastModifiedDate	  "Tue Mar 08 13:52:33 2011"
+  RTWModifiedTimeStamp	  221493151
+  ModelVersionFormat	  "1.%<AutoIncrement:978>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -939,7 +939,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    1037
+    SIDHighWatermark	    1066
     Block {
       BlockType		      SubSystem
       Name		      "\nCalculate Additional Forces from UDP input"
@@ -974,7 +974,7 @@ Model {
 	  BlockType		  Inport
 	  Name			  "vx"
 	  SID			  959
-	  Position		  [520, 188, 550, 202]
+	  Position		  [440, 198, 470, 212]
 	  IconDisplay		  "Port number"
 	  OutDataType		  "fixdt(1, 16)"
 	  OutScaling		  "2^0"
@@ -983,7 +983,7 @@ Model {
 	  BlockType		  Inport
 	  Name			  "vy"
 	  SID			  960
-	  Position		  [520, 228, 550, 242]
+	  Position		  [440, 228, 470, 242]
 	  Port			  "2"
 	  IconDisplay		  "Port number"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1024,7 +1024,17 @@ Model {
 	  Name			  "Demux"
 	  SID			  1032
 	  Ports			  [1, 2]
-	  Position		  [520, 418, 525, 487]
+	  Position		  [525, 418, 530, 487]
+	  ShowName		  off
+	  Outputs		  "2"
+	  DisplayOption		  "bar"
+	}
+	Block {
+	  BlockType		  Demux
+	  Name			  "Demux1"
+	  SID			  1051
+	  Ports			  [1, 2]
+	  Position		  [525, 608, 530, 677]
 	  ShowName		  off
 	  Outputs		  "2"
 	  DisplayOption		  "bar"
@@ -1045,6 +1055,16 @@ Model {
 	  SaturateOnIntegerOverflow off
 	}
 	Block {
+	  BlockType		  DotProduct
+	  Name			  "Dot Product"
+	  SID			  1061
+	  Position		  [200, 627, 230, 658]
+	  OutputDataTypeScalingMode "Inherit via internal rule"
+	  OutDataType		  "fixdt(1, 16)"
+	  OutScaling		  "2^-10"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	}
+	Block {
 	  BlockType		  Fcn
 	  Name			  "Fcn3"
 	  SID			  1031
@@ -1062,9 +1082,18 @@ Model {
 	}
 	Block {
 	  BlockType		  From
+	  Name			  "From11"
+	  SID			  1048
+	  Position		  [395, 689, 455, 701]
+	  BackgroundColor	  "orange"
+	  CloseFcn		  "tagdialog Close"
+	  GotoTag		  "stopMag"
+	}
+	Block {
+	  BlockType		  From
 	  Name			  "From12"
 	  SID			  1007
-	  Position		  [835, 714, 895, 726]
+	  Position		  [780, 714, 840, 726]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "vy"
@@ -1073,7 +1102,7 @@ Model {
 	  BlockType		  From
 	  Name			  "From13"
 	  SID			  1008
-	  Position		  [835, 689, 895, 701]
+	  Position		  [780, 689, 840, 701]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "saddle"
@@ -1100,25 +1129,61 @@ Model {
 	  BlockType		  From
 	  Name			  "From16"
 	  SID			  1010
-	  Position		  [835, 774, 895, 786]
+	  Position		  [780, 774, 840, 786]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "saddle"
 	}
 	Block {
 	  BlockType		  From
+	  Name			  "From17"
+	  SID			  1054
+	  Position		  [990, 684, 1050, 696]
+	  BackgroundColor	  "orange"
+	  CloseFcn		  "tagdialog Close"
+	  GotoTag		  "sfy"
+	}
+	Block {
+	  BlockType		  From
 	  Name			  "From18"
 	  SID			  1012
-	  Position		  [780, 599, 840, 611]
+	  Position		  [775, 584, 835, 596]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "curl"
 	}
 	Block {
 	  BlockType		  From
+	  Name			  "From19"
+	  SID			  1055
+	  Position		  [990, 249, 1050, 261]
+	  BackgroundColor	  "orange"
+	  CloseFcn		  "tagdialog Close"
+	  GotoTag		  "sfx"
+	}
+	Block {
+	  BlockType		  From
 	  Name			  "From2"
 	  SID			  966
-	  Position		  [830, 199, 890, 211]
+	  Position		  [685, 129, 745, 141]
+	  BackgroundColor	  "orange"
+	  CloseFcn		  "tagdialog Close"
+	  GotoTag		  "vy"
+	}
+	Block {
+	  BlockType		  From
+	  Name			  "From20"
+	  SID			  1058
+	  Position		  [35, 629, 95, 641]
+	  BackgroundColor	  "orange"
+	  CloseFcn		  "tagdialog Close"
+	  GotoTag		  "vx"
+	}
+	Block {
+	  BlockType		  From
+	  Name			  "From21"
+	  SID			  1059
+	  Position		  [35, 659, 95, 671]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "vy"
@@ -1127,7 +1192,7 @@ Model {
 	  BlockType		  From
 	  Name			  "From3"
 	  SID			  967
-	  Position		  [830, 174, 890, 186]
+	  Position		  [685, 104, 745, 116]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "saddle"
@@ -1136,7 +1201,7 @@ Model {
 	  BlockType		  From
 	  Name			  "From4"
 	  SID			  968
-	  Position		  [830, 264, 890, 276]
+	  Position		  [685, 199, 745, 211]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "vx"
@@ -1145,7 +1210,7 @@ Model {
 	  BlockType		  From
 	  Name			  "From5"
 	  SID			  969
-	  Position		  [830, 239, 890, 251]
+	  Position		  [685, 174, 745, 186]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "saddle"
@@ -1154,7 +1219,7 @@ Model {
 	  BlockType		  From
 	  Name			  "From6"
 	  SID			  970
-	  Position		  [905, 119, 965, 131]
+	  Position		  [900, 69, 960, 81]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "vy"
@@ -1163,7 +1228,7 @@ Model {
 	  BlockType		  From
 	  Name			  "From7"
 	  SID			  971
-	  Position		  [905, 94, 965, 106]
+	  Position		  [900, 44, 960, 56]
 	  BackgroundColor	  "orange"
 	  CloseFcn		  "tagdialog Close"
 	  GotoTag		  "curl"
@@ -1190,7 +1255,23 @@ Model {
 	  BlockType		  Gain
 	  Name			  "Gain"
 	  SID			  1020
-	  Position		  [850, 590, 880, 620]
+	  Position		  [845, 575, 875, 605]
+	  Gain			  "-1"
+	  ParameterDataTypeMode	  "Inherit via internal rule"
+	  ParameterDataType	  "fixdt(1, 16)"
+	  ParameterScaling	  "2^0"
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeMode	  "Inherit via internal rule"
+	  OutDataType		  "fixdt(1, 16)"
+	  OutScaling		  "2^0"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain1"
+	  SID			  1050
+	  Position		  [410, 615, 440, 645]
 	  Gain			  "-1"
 	  ParameterDataTypeMode	  "Inherit via internal rule"
 	  ParameterDataType	  "fixdt(1, 16)"
@@ -1209,6 +1290,24 @@ Model {
 	  Position		  [330, 148, 385, 162]
 	  BackgroundColor	  "cyan"
 	  GotoTag		  "saddle"
+	  TagVisibility		  "local"
+	}
+	Block {
+	  BlockType		  Goto
+	  Name			  "Goto10"
+	  SID			  1056
+	  Position		  [495, 198, 550, 212]
+	  BackgroundColor	  "cyan"
+	  GotoTag		  "vx"
+	  TagVisibility		  "local"
+	}
+	Block {
+	  BlockType		  Goto
+	  Name			  "Goto11"
+	  SID			  1057
+	  Position		  [495, 228, 550, 242]
+	  BackgroundColor	  "cyan"
+	  GotoTag		  "vy"
 	  TagVisibility		  "local"
 	}
 	Block {
@@ -1249,20 +1348,29 @@ Model {
 	}
 	Block {
 	  BlockType		  Goto
-	  Name			  "Goto6"
-	  SID			  977
-	  Position		  [580, 188, 635, 202]
+	  Name			  "Goto7"
+	  SID			  1052
+	  Position		  [555, 618, 610, 632]
 	  BackgroundColor	  "cyan"
-	  GotoTag		  "vx"
+	  GotoTag		  "sfx"
 	  TagVisibility		  "local"
 	}
 	Block {
 	  BlockType		  Goto
-	  Name			  "Goto7"
-	  SID			  978
-	  Position		  [580, 228, 635, 242]
+	  Name			  "Goto8"
+	  SID			  1038
+	  Position		  [330, 328, 385, 342]
 	  BackgroundColor	  "cyan"
-	  GotoTag		  "vy"
+	  GotoTag		  "stopMag"
+	  TagVisibility		  "local"
+	}
+	Block {
+	  BlockType		  Goto
+	  Name			  "Goto9"
+	  SID			  1053
+	  Position		  [555, 653, 610, 667]
+	  BackgroundColor	  "cyan"
+	  GotoTag		  "sfy"
 	  TagVisibility		  "local"
 	}
 	Block {
@@ -1286,6 +1394,16 @@ Model {
 	  DisplayOption		  "bar"
 	}
 	Block {
+	  BlockType		  Mux
+	  Name			  "Mux3"
+	  SID			  1042
+	  Ports			  [2, 1]
+	  Position		  [125, 621, 130, 679]
+	  ShowName		  off
+	  Inputs		  "2"
+	  DisplayOption		  "bar"
+	}
+	Block {
 	  BlockType		  Product
 	  Name			  "Product1"
 	  SID			  1034
@@ -1303,7 +1421,7 @@ Model {
 	  Name			  "Product2"
 	  SID			  980
 	  Ports			  [2, 1]
-	  Position		  [930, 167, 965, 218]
+	  Position		  [785, 97, 820, 148]
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1316,7 +1434,20 @@ Model {
 	  Name			  "Product3"
 	  SID			  981
 	  Ports			  [2, 1]
-	  Position		  [930, 231, 965, 284]
+	  Position		  [785, 166, 820, 219]
+	  InputSameDT		  off
+	  OutDataTypeMode	  "Inherit via internal rule"
+	  OutDataType		  "fixdt(1, 16)"
+	  OutScaling		  "2^0"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "Product4"
+	  SID			  1047
+	  Ports			  [2, 1]
+	  Position		  [345, 602, 380, 653]
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1329,7 +1460,20 @@ Model {
 	  Name			  "Product5"
 	  SID			  983
 	  Ports			  [2, 1]
-	  Position		  [995, 88, 1025, 137]
+	  Position		  [990, 38, 1020, 87]
+	  InputSameDT		  off
+	  OutDataTypeMode	  "Inherit via internal rule"
+	  OutDataType		  "fixdt(1, 16)"
+	  OutScaling		  "2^0"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "Product6"
+	  SID			  1060
+	  Ports			  [2, 1]
+	  Position		  [480, 617, 515, 668]
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1342,7 +1486,7 @@ Model {
 	  Name			  "Product7"
 	  SID			  1013
 	  Ports			  [2, 1]
-	  Position		  [925, 682, 960, 733]
+	  Position		  [870, 682, 905, 733]
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1355,7 +1499,7 @@ Model {
 	  Name			  "Product8"
 	  SID			  1014
 	  Ports			  [2, 1]
-	  Position		  [925, 766, 960, 819]
+	  Position		  [870, 766, 905, 819]
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1368,7 +1512,7 @@ Model {
 	  Name			  "Product9"
 	  SID			  1015
 	  Ports			  [2, 1]
-	  Position		  [995, 593, 1025, 642]
+	  Position		  [990, 578, 1020, 627]
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1380,22 +1524,33 @@ Model {
 	  BlockType		  RateTransition
 	  Name			  "Rate Transition3"
 	  SID			  985
-	  Position		  [170, 163, 200, 197]
+	  Position		  [170, 183, 200, 217]
 	}
 	Block {
 	  BlockType		  Reference
 	  Name			  "Receive"
 	  SID			  986
 	  Ports			  [0, 2]
-	  Position		  [15, 167, 95, 218]
+	  Position		  [15, 187, 95, 238]
 	  LibraryVersion	  "1.1656"
 	  SourceBlock		  "xpclib/UDP/Receive"
 	  SourceType		  "xpcudpbytereceive"
 	  ipAddress		  "0.0.0.0"
 	  ipPort		  "25000"
-	  width			  "8*6"
+	  width			  "8*7"
 	  vblLen		  off
 	  sampletime		  "sp*5"
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Saturation"
+	  SID			  1066
+	  Ports			  [1, 1]
+	  Position		  [265, 630, 295, 660]
+	  UpperLimit		  "inf"
+	  LowerLimit		  "0"
+	  OutDataType		  "fixdt(1, 16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Reference
@@ -1536,7 +1691,7 @@ Model {
 	  Name			  "Sum"
 	  SID			  991
 	  Ports			  [2, 1]
-	  Position		  [995, 154, 1025, 296]
+	  Position		  [850, 89, 880, 231]
 	  Inputs		  "--"
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
@@ -1549,9 +1704,9 @@ Model {
 	  BlockType		  Sum
 	  Name			  "Sum of Forces - X"
 	  SID			  992
-	  Ports			  [3, 1]
-	  Position		  [1070, 56, 1105, 394]
-	  Inputs		  "+++"
+	  Ports			  [4, 1]
+	  Position		  [1070, 17, 1110, 398]
+	  Inputs		  "++++"
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1563,9 +1718,9 @@ Model {
 	  BlockType		  Sum
 	  Name			  "Sum of Forces - Y"
 	  SID			  1018
-	  Ports			  [3, 1]
-	  Position		  [1070, 476, 1105, 814]
-	  Inputs		  "+++"
+	  Ports			  [4, 1]
+	  Position		  [1070, 478, 1105, 817]
+	  Inputs		  "++++"
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
 	  OutDataType		  "fixdt(1, 16)"
@@ -1592,7 +1747,7 @@ Model {
 	  Name			  "Sum2"
 	  SID			  1017
 	  Ports			  [2, 1]
-	  Position		  [995, 667, 1025, 838]
+	  Position		  [940, 667, 970, 838]
 	  Inputs		  "-+"
 	  InputSameDT		  off
 	  OutDataTypeMode	  "Inherit via internal rule"
@@ -1605,7 +1760,7 @@ Model {
 	  BlockType		  Terminator
 	  Name			  "Terminator2"
 	  SID			  995
-	  Position		  [120, 195, 140, 215]
+	  Position		  [115, 215, 135, 235]
 	  BackgroundColor	  "gray"
 	  ShowName		  off
 	}
@@ -1613,13 +1768,13 @@ Model {
 	  BlockType		  Reference
 	  Name			  "Unpack"
 	  SID			  996
-	  Ports			  [1, 6]
-	  Position		  [250, 41, 300, 314]
+	  Ports			  [1, 7]
+	  Position		  [250, 43, 300, 357]
 	  LibraryVersion	  "1.1656"
 	  SourceBlock		  "xpclib/UDP/Unpack"
 	  SourceType		  "xpcbyte2any"
-	  dimensions		  "{1,1,1,1,1,1}"
-	  datatypes		  "{'double','double','double','double','double','double'}"
+	  dimensions		  "{1,1,1,1,1,1,1}"
+	  datatypes		  "{'double','double','double','double','double','double','double'}"
 	  byteAlign		  "1"
 	}
 	Block {
@@ -1720,21 +1875,9 @@ Model {
 	  DstPort		  1
 	}
 	Line {
-	  SrcBlock		  "vy"
-	  SrcPort		  1
-	  DstBlock		  "Goto7"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "vx"
-	  SrcPort		  1
-	  DstBlock		  "Goto6"
-	  DstPort		  1
-	}
-	Line {
 	  SrcBlock		  "Sum of Forces - X"
 	  SrcPort		  1
-	  Points		  [10, 0]
+	  Points		  [0, 15; 5, 0]
 	  Branch {
 	    Points		    [0, -70]
 	    DstBlock		    "Scope (xPC) 1"
@@ -1838,7 +1981,7 @@ Model {
 	Line {
 	  SrcBlock		  "Sum of Forces - Y"
 	  SrcPort		  1
-	  Points		  [5, 0]
+	  Points		  [0, -5; 5, 0]
 	  Branch {
 	    DstBlock		    "Scope (xPC) 2"
 	    DstPort		    1
@@ -1861,18 +2004,6 @@ Model {
 	  DstPort		  1
 	}
 	Line {
-	  SrcBlock		  "x"
-	  SrcPort		  1
-	  DstBlock		  "Mux1"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "y"
-	  SrcPort		  1
-	  DstBlock		  "Mux1"
-	  DstPort		  2
-	}
-	Line {
 	  SrcBlock		  "From1"
 	  SrcPort		  1
 	  DstBlock		  "Mux2"
@@ -1883,12 +2014,6 @@ Model {
 	  SrcPort		  1
 	  DstBlock		  "Mux2"
 	  DstPort		  2
-	}
-	Line {
-	  SrcBlock		  "Mux1"
-	  SrcPort		  1
-	  DstBlock		  "Sum1"
-	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Mux2"
@@ -1925,8 +2050,24 @@ Model {
 	Line {
 	  SrcBlock		  "Divide"
 	  SrcPort		  1
-	  DstBlock		  "Product1"
-	  DstPort		  2
+	  Points		  [10, 0]
+	  Branch {
+	    DstBlock		    "Product1"
+	    DstPort		    2
+	  }
+	  Branch {
+	    Points		    [0, 50; -115, 0]
+	    Branch {
+	      Points		      [-130, 0]
+	      DstBlock		      "Dot Product"
+	      DstPort		      1
+	    }
+	    Branch {
+	      Points		      [0, 80]
+	      DstBlock		      "Product4"
+	      DstPort		      1
+	    }
+	  }
 	}
 	Line {
 	  SrcBlock		  "Product1"
@@ -1936,30 +2077,146 @@ Model {
 	}
 	Line {
 	  SrcBlock		  "Demux"
-	  SrcPort		  1
-	  Points		  [260, 0; 0, -100]
-	  DstBlock		  "Sum of Forces - X"
-	  DstPort		  3
-	}
-	Line {
-	  SrcBlock		  "Demux"
 	  SrcPort		  2
-	  Points		  [525, 0]
+	  Points		  [520, 0]
 	  DstBlock		  "Sum of Forces - Y"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Product9"
 	  SrcPort		  1
-	  Points		  [10, 0; 0, 25]
 	  DstBlock		  "Sum of Forces - Y"
 	  DstPort		  2
 	}
 	Line {
+	  SrcBlock		  "Unpack"
+	  SrcPort		  7
+	  DstBlock		  "Goto8"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "y"
+	  SrcPort		  1
+	  DstBlock		  "Mux1"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "x"
+	  SrcPort		  1
+	  DstBlock		  "Mux1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Mux1"
+	  SrcPort		  1
+	  DstBlock		  "Sum1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Product4"
+	  SrcPort		  1
+	  DstBlock		  "Gain1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Demux1"
+	  SrcPort		  1
+	  DstBlock		  "Goto7"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Demux1"
+	  SrcPort		  2
+	  DstBlock		  "Goto9"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Demux"
+	  SrcPort		  1
+	  Points		  [260, 0; 0, -85]
+	  DstBlock		  "Sum of Forces - X"
+	  DstPort		  4
+	}
+	Line {
 	  SrcBlock		  "Sum2"
+	  SrcPort		  1
+	  Points		  [65, 0; 0, 20]
+	  DstBlock		  "Sum of Forces - Y"
+	  DstPort		  4
+	}
+	Line {
+	  SrcBlock		  "From17"
 	  SrcPort		  1
 	  DstBlock		  "Sum of Forces - Y"
 	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "From19"
+	  SrcPort		  1
+	  DstBlock		  "Sum of Forces - X"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "vy"
+	  SrcPort		  1
+	  DstBlock		  "Goto11"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "vx"
+	  SrcPort		  1
+	  DstBlock		  "Goto10"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "From20"
+	  SrcPort		  1
+	  DstBlock		  "Mux3"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "From21"
+	  SrcPort		  1
+	  DstBlock		  "Mux3"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Gain1"
+	  SrcPort		  1
+	  DstBlock		  "Product6"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Product6"
+	  SrcPort		  1
+	  DstBlock		  "Demux1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Dot Product"
+	  SrcPort		  1
+	  DstBlock		  "Saturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Mux3"
+	  SrcPort		  1
+	  DstBlock		  "Dot Product"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Saturation"
+	  SrcPort		  1
+	  Points		  [15, 0; 0, -5]
+	  DstBlock		  "Product4"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "From11"
+	  SrcPort		  1
+	  Points		  [0, -40]
+	  DstBlock		  "Product6"
+	  DstPort		  2
 	}
       }
     }
@@ -6391,7 +6648,7 @@ Model {
       System {
 	Name			"Subsystem"
 	Location		[188, 141, 1064, 948]
-	Open			on
+	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
