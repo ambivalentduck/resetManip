@@ -10,8 +10,8 @@
 #define CURLVAL -20
 #define SADDLEVAL 10
 #define TIME_OFFSET .25l
-#define VISCOUS_MAG 150
-#define VISCOUS_DURATION .2
+#define VISCOUS_MAG 100
+#define VISCOUS_DURATION .8
 
 ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->primaryScreen()))
 {

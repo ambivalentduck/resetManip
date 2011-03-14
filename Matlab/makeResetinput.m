@@ -1,5 +1,5 @@
 function makeResetinput()
-number=144;
+number=146;
 Stim=1;
 
 fhandle=fopen(['../Data/input',num2str(number),'.dat'],'wt');
@@ -15,8 +15,8 @@ sd=sin(directions);
 cd2=cd/2;
 sd2=sd/2;
 
-xtable=[cd2',cd'];
-ytable=[sd2',sd'];
+xtable=.9*[cd2',cd'];
+ytable=.9*[sd2',sd'];
 %use via xtable(direction, distance), directions 1-3 and distance (.5 or 1)
 %as (1 or 2)
 
@@ -84,7 +84,7 @@ resetsperdirection=15;
 delay=-1*ones(size(direction));
 
 if sporadic
-    delaytimes=0:.01:.14;
+    delaytimes=0.01:.01:.15;
     rp=randperm(length(delaytimes));
     delaytimes=delaytimes(rp);
     delaytimes=[delaytimes delaytimes delaytimes];
