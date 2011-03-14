@@ -1,0 +1,6 @@
+MODEL=modelinference_target
+NUMST=5
+NCSTATES=14
+HAVESTDIO
+INTEGER_CODE=0
+MT=1

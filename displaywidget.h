@@ -9,10 +9,10 @@
 #include <deque>
 #include "point.h"
 
-#define LEFT (-.019l+.506l/2l)
-#define RIGHT (-.019l-.506l/2l)
-#define TOP (.53l-.288l/2l)
-#define BOTTOM (.53l+.288l/2l)
+#define LEFT .297l
+#define RIGHT -.317l
+#define TOP .277l
+#define BOTTOM .6834l
 
 #define LOWERBAR .50l
 #define UPPERBAR .65l
