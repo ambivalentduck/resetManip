@@ -3,9 +3,9 @@
  *
  * Real-Time Workshop code generation for Simulink model "BasicModelTarget.mdl".
  *
- * Model version              : 1.978
+ * Model version              : 1.983
  * Real-Time Workshop version : 7.5  (R2010a)  25-Jan-2010
- * C source code generated on : Tue Mar 08 13:52:40 2011
+ * C source code generated on : Thu Mar 17 13:21:59 2011
  *
  * Target selection: xpctarget.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -54,9 +54,9 @@ static const char_T * rtDataTypeNames[] = {
 
 /* data type transitions for block I/O structure */
 static DataTypeTransition rtBTransitions[] = {
-  { (char_T *)(&BasicModelTarget_B.Clock), 0, 0, 286 },
+  { (char_T *)(&BasicModelTarget_B.Clock), 0, 0, 296 },
 
-  { (char_T *)(&BasicModelTarget_B.RateTransition3[0]), 3, 0, 256 }
+  { (char_T *)(&BasicModelTarget_B.RateTransition3[0]), 3, 0, 272 }
   ,
 
   { (char_T *)(&BasicModelTarget_DWork.UnitDelay_DSTATE[0]), 0, 0, 116 },
@@ -67,7 +67,7 @@ static DataTypeTransition rtBTransitions[] = {
 
   { (char_T *)(&BasicModelTarget_DWork.PCI6031EDA_IWORK[0]), 10, 0, 91 },
 
-  { (char_T *)(&BasicModelTarget_DWork.RateTransition3_Buffer0[0]), 3, 0, 56 }
+  { (char_T *)(&BasicModelTarget_DWork.RateTransition3_Buffer0[0]), 3, 0, 64 }
 };
 
 /* data type transition table for block I/O structure */
@@ -78,7 +78,7 @@ static DataTypeTransitionTable rtBTransTable = {
 
 /* data type transitions for Parameters structure */
 static DataTypeTransition rtPTransitions[] = {
-  { (char_T *)(&BasicModelTarget_P.OffsetShoulderOFFSETSH_Value), 0, 0, 522 },
+  { (char_T *)(&BasicModelTarget_P.OffsetShoulderOFFSETSH_Value), 0, 0, 524 },
 
   { (char_T *)(&BasicModelTarget_P.RateTransition3_X0), 3, 0, 1 }
 };

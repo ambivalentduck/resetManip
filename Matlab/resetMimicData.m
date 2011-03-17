@@ -9,9 +9,12 @@ close all
 clear all
 tic
 
+number=146;
+nums=num2str(number);
+
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB Jt fJ getAlpha getAccel forces_in forces_in_time
 
-load(['../Data/145.mat']);
+load(['../Data/',nums,'.mat']);
 
 kp=[15 6; 6 16]*1;
 kd=[2.3 .09; .09 2.4];
@@ -48,7 +51,7 @@ resetT=[.1650 inf]; %how many reset times, last must ALWAYS be inf
 
 h = waitbar(0,'Starting');
 
-for TRIAL=2; %1:length(trials)
+for TRIAL=1:10; %1:length(trials)
     pf=trials{TRIAL}.target;
     waitbar(TRIAL/length(trials),h,'Starting');
 
@@ -120,6 +123,6 @@ for TRIAL=2; %1:length(trials)
     toc
 end
 close(h)
-save('../Data/145withsim.mat','trials');
+save('../Data/',nums,'withsim.mat','trials');
 
 plotresetMimic

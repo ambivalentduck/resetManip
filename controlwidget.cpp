@@ -11,7 +11,9 @@
 #define SADDLEVAL 10
 #define TIME_OFFSET .25l
 #define VISCOUS_MAG 150
-#define VISCOUS_DURATION .2
+#define VISCOUS_DURATION .8
+#define PULSE_DURATION .3
+#define PULSE_MAG 10
 
 ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->primaryScreen()))
 {
@@ -109,7 +111,8 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	probeDelay=9999999; //Several months ~ infinity without the messiness of picking the numerical limit
 	pillowMag=0;
 	ExperimentRunning=false;
-	kickMag=0;
+	commandforce=point(0,0);
+	probeOn=-1;
 }
 
 void ControlWidget::readPending()
@@ -143,8 +146,9 @@ void ControlWidget::readPending()
 		out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-		out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
 		out.append(reinterpret_cast<char*>(&pillowMag),sizeof(double));
+		out.append(reinterpret_cast<char*>(&commandforce.X()),sizeof(double));
+		out.append(reinterpret_cast<char*>(&commandforce.Y()),sizeof(double));
 		us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 		return;
 	}
@@ -201,7 +205,7 @@ void ControlWidget::readPending()
 				userWidget->setBars(times); */
 				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center);
+				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=50; probeDelay=.04; probeOn=-1;}
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -211,10 +215,36 @@ void ControlWidget::readPending()
 	}
 	
 	double delay=now-trialStart;
-	if ((delay>=probeDelay)&&(delay<=(probeDelay+VISCOUS_DURATION)))
-		pillowMag=VISCOUS_MAG;
-	else
-		pillowMag=0;
+	pillowMag=0;
+	commandforce=point(0,0);
+	switch(probe)
+	{
+		case NONE:
+			break;
+		case VISCOUSITY:
+			if ((delay>=probeDelay)&&(delay<=(probeDelay+VISCOUS_DURATION)))
+			{
+				curl=0;
+				if(probeOn<0) probeOn=delay;
+				pillowMag=VISCOUS_MAG*evalSigmoid(delay-probeOn,.05l); //choose risetime=rise time of motors?
+			}
+			break;
+		case PULSE:
+			if ((delay>=probeDelay)&&(delay<=(probeDelay+PULSE_DURATION)))
+			{
+				curl=0;
+				if(probeOn<0)
+				{
+					probeOn=delay;
+					point tmou=(target-origin).unit();
+					point cmo=(cursor-origin);
+					unitcommandforce=((tmou*tmou.dot(cmo))+origin-cursor).unit();
+					std::cout<< unitcommandforce.X() TAB unitcommandforce.Y() << std::endl;
+				}
+				commandforce=unitcommandforce*PULSE_MAG; //*evalSigmoid(delay-probeOn,.01l); //choose risetime < rise time of motors?
+			}
+			break;
+	}
 		
 	//out = {most recent timestamp, curl mag, saddle mag, target x, target y (both in robot coordinates), and pillowvec}
 	
@@ -223,12 +253,13 @@ void ControlWidget::readPending()
 	out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-	out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
 	out.append(reinterpret_cast<char*>(&pillowMag),sizeof(double));
+	out.append(reinterpret_cast<char*>(&commandforce.X()),sizeof(double));
+	out.append(reinterpret_cast<char*>(&commandforce.Y()),sizeof(double));
 	//This will require additional appends for other stimuli
 	us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 	
-	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB kickMag TAB pillowMag << endl;
+	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB pillowMag TAB commandforce.X() TAB commandforce.Y() << endl;
 }
 
 void ControlWidget::startClicked()
@@ -287,19 +318,21 @@ void ControlWidget::closeEvent(QCloseEvent *event)
 
 point ControlWidget::loadTrial(int T)
 {
+	probeOn=-1;
 	trial=T;
 	if(trialFile.atEnd()) emit(endApp());
 	
 	char line[200];
 	std::string qline;
 	int temptrial;
+	unsigned int tempprobe;
 	double tempx, tempy,tempstim;
 	std::cout << "Loading Trial " << T << std::endl;
 	do
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf",&temptrial,&tempstim,&tempx,&tempy,&probeDelay));
+		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf\t%d",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe));
 		else
 		{
 			std::cout << "Complete failure to read line: " << line << std::endl; return center;
@@ -309,6 +342,7 @@ point ControlWidget::loadTrial(int T)
 	if (fabs(tempstim)>.5) {stimulus=stimuli(1); stimulusBox->setCurrentIndex(1);}
 	else {stimulus=stimuli(0); stimulusBox->setCurrentIndex(0);}
 	curl=tempstim;
+	probe=ProbeType(tempprobe);
 	trialNumBox->setValue(T);
 	
 	std::cout << "Finished Loading Trial " << temptrial << std::endl;

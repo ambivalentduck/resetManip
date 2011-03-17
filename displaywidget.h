@@ -14,8 +14,8 @@
 #define TOP .277l
 #define BOTTOM .6834l
 
-#define LOWERBAR .50l
-#define UPPERBAR .65l
+#define LOWERBAR .40l
+#define UPPERBAR .55l
 
 class DisplayWidget : public QGLWidget
 {
