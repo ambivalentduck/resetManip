@@ -3,9 +3,9 @@
  *
  * Real-Time Workshop code generation for Simulink model "BasicModelTarget.mdl".
  *
- * Model version              : 1.978
+ * Model version              : 1.983
  * Real-Time Workshop version : 7.5  (R2010a)  25-Jan-2010
- * C source code generated on : Tue Mar 08 13:52:40 2011
+ * C source code generated on : Thu Mar 17 13:21:59 2011
  *
  * Target selection: xpctarget.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping

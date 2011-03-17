@@ -3,9 +3,9 @@
  *
  * Real-Time Workshop code generation for Simulink model "BasicModelTarget.mdl".
  *
- * Model version              : 1.978
+ * Model version              : 1.983
  * Real-Time Workshop version : 7.5  (R2010a)  25-Jan-2010
- * C source code generated on : Tue Mar 08 13:52:40 2011
+ * C source code generated on : Thu Mar 17 13:21:59 2011
  *
  * Target selection: xpctarget.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -568,10 +568,9 @@ void BasicModelTarget_output(int_T tid)
 
     /* RateTransition: '<S1>/Rate Transition3' */
     if (BasicModelTarget_rtM->Timing.RateInteraction.TID1_4) {
-      for (i = 0; i < 56; i++) {
-        BasicModelTarget_B.RateTransition3[i] =
-          BasicModelTarget_DWork.RateTransition3_Buffer0[i];
-      }
+      memcpy((void *)(&BasicModelTarget_B.RateTransition3[0]), (void *)
+             (&BasicModelTarget_DWork.RateTransition3_Buffer0[0]), sizeof
+             (uint8_T) << 6U);
     }
 
     /* Unpack: <S1>/Unpack */
@@ -596,6 +595,9 @@ void BasicModelTarget_output(int_T tid)
     (void) memcpy(&BasicModelTarget_B.Unpack_o7,
                   &BasicModelTarget_B.RateTransition3[48],
                   8);
+    (void) memcpy(&BasicModelTarget_B.Unpack_o8,
+                  &BasicModelTarget_B.RateTransition3[56],
+                  8);
   }
 
   if (tid == 0) {
@@ -618,6 +620,10 @@ void BasicModelTarget_output(int_T tid)
 
   if (rtmIsMajorTimeStep(BasicModelTarget_rtM) &&
       tid == 0) {
+    /* Gain: '<S1>/Gain3' */
+    BasicModelTarget_B.Gain3 = BasicModelTarget_P.Gain3_Gain *
+      BasicModelTarget_B.Unpack_o6;
+
     /* Sum: '<S1>/Sum1' */
     BasicModelTarget_B.Sum1_a[0] = BasicModelTarget_B.Unpack_o4 -
       BasicModelTarget_B.Sum_h;
@@ -643,31 +649,66 @@ void BasicModelTarget_output(int_T tid)
       BasicModelTarget_B.Fcn3_n;
     BasicModelTarget_B.Divide[1] = BasicModelTarget_B.Sum1_a[1] /
       BasicModelTarget_B.Fcn3_n;
+
+    /* Gain: '<S1>/Gain2' */
+    BasicModelTarget_B.Gain2_n = BasicModelTarget_P.Gain2_Gain_h *
+      BasicModelTarget_B.Divide[0];
   }
 
   if (tid == 0) {
-    /* SignalConversion: '<S1>/TmpSignal ConversionAtDot ProductInport2' */
+    /* SignalConversion: '<S1>/TmpSignal ConversionAtDot Product1Inport1' */
     BasicModelTarget_B.TmpSignalConversionAtDotProduct[0] =
-      BasicModelTarget_B.Derivative1;
+      BasicModelTarget_B.Divide[1];
     BasicModelTarget_B.TmpSignalConversionAtDotProduct[1] =
+      BasicModelTarget_B.Gain2_n;
+
+    /* SignalConversion: '<S1>/TmpSignal ConversionAtDot ProductInport2' */
+    BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[0] =
+      BasicModelTarget_B.Derivative1;
+    BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[1] =
       BasicModelTarget_B.Derivative3;
 
+    /* DotProduct: '<S1>/Dot Product1' */
+    tmp_0 = BasicModelTarget_B.TmpSignalConversionAtDotProduct[0] *
+      BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[0];
+    tmp_0 += BasicModelTarget_B.TmpSignalConversionAtDotProduct[1] *
+      BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[1];
+    BasicModelTarget_B.DotProduct1 = tmp_0;
+
     /* DotProduct: '<S1>/Dot Product' */
+
+    /* Product: '<S1>/Product1' */
+    BasicModelTarget_B.Product1_h[0] =
+      BasicModelTarget_B.TmpSignalConversionAtDotProduct[0] *
+      BasicModelTarget_B.DotProduct1;
+
+    /* Product: '<S1>/Small viscousity perpendicular to reach' */
+    BasicModelTarget_B.Smallviscousityperpendiculartor[0] =
+      BasicModelTarget_B.Gain3 * BasicModelTarget_B.Product1_h[0];
     tmp_0 = BasicModelTarget_B.Divide[0] *
-      BasicModelTarget_B.TmpSignalConversionAtDotProduct[0];
+      BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[0];
+
+    /* Product: '<S1>/Product1' */
+    BasicModelTarget_B.Product1_h[1] =
+      BasicModelTarget_B.TmpSignalConversionAtDotProduct[1] *
+      BasicModelTarget_B.DotProduct1;
+
+    /* Product: '<S1>/Small viscousity perpendicular to reach' */
+    BasicModelTarget_B.Smallviscousityperpendiculartor[1] =
+      BasicModelTarget_B.Gain3 * BasicModelTarget_B.Product1_h[1];
     tmp_0 += BasicModelTarget_B.Divide[1] *
-      BasicModelTarget_B.TmpSignalConversionAtDotProduct[1];
+      BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[1];
     BasicModelTarget_B.DotProduct_a = tmp_0;
 
-    /* Saturate: '<S1>/Saturation' */
+    /* Saturate: '<S1>/inf to 0  makes  one-sided' */
     tmp_0 = BasicModelTarget_B.DotProduct_a;
-    BasicModelTarget_B.Saturation = rt_SATURATE(tmp_0,
-      BasicModelTarget_P.Saturation_LowerSat,
-      BasicModelTarget_P.Saturation_UpperSat);
+    BasicModelTarget_B.infto0makesonesided = rt_SATURATE(tmp_0,
+      BasicModelTarget_P.infto0makesonesided_LowerSat,
+      BasicModelTarget_P.infto0makesonesided_UpperSat);
 
     /* Product: '<S1>/Product4' */
     BasicModelTarget_B.Product4[0] = BasicModelTarget_B.Divide[0] *
-      BasicModelTarget_B.Saturation;
+      BasicModelTarget_B.infto0makesonesided;
 
     /* Gain: '<S1>/Gain1' */
     BasicModelTarget_B.Gain1_o[0] = BasicModelTarget_P.Gain1_Gain_g *
@@ -675,11 +716,16 @@ void BasicModelTarget_output(int_T tid)
 
     /* Product: '<S1>/Product6' */
     BasicModelTarget_B.Product6[0] = BasicModelTarget_B.Gain1_o[0] *
-      BasicModelTarget_B.Unpack_o7;
+      BasicModelTarget_B.Unpack_o6;
+
+    /* Sum: '<S1>/Sum3' */
+    BasicModelTarget_B.Sum3[0] =
+      BasicModelTarget_B.Smallviscousityperpendiculartor[0] +
+      BasicModelTarget_B.Product6[0];
 
     /* Product: '<S1>/Product4' */
     BasicModelTarget_B.Product4[1] = BasicModelTarget_B.Divide[1] *
-      BasicModelTarget_B.Saturation;
+      BasicModelTarget_B.infto0makesonesided;
 
     /* Gain: '<S1>/Gain1' */
     BasicModelTarget_B.Gain1_o[1] = BasicModelTarget_P.Gain1_Gain_g *
@@ -687,23 +733,17 @@ void BasicModelTarget_output(int_T tid)
 
     /* Product: '<S1>/Product6' */
     BasicModelTarget_B.Product6[1] = BasicModelTarget_B.Gain1_o[1] *
-      BasicModelTarget_B.Unpack_o7;
-  }
+      BasicModelTarget_B.Unpack_o6;
 
-  if (rtmIsMajorTimeStep(BasicModelTarget_rtM) &&
-      tid == 0) {
-    /* Product: '<S1>/Product1' */
-    BasicModelTarget_B.Product1_h[0] = BasicModelTarget_B.Unpack_o6 *
-      BasicModelTarget_B.Divide[0];
-    BasicModelTarget_B.Product1_h[1] = BasicModelTarget_B.Unpack_o6 *
-      BasicModelTarget_B.Divide[1];
-  }
+    /* Sum: '<S1>/Sum3' */
+    BasicModelTarget_B.Sum3[1] =
+      BasicModelTarget_B.Smallviscousityperpendiculartor[1] +
+      BasicModelTarget_B.Product6[1];
 
-  if (tid == 0) {
     /* Sum: '<S1>/Sum of Forces - X' */
     BasicModelTarget_B.SumofForcesX = ((BasicModelTarget_B.Product5 +
-      BasicModelTarget_B.Sum_n) + BasicModelTarget_B.Product6[0]) +
-      BasicModelTarget_B.Product1_h[0];
+      BasicModelTarget_B.Sum_n) + BasicModelTarget_B.Sum3[0]) +
+      BasicModelTarget_B.Unpack_o7;
 
     /* Product: '<S2>/Product4' */
     BasicModelTarget_B.Product4_i = BasicModelTarget_B.AveX1 *
@@ -759,16 +799,16 @@ void BasicModelTarget_output(int_T tid)
     /* Gain: '<S2>/Gain3' incorporates:
      *  Constant: '<S2>/Bwall'
      */
-    BasicModelTarget_B.Gain3 = BasicModelTarget_P.Gain3_Gain *
+    BasicModelTarget_B.Gain3_j = BasicModelTarget_P.Gain3_Gain_g *
       BasicModelTarget_P.Bwall_Value;
   }
 
   if (tid == 0) {
     /* Product: '<S2>/Product2' */
     BasicModelTarget_B.Product2_l[0] = BasicModelTarget_B.Product5_o *
-      BasicModelTarget_B.Gain3;
+      BasicModelTarget_B.Gain3_j;
     BasicModelTarget_B.Product2_l[1] = BasicModelTarget_B.Product6_b *
-      BasicModelTarget_B.Gain3;
+      BasicModelTarget_B.Gain3_j;
   }
 
   if (rtmIsMajorTimeStep(BasicModelTarget_rtM) &&
@@ -842,8 +882,8 @@ void BasicModelTarget_output(int_T tid)
       BasicModelTarget_B.Product7_p;
 
     /* Sum: '<S1>/Sum of Forces - Y' */
-    BasicModelTarget_B.SumofForcesY = ((BasicModelTarget_B.Product1_h[1] +
-      BasicModelTarget_B.Product9) + BasicModelTarget_B.Product6[1]) +
+    BasicModelTarget_B.SumofForcesY = ((BasicModelTarget_B.Unpack_o8 +
+      BasicModelTarget_B.Product9) + BasicModelTarget_B.Sum3[1]) +
       BasicModelTarget_B.Sum2;
 
     /* Product: '<S2>/Product8' */
@@ -1608,13 +1648,13 @@ void BasicModelTarget_output(int_T tid)
 
     /* Saturate: '<Root>/Saturation' */
     tmp_0 = BasicModelTarget_B.Integrator_g;
-    BasicModelTarget_B.Saturation_b = rt_SATURATE(tmp_0,
-      BasicModelTarget_P.Saturation_LowerSat_n,
-      BasicModelTarget_P.Saturation_UpperSat_m);
+    BasicModelTarget_B.Saturation = rt_SATURATE(tmp_0,
+      BasicModelTarget_P.Saturation_LowerSat,
+      BasicModelTarget_P.Saturation_UpperSat);
 
     /* Gain: '<Root>/S Gain4' */
     BasicModelTarget_B.SGain4 = BasicModelTarget_P.SGain4_Gain *
-      BasicModelTarget_B.Saturation_b;
+      BasicModelTarget_B.Saturation;
   }
 
   if (tid == 2) {
@@ -1787,7 +1827,6 @@ void BasicModelTarget_output(int_T tid)
 /* Model update function */
 void BasicModelTarget_update(int_T tid)
 {
-  int32_T i;
   if (tid == 2) {
     /* Update for UnitDelay: '<S16>/Unit Delay' */
     BasicModelTarget_DWork.UnitDelay_DSTATE[0] = BasicModelTarget_B.Bits18_o1;
@@ -1876,10 +1915,8 @@ void BasicModelTarget_update(int_T tid)
 
   /* Update for RateTransition: '<S1>/Rate Transition3' */
   if (tid == 4) {
-    for (i = 0; i < 56; i++) {
-      BasicModelTarget_DWork.RateTransition3_Buffer0[i] =
-        BasicModelTarget_B.Receive_o1[i];
-    }
+    memcpy((void *)(&BasicModelTarget_DWork.RateTransition3_Buffer0[0]), (void *)
+           (&BasicModelTarget_B.Receive_o1[0]), sizeof(uint8_T) << 6U);
   }
 
   if (tid == 3) {
@@ -2245,7 +2282,8 @@ void BasicModelTarget_initialize(boolean_T firstTime)
   rt_InitInfAndNaN(sizeof(real_T));
 
   /* non-finite (run-time) assignments */
-  BasicModelTarget_P.Saturation_UpperSat = rtInf;
+  BasicModelTarget_P.infto0makesonesided_UpperSat = rtInf;
+  BasicModelTarget_P.infto0makesonesided_LowerSat = rtMinusInf;
   BasicModelTarget_P.Saturation1_UpperSat = rtInf;
 
   /* initialize real-time model */
@@ -2549,10 +2587,10 @@ void BasicModelTarget_initialize(boolean_T firstTime)
   }
 
   /* external mode info */
-  BasicModelTarget_rtM->Sizes.checksums[0] = (3636285181U);
-  BasicModelTarget_rtM->Sizes.checksums[1] = (1970676385U);
-  BasicModelTarget_rtM->Sizes.checksums[2] = (3950115347U);
-  BasicModelTarget_rtM->Sizes.checksums[3] = (619210971U);
+  BasicModelTarget_rtM->Sizes.checksums[0] = (3340799056U);
+  BasicModelTarget_rtM->Sizes.checksums[1] = (51169223U);
+  BasicModelTarget_rtM->Sizes.checksums[2] = (2356541911U);
+  BasicModelTarget_rtM->Sizes.checksums[3] = (1902379768U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -2630,27 +2668,37 @@ void BasicModelTarget_initialize(boolean_T firstTime)
     BasicModelTarget_B.Unpack_o5 = 0.0;
     BasicModelTarget_B.Unpack_o6 = 0.0;
     BasicModelTarget_B.Unpack_o7 = 0.0;
+    BasicModelTarget_B.Unpack_o8 = 0.0;
     BasicModelTarget_B.Product5 = 0.0;
     BasicModelTarget_B.Product2 = 0.0;
     BasicModelTarget_B.Product3 = 0.0;
     BasicModelTarget_B.Sum_n = 0.0;
+    BasicModelTarget_B.Gain3 = 0.0;
     BasicModelTarget_B.Sum1_a[0] = 0.0;
     BasicModelTarget_B.Sum1_a[1] = 0.0;
     BasicModelTarget_B.Fcn3_n = 0.0;
     BasicModelTarget_B.Divide[0] = 0.0;
     BasicModelTarget_B.Divide[1] = 0.0;
+    BasicModelTarget_B.Gain2_n = 0.0;
     BasicModelTarget_B.TmpSignalConversionAtDotProduct[0] = 0.0;
     BasicModelTarget_B.TmpSignalConversionAtDotProduct[1] = 0.0;
+    BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[0] = 0.0;
+    BasicModelTarget_B.TmpSignalConversionAtDotProdu_o[1] = 0.0;
+    BasicModelTarget_B.DotProduct1 = 0.0;
+    BasicModelTarget_B.Product1_h[0] = 0.0;
+    BasicModelTarget_B.Product1_h[1] = 0.0;
+    BasicModelTarget_B.Smallviscousityperpendiculartor[0] = 0.0;
+    BasicModelTarget_B.Smallviscousityperpendiculartor[1] = 0.0;
     BasicModelTarget_B.DotProduct_a = 0.0;
-    BasicModelTarget_B.Saturation = 0.0;
+    BasicModelTarget_B.infto0makesonesided = 0.0;
     BasicModelTarget_B.Product4[0] = 0.0;
     BasicModelTarget_B.Product4[1] = 0.0;
     BasicModelTarget_B.Gain1_o[0] = 0.0;
     BasicModelTarget_B.Gain1_o[1] = 0.0;
     BasicModelTarget_B.Product6[0] = 0.0;
     BasicModelTarget_B.Product6[1] = 0.0;
-    BasicModelTarget_B.Product1_h[0] = 0.0;
-    BasicModelTarget_B.Product1_h[1] = 0.0;
+    BasicModelTarget_B.Sum3[0] = 0.0;
+    BasicModelTarget_B.Sum3[1] = 0.0;
     BasicModelTarget_B.SumofForcesX = 0.0;
     BasicModelTarget_B.Product4_i = 0.0;
     BasicModelTarget_B.Fcn4 = 0.0;
@@ -2660,7 +2708,7 @@ void BasicModelTarget_initialize(boolean_T firstTime)
     BasicModelTarget_B.Saturation1 = 0.0;
     BasicModelTarget_B.Product5_o = 0.0;
     BasicModelTarget_B.Product6_b = 0.0;
-    BasicModelTarget_B.Gain3 = 0.0;
+    BasicModelTarget_B.Gain3_j = 0.0;
     BasicModelTarget_B.Product2_l[0] = 0.0;
     BasicModelTarget_B.Product2_l[1] = 0.0;
     BasicModelTarget_B.AveX2 = 0.0;
@@ -2783,7 +2831,7 @@ void BasicModelTarget_initialize(boolean_T firstTime)
     BasicModelTarget_B.Saturation1_p = 0.0;
     BasicModelTarget_B.SGain3 = 0.0;
     BasicModelTarget_B.Integrator_g = 0.0;
-    BasicModelTarget_B.Saturation_b = 0.0;
+    BasicModelTarget_B.Saturation = 0.0;
     BasicModelTarget_B.SGain4 = 0.0;
     BasicModelTarget_B.Bit1_o1 = 0.0;
     BasicModelTarget_B.Bit1_o2 = 0.0;
@@ -3314,7 +3362,7 @@ void BasicModelTarget_initialize(boolean_T firstTime)
         /* port 0 */
         {
           _ssSetOutputPortNumDimensions(rts, 0, 1);
-          ssSetOutputPortWidth(rts, 0, 56);
+          ssSetOutputPortWidth(rts, 0, 64);
           ssSetOutputPortSignal(rts, 0, ((uint8_T *)
             BasicModelTarget_B.Receive_o1));
         }
@@ -4952,9 +5000,9 @@ void MdlInitializeSizes(void)
   BasicModelTarget_rtM->Sizes.numU = (0);/* Number of model inputs */
   BasicModelTarget_rtM->Sizes.sysDirFeedThru = (0);/* The model is not direct feedthrough */
   BasicModelTarget_rtM->Sizes.numSampTimes = (5);/* Number of sample times */
-  BasicModelTarget_rtM->Sizes.numBlocks = (209);/* Number of blocks */
-  BasicModelTarget_rtM->Sizes.numBlockIO = (210);/* Number of block outputs */
-  BasicModelTarget_rtM->Sizes.numBlockPrms = (523);/* Sum of parameter "widths" */
+  BasicModelTarget_rtM->Sizes.numBlocks = (215);/* Number of blocks */
+  BasicModelTarget_rtM->Sizes.numBlockIO = (217);/* Number of block outputs */
+  BasicModelTarget_rtM->Sizes.numBlockPrms = (525);/* Sum of parameter "widths" */
 }
 
 void MdlInitializeSampleTimes(void)
@@ -4994,7 +5042,7 @@ void MdlInitialize(void)
     BasicModelTarget_DWork.Derivative3_RWORK.TimeStampB = rtInf;
 
     /* InitializeConditions for RateTransition: '<S1>/Rate Transition3' */
-    for (i = 0; i < 56; i++) {
+    for (i = 0; i < 64; i++) {
       BasicModelTarget_DWork.RateTransition3_Buffer0[i] =
         BasicModelTarget_P.RateTransition3_X0;
     }
@@ -5070,7 +5118,7 @@ void MdlStart(void)
     }
 
     /* Start for RateTransition: '<S1>/Rate Transition3' */
-    for (i = 0; i < 56; i++) {
+    for (i = 0; i < 64; i++) {
       BasicModelTarget_B.RateTransition3[i] =
         BasicModelTarget_P.RateTransition3_X0;
     }

@@ -128,7 +128,7 @@ template<typename T> Point<T> Point<T>::raypointvec(Point<T> x0, Point<T> x1)
 	return *this-(x0+M*t0);
 } 
 
-template<typename T> Point<double> Point<T>::unit() {T m=this->mag(); if(m==0) return *this; return (*this)/m;}
+template<typename T> Point<double> Point<T>::unit() {T m=this->mag(); if(m==0) return *this; return (*this)/m;} //Never return inf
 
 template<typename T> Point<T> Point<T>::rotate(double theta, Point<T> u)
 {
