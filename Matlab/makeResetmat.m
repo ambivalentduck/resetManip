@@ -1,5 +1,5 @@
 function makeResetmat(name)
-name='145';
+name='146';
 
 input=load(['../Data/input',name,'.dat']);
 output=load(['../Data/output',name,'.dat']);
@@ -13,7 +13,7 @@ f=find(input(:,5)>0);
 
 %  xrobot=7.7638*xinput+.0776
 %  yrobot=-7.7640*yinput+3.2283
-% center is right around -0.01, 
+% center is right around -0.01,
 
 for k=1:length(f)
     fk=f(k);
@@ -25,20 +25,24 @@ for k=1:length(f)
     %one=ones(size(trials{k}.pos,1),1);
     %trials{k}.pos=trials{k}.pos-[trials{k}.pos(1,1)*one trials{k}.pos(1,2)*one];
     trials{k}.force=output(fo,[9 10]);
-    trials{k}.requested=output(fo,11);
+    trials{k}.requested=output(fo,12);
     trials{k}.mag=input(fk,2);
     trials{k}.delay=input(fk,5);
     trials{k}.time=output(fo,2);
-    [pkv, pks]=findpeaks(speed,'minpeakheight',.4);
-    ff=find(speed>pkv(1)*.1);
+    try
+        [pkv, pks]=findpeaks(speed,'minpeakheight',.2);
+        ff=find(speed>pkv(1)*.1);
+    catch
+        plot(speed)
+    end
     %trials{k}.time=trials{k}.time-trials{k}.time(pks(1))+.4; %Peak alignment
 
     %Assume that intended reach time is 600 ms, align and scale!
     trials{k}.time=trials{k}.time-trials{k}.time(ff(1));
     trials{k}.time=.6*trials{k}.time/(2*trials{k}.time(pks(1)));
-    
+
     trials{k}.force(trials{k}.time>1)=0; %Nothing relevant happens this far out?
-    
+
     fa=find(categories==categories(fk));
     faa=find(fa==fk);
     trials{k}.prior=output(output(:,1)==fa(faa-1),[3 4]);
