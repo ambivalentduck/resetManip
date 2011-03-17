@@ -205,7 +205,7 @@ void ControlWidget::readPending()
 				userWidget->setBars(times); */
 				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=15; probeDelay=.15; probeOn=-1;}
+				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=15; probeDelay=.03; probeOn=-1;}
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -224,6 +224,7 @@ void ControlWidget::readPending()
 		case VISCOUSITY:
 			if ((delay>=probeDelay)&&(delay<=(probeDelay+VISCOUS_DURATION)))
 			{
+				curl=0;
 				if(probeOn<0) probeOn=delay;
 				pillowMag=VISCOUS_MAG*evalSigmoid(delay-probeOn,.05l); //choose risetime=rise time of motors?
 			}
@@ -233,6 +234,7 @@ void ControlWidget::readPending()
 			{
 				if(probeOn<0)
 				{
+					curl=0;
 					probeOn=delay;
 					point tmou=(target-origin).unit();
 					point cmo=(cursor-origin);

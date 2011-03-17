@@ -1,5 +1,5 @@
 function makeResetinput()
-number=146;
+number=147;
 Stim=1;
 
 fhandle=fopen(['../Data/input',num2str(number),'.dat'],'wt');
@@ -46,17 +46,17 @@ for K=1:length(phases)
                     stim=0;
                 else
                     if s(k)
-                        stim=sign(rand-.5)*(rand*10+10);
+                        stim=sign(rand-.5)*17; % +/- 17
                     else
                         stim=0;
                     end
                 end
         end
         if zero
-            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\n',k2+offset,stim,xtable(dir(k),dist),ytable(dir(k),dist),delay(k));
+            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f2\n',k2+offset,stim,xtable(dir(k),dist),ytable(dir(k),dist),delay(k));
             zero=0;
         else
-            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\n',k2+offset,stim,0,0,-1);
+            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f2\n',k2+offset,stim,0,0,-1);
             zero=1;
         end
     end
@@ -84,7 +84,7 @@ resetsperdirection=15;
 delay=-1*ones(size(direction));
 
 if sporadic
-    delaytimes=0.01:.01:.15;
+    delaytimes=linspace(.02,.05,15);
     rp=randperm(length(delaytimes));
     delaytimes=delaytimes(rp);
     delaytimes=[delaytimes delaytimes delaytimes];
