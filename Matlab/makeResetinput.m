@@ -38,6 +38,7 @@ for K=1:length(phases)
     [dir,s,delay]=shuffleStuff(phases(K)/2, (abs(sporadic(K)) == 1));
     for k2=1:phases(K)
         k=ceil(k2/2);
+        probe=0;
         switch sporadic(K)
             case 0 %Untreated
                 stim=0;
@@ -46,17 +47,18 @@ for K=1:length(phases)
                     stim=0;
                 else
                     if s(k)
-                        stim=sign(rand-.5)*17; % +/- 17
+                        stim=sign(rand-.5)*50; % +/- 17
+                        probe=2;
                     else
                         stim=0;
                     end
                 end
         end
         if zero
-            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f2\n',k2+offset,stim,xtable(dir(k),dist),ytable(dir(k),dist),delay(k));
+            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\t%i\n',k2+offset,stim,xtable(dir(k),dist),ytable(dir(k),dist),delay(k),probe);
             zero=0;
         else
-            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f2\n',k2+offset,stim,0,0,-1);
+            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\t%i\n',k2+offset,stim,0,0,-1,probe);
             zero=1;
         end
     end

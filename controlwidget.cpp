@@ -205,7 +205,7 @@ void ControlWidget::readPending()
 				userWidget->setBars(times); */
 				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=15; probeDelay=.03; probeOn=-1;}
+				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=50; probeDelay=.04; probeOn=-1;}
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -232,9 +232,9 @@ void ControlWidget::readPending()
 		case PULSE:
 			if ((delay>=probeDelay)&&(delay<=(probeDelay+PULSE_DURATION)))
 			{
+				curl=0;
 				if(probeOn<0)
 				{
-					curl=0;
 					probeOn=delay;
 					point tmou=(target-origin).unit();
 					point cmo=(cursor-origin);
@@ -332,7 +332,7 @@ point ControlWidget::loadTrial(int T)
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe));
+		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf\t%d",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe));
 		else
 		{
 			std::cout << "Complete failure to read line: " << line << std::endl; return center;
