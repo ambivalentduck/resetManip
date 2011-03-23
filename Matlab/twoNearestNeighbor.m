@@ -1,18 +1,23 @@
 function out=twoNearestNeighbor(x,t,t0)
 
-%Assumes that x is composed of column vectors.
+%Assumes that x is composed of row vectors.  Ie. Rows are times, columns
+%are variables
 
-time=sort(t-t0);
-found=find(time>0);
-if numel(found)==0
-    out=x(1,:);
-    return
+out=zeros(length(t0),size(x,2));
+
+for k=1:length(t0);
+    time=sort(t-t0(k));
+    found=find(time>0);
+    if numel(found)==0
+        out(k,:)=x(end,:);
+        continue
+    end
+    if found(1)==1
+        out(k,:)=x(1,:);
+        continue
+    elseif found(1)==size(x,1)
+        out(k,:)=x(end,:);
+        continue
+    end
+    out(k,:)=(x(found(1)-1,:)*time(found(1))+x(found(1),:)*-time(found(1)-1))/(time(found(1))-time(found(1)-1));
 end
-if found(1)==1
-    out=x(1,:);
-    return
-elseif found(1)==size(x,1)
-    out=x(end,:);
-    return
-end
-out=(x(found(1)-1,:)*time(found(1))+x(found(1),:)*-time(found(1)-1))/(time(found(1))-time(found(1)-1));

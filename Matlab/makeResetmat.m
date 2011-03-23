@@ -1,5 +1,5 @@
 function makeResetmat(name)
-name='146';
+name='147';
 
 input=load(['../Data/input',name,'.dat']);
 output=load(['../Data/output',name,'.dat']);
