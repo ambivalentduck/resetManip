@@ -47,4 +47,4 @@ for k=1:length(f)
 end
 
 
-save(['../Data/',name,'.mat'],'composite')
+save(['../Data/',name,'normal.mat'],'trials')
