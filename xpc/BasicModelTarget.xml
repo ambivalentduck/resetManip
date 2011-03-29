@@ -1,0 +1,2675 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+	<SubSystem>
+		<Name>
+Calculate Additional Forces from UDP input</Name>
+		<xPCName>BasicModelTarget/ Calculate Additional Forces from UDP input</xPCName>
+		<SubSystem>
+			<Name>Scope (xPC) </Name>
+			<xPCName>BasicModelTarget/ Calculate Additional Forces from UDP input/Scope (xPC) </xPCName>
+		</SubSystem>
+		<SubSystem>
+			<Name>Scope (xPC) 1</Name>
+			<xPCName>BasicModelTarget/ Calculate Additional Forces from UDP input/Scope (xPC) 1</xPCName>
+		</SubSystem>
+		<SubSystem>
+			<Name>Scope (xPC) 2</Name>
+			<xPCName>BasicModelTarget/ Calculate Additional Forces from UDP input/Scope (xPC) 2</xPCName>
+		</SubSystem>
+		<block>
+			<blkName>Gain</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Gain</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Gain</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain1</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Gain1</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Gain1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain2</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Gain2</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Gain2</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain3</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Gain3</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Gain3</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Rate Transition3</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Rate Transition3</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Rate Transition3</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>X0</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>inf to 0
+ makes
+ one-sided</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/inf to 0  makes  one-sided</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/inf to 0  makes  one-sided</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>UpperLimit</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>LowerLimit</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Receive</blkName>
+			<xpcblkName> Calculate Additional Forces from UDP input/Receive</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Calculate Additional Forces from UDP input/Receive</SLblockPath>
+			<isSrc>[1 0 2]</isSrc>
+			<parameter>
+				<paramName>P1</paramName>
+				<dim>[1, 7]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P2</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P3</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P4</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P5</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Fcn3</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Fcn3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Gain</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Gain1</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain2</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Gain2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain3</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Gain3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Divide</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Divide</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product1</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product2</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product3</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product4</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product4</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product5</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product5</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product6</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product6</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product7</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product7</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product8</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product8</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product9</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Product9</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Small viscousity
+perpendicular
+to reach</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Small viscousity perpendicular to reach</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Rate Transition3</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Rate Transition3</xpcsigName>
+			<sigWidth>64</sigWidth>
+			<sigDim>[64, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>inf to 0
+ makes
+ one-sided</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/inf to 0  makes  one-sided</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Receive/p1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Receive/p1</xpcsigName>
+			<sigWidth>64</sigWidth>
+			<sigDim>[64, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Receive/p2</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Receive/p2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p2</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p3</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p4</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p4</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p5</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p5</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p6</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p6</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p7</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p7</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Unpack/p8</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Unpack/p8</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Subtract1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Subtract1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Sum</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum of Forces - X</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Sum of Forces - X</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum of Forces - Y</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Sum of Forces - Y</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Sum1</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum2</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Sum2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum3</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Sum3</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Dot Product</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Dot Product</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Dot Product1</sigName>
+			<xpcsigName> Calculate Additional Forces from UDP input/Dot Product1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>
+Pillow Subsystem]</Name>
+		<xPCName>BasicModelTarget/ Pillow Subsystem]</xPCName>
+		<block>
+			<blkName>Bwall</blkName>
+			<xpcblkName> Pillow Subsystem]/Bwall</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/Bwall</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Kwall</blkName>
+			<xpcblkName> Pillow Subsystem]/Kwall</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/Kwall</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>One</blkName>
+			<xpcblkName> Pillow Subsystem]/One</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/One</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Rect Field</blkName>
+			<xpcblkName> Pillow Subsystem]/Rect Field</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/Rect Field</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>r</blkName>
+			<xpcblkName> Pillow Subsystem]/r</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/r</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>xwm</blkName>
+			<xpcblkName> Pillow Subsystem]/xwm</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/xwm</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>xwp</blkName>
+			<xpcblkName> Pillow Subsystem]/xwp</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/xwp</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>ywm</blkName>
+			<xpcblkName> Pillow Subsystem]/ywm</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/ywm</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>ywp</blkName>
+			<xpcblkName> Pillow Subsystem]/ywp</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/ywp</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain1</blkName>
+			<xpcblkName> Pillow Subsystem]/Gain1</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/Gain1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain2</blkName>
+			<xpcblkName> Pillow Subsystem]/Gain2</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/Gain2</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain3</blkName>
+			<xpcblkName> Pillow Subsystem]/Gain3</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/Gain3</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Saturation1</blkName>
+			<xpcblkName> Pillow Subsystem]/Saturation1</xpcblkName>
+			<SLblockPath>BasicModelTarget/ Pillow Subsystem]/Saturation1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>UpperLimit</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>LowerLimit</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Rect Field</sigName>
+			<xpcsigName> Pillow Subsystem]/Rect Field</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Dot Product</sigName>
+			<xpcsigName> Pillow Subsystem]/Dot Product</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fcn1</sigName>
+			<xpcsigName> Pillow Subsystem]/Fcn1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fcn3</sigName>
+			<xpcsigName> Pillow Subsystem]/Fcn3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fcn4</sigName>
+			<xpcsigName> Pillow Subsystem]/Fcn4</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain1</sigName>
+			<xpcsigName> Pillow Subsystem]/Gain1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain2</sigName>
+			<xpcsigName> Pillow Subsystem]/Gain2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain3</sigName>
+			<xpcsigName> Pillow Subsystem]/Gain3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Divide</sigName>
+			<xpcsigName> Pillow Subsystem]/Divide</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product1</sigName>
+			<xpcsigName> Pillow Subsystem]/Product1</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product2</sigName>
+			<xpcsigName> Pillow Subsystem]/Product2</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product3</sigName>
+			<xpcsigName> Pillow Subsystem]/Product3</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product4</sigName>
+			<xpcsigName> Pillow Subsystem]/Product4</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product5</sigName>
+			<xpcsigName> Pillow Subsystem]/Product5</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product6</sigName>
+			<xpcsigName> Pillow Subsystem]/Product6</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product7</sigName>
+			<xpcsigName> Pillow Subsystem]/Product7</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Product8</sigName>
+			<xpcsigName> Pillow Subsystem]/Product8</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Saturation1</sigName>
+			<xpcsigName> Pillow Subsystem]/Saturation1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Ave X</sigName>
+			<xpcsigName> Pillow Subsystem]/Ave X</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Ave X1</sigName>
+			<xpcsigName> Pillow Subsystem]/Ave X1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Ave X2</sigName>
+			<xpcsigName> Pillow Subsystem]/Ave X2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Ave X3</sigName>
+			<xpcsigName> Pillow Subsystem]/Ave X3</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Ave Y</sigName>
+			<xpcsigName> Pillow Subsystem]/Ave Y</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Radial Vec</sigName>
+			<xpcsigName> Pillow Subsystem]/Radial Vec</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum of Forces - X</sigName>
+			<xpcsigName> Pillow Subsystem]/Sum of Forces - X</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum of Forces - Y</sigName>
+			<xpcsigName> Pillow Subsystem]/Sum of Forces - Y</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Endpoint Forces to Motor Torques</Name>
+		<xPCName>BasicModelTarget/Endpoint Forces to Motor Torques</xPCName>
+		<signal>
+			<sigName>Fxsin(th2)</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)1</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)2</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)3</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Sum</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum1</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Sum1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Filtered 
+Velocity Calculations</Name>
+		<xPCName>BasicModelTarget/Filtered  Velocity Calculations</xPCName>
+		<block>
+			<blkName>Transfer Fcn1</blkName>
+			<xpcblkName>Filtered  Velocity Calculations/Transfer Fcn1</xpcblkName>
+			<SLblockPath>BasicModelTarget/Filtered  Velocity Calculations/Transfer Fcn1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>A</paramName>
+				<dim>[3, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>C</paramName>
+				<dim>[1, 3]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Transfer Fcn2</blkName>
+			<xpcblkName>Filtered  Velocity Calculations/Transfer Fcn2</xpcblkName>
+			<SLblockPath>BasicModelTarget/Filtered  Velocity Calculations/Transfer Fcn2</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>A</paramName>
+				<dim>[3, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>C</paramName>
+				<dim>[1, 3]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Transfer Fcn8</blkName>
+			<xpcblkName>Filtered  Velocity Calculations/Transfer Fcn8</xpcblkName>
+			<SLblockPath>BasicModelTarget/Filtered  Velocity Calculations/Transfer Fcn8</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>A</paramName>
+				<dim>[3, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>C</paramName>
+				<dim>[1, 3]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Transfer Fcn9</blkName>
+			<xpcblkName>Filtered  Velocity Calculations/Transfer Fcn9</xpcblkName>
+			<SLblockPath>BasicModelTarget/Filtered  Velocity Calculations/Transfer Fcn9</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>A</paramName>
+				<dim>[3, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>C</paramName>
+				<dim>[1, 3]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Derivative1</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative2</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative3</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative4</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative4</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative5</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative5</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative6</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative6</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative7</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative7</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative8</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative8</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Transfer Fcn1</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Transfer Fcn1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Transfer Fcn2</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Transfer Fcn2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Transfer Fcn8</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Transfer Fcn8</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Transfer Fcn9</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Transfer Fcn9</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Manipulandum 
+Dynamic Compensation:
+will function poorly with unfiltered inputs</Name>
+		<xPCName>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs</xPCName>
+		<SubSystem>
+			<Name>2x2Make</Name>
+			<xPCName>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make</xPCName>
+			<block>
+				<blkName>Gain</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain1</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain2</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain2</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain2</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain3</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain3</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain3</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Gain</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain1</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain1</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain2</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain2</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain3</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain3</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Add</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Add</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>2x2Make1</Name>
+			<xPCName>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1</xPCName>
+			<block>
+				<blkName>Gain</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain1</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain2</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain2</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain2</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain3</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain3</xpcblkName>
+				<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain3</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Gain</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain1</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain1</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain2</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain2</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain3</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain3</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Add</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Add</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+		</SubSystem>
+		<block>
+			<blkName>A</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/A</xpcblkName>
+			<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/A</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>B</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/B</xpcblkName>
+			<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/B</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>C </blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C </xpcblkName>
+			<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C </SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>C 1</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 1</xpcblkName>
+			<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 1</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>C 2</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 2</xpcblkName>
+			<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 2</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Gain</xpcblkName>
+			<SLblockPath>BasicModelTarget/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Gain</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>squared</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/squared</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>squared1</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/squared1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>th1-th2-pi</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/th1-th2-pi</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>th1-th2-pi1</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/th1-th2-pi1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Gain</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Matrix Multiply</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Matrix Multiply</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Matrix Multiply1</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Matrix Multiply1</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Sum</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Subsystem</Name>
+		<xPCName>BasicModelTarget/Subsystem</xPCName>
+		<SubSystem>
+			<Name>Elbow Angle</Name>
+			<xPCName>BasicModelTarget/Subsystem/Elbow Angle</xPCName>
+			<SubSystem>
+				<Name>Parity</Name>
+				<xPCName>BasicModelTarget/Subsystem/Elbow Angle/Parity</xPCName>
+				<block>
+					<blkName>Constant</blkName>
+					<xpcblkName>Subsystem/Elbow Angle/Parity/Constant</xpcblkName>
+					<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Parity/Constant</SLblockPath>
+					<isSrc>[1 0 1]</isSrc>
+					<parameter>
+						<paramName>Value</paramName>
+						<dim>[1, 1]</dim>
+					</parameter>
+				</block>
+				<signal>
+					<sigName>Math
+Function</sigName>
+					<xpcsigName>Subsystem/Elbow Angle/Parity/Math Function</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+				<signal>
+					<sigName>Sum</sigName>
+					<xpcsigName>Subsystem/Elbow Angle/Parity/Sum</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+			</SubSystem>
+			<block>
+				<blkName>(ALPHA)</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/(ALPHA)</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/(ALPHA)</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits//Radian
+(TRIG_SCALE)</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bits//Radian (TRIG_SCALE)</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Bits//Radian (TRIG_SCALE)</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Const</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Const</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Const</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Constant2</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Constant2</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Constant2</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 17]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Constant3</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Constant3</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Constant3</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Offset Elbow
+(OFFSETEL)
+</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Offset Elbow (OFFSETEL) </xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Offset Elbow (OFFSETEL) </SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Pulse
+Generator1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Pulse Generator1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Pulse Generator1</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Amplitude</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>Period</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PulseWidth</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PhaseDelay</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bit1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bit1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Bit1</SLblockPath>
+				<isSrc>[1 0 2]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits1-8
+1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bits1-8 1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Bits1-8 1</SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits9-1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bits9-1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Bits9-1</SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>PCI-DIO-96 1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/PCI-DIO-96 1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/PCI-DIO-96 1</SLblockPath>
+				<isSrc>[0 2 0]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P9</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P10</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Unit Delay</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Unit Delay</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Elbow Angle/Unit Delay</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>X0</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Pulse
+Generator1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Pulse Generator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Encoder Radians</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Encoder Radians</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Offset in Radians</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Offset in Radians</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit1/p1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bit1/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit1/p2</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bit1/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p2</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p3</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p4</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p5</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p6</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p7</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p8</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p2</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p3</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p4</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p5</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p6</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p7</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p8</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Sum</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Unit Delay</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Unit Delay</xpcsigName>
+				<sigWidth>17</sigWidth>
+				<sigDim>[17, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Encoder Decimal</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Encoder Decimal</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Jacobian-Cartesian Transformation</Name>
+			<xPCName>BasicModelTarget/Subsystem/Jacobian-Cartesian Transformation</xPCName>
+			<signal>
+				<sigName>J00</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J00</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>J01</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J01</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>J10</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J10</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>J11</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J11</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/Sum</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum1</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/Sum1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Shoulder Angle</Name>
+			<xPCName>BasicModelTarget/Subsystem/Shoulder Angle</xPCName>
+			<SubSystem>
+				<Name>Parity</Name>
+				<xPCName>BasicModelTarget/Subsystem/Shoulder Angle/Parity</xPCName>
+				<block>
+					<blkName>Constant</blkName>
+					<xpcblkName>Subsystem/Shoulder Angle/Parity/Constant</xpcblkName>
+					<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Parity/Constant</SLblockPath>
+					<isSrc>[1 0 1]</isSrc>
+					<parameter>
+						<paramName>Value</paramName>
+						<dim>[1, 1]</dim>
+					</parameter>
+				</block>
+				<signal>
+					<sigName>Math
+Function</sigName>
+					<xpcsigName>Subsystem/Shoulder Angle/Parity/Math Function</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+				<signal>
+					<sigName>Sum</sigName>
+					<xpcsigName>Subsystem/Shoulder Angle/Parity/Sum</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+			</SubSystem>
+			<block>
+				<blkName>Bits//Radian
+(TRIG_SCALE)</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bits//Radian (TRIG_SCALE)</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Bits//Radian (TRIG_SCALE)</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Constant1</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Constant1</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Constant1</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Offset Shoulder
+(OFFSETSH)
+</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Offset Shoulder (OFFSETSH) </xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Offset Shoulder (OFFSETSH) </SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Vector 2^17</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Vector 2^17</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Vector 2^17</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 17]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Pulse
+Generator</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Pulse Generator</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Pulse Generator</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Amplitude</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>Period</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PulseWidth</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PhaseDelay</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bit17</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bit17</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Bit17</SLblockPath>
+				<isSrc>[1 0 2]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits1-8
+</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bits1-8 </xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Bits1-8 </SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits9-16</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bits9-16</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Bits9-16</SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Int &amp; OE</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Int &amp; OE</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Int &amp; OE</SLblockPath>
+				<isSrc>[0 2 0]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P9</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P10</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Unit Delay</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Unit Delay</xpcblkName>
+				<SLblockPath>BasicModelTarget/Subsystem/Shoulder Angle/Unit Delay</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>X0</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Pulse
+Generator</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Pulse Generator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Offset in Radians</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Offset in Radians</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Product1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Product1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit17/p1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bit17/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit17/p2</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bit17/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p2</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p3</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p4</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p5</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p6</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p7</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p8</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p2</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p3</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p4</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p5</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p6</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p7</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p8</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Sum</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Unit Delay</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Unit Delay</xpcsigName>
+				<sigWidth>17</sigWidth>
+				<sigDim>[17, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Dot Product</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Dot Product</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<block>
+			<blkName>Xy</blkName>
+			<xpcblkName>Subsystem/Xy</xpcblkName>
+			<SLblockPath>BasicModelTarget/Subsystem/Xy</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Xy2</blkName>
+			<xpcblkName>Subsystem/Xy2</xpcblkName>
+			<SLblockPath>BasicModelTarget/Subsystem/Xy2</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>f</blkName>
+			<xpcblkName>Subsystem/f</xpcblkName>
+			<SLblockPath>BasicModelTarget/Subsystem/f</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>f1</blkName>
+			<xpcblkName>Subsystem/f1</xpcblkName>
+			<SLblockPath>BasicModelTarget/Subsystem/f1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Rate Transition</blkName>
+			<xpcblkName>Subsystem/Rate Transition</xpcblkName>
+			<SLblockPath>BasicModelTarget/Subsystem/Rate Transition</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>X0</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Rate Transition1</blkName>
+			<xpcblkName>Subsystem/Rate Transition1</xpcblkName>
+			<SLblockPath>BasicModelTarget/Subsystem/Rate Transition1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>X0</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>PCI-6031E AD</blkName>
+			<xpcblkName>Subsystem/PCI-6031E AD</xpcblkName>
+			<SLblockPath>BasicModelTarget/Subsystem/PCI-6031E AD</SLblockPath>
+			<isSrc>[1 0 6]</isSrc>
+			<parameter>
+				<paramName>P1</paramName>
+				<dim>[1, 6]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P2</paramName>
+				<dim>[1, 6]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P3</paramName>
+				<dim>[1, 6]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P4</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P5</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P6</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>cos_th1</sigName>
+			<xpcsigName>Subsystem/cos_th1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>sin_th2</sigName>
+			<xpcsigName>Subsystem/sin_th2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Xy</sigName>
+			<xpcsigName>Subsystem/Xy</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Xy2</sigName>
+			<xpcsigName>Subsystem/Xy2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>f</sigName>
+			<xpcsigName>Subsystem/f</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>f1</sigName>
+			<xpcsigName>Subsystem/f1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxcos(th2)</sigName>
+			<xpcsigName>Subsystem/Fxcos(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)</sigName>
+			<xpcsigName>Subsystem/Fxsin(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fycos(th2)</sigName>
+			<xpcsigName>Subsystem/Fycos(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fysin(th2)</sigName>
+			<xpcsigName>Subsystem/Fysin(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Rate Transition</sigName>
+			<xpcsigName>Subsystem/Rate Transition</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Rate Transition1</sigName>
+			<xpcsigName>Subsystem/Rate Transition1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p1</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p2</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p3</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p4</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p4</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p5</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p5</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p6</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p6</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum</sigName>
+			<xpcsigName>Subsystem/Sum</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum1</sigName>
+			<xpcsigName>Subsystem/Sum1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>X Direction 
+Virtual DOF + Endpoint Force Calculation
+</Name>
+		<xPCName>BasicModelTarget/X Direction  Virtual DOF + Endpoint Force Calculation </xPCName>
+		<block>
+			<blkName>Integrator</blkName>
+			<xpcblkName>X Direction  Virtual DOF + Endpoint Force Calculation /Integrator</xpcblkName>
+			<SLblockPath>BasicModelTarget/X Direction  Virtual DOF + Endpoint Force Calculation /Integrator</SLblockPath>
+			<isSrc>[0 2 1]</isSrc>
+			<parameter>
+				<paramName>InitialCondition</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Function1: just direct transmissiion for now</sigName>
+			<xpcsigName>X Direction  Virtual DOF + Endpoint Force Calculation /Function1: just direct transmissiion for now</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Function2: Can be a function of states and parameters</sigName>
+			<xpcsigName>X Direction  Virtual DOF + Endpoint Force Calculation /Function2: Can be a function of states and parameters</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Integrator</sigName>
+			<xpcsigName>X Direction  Virtual DOF + Endpoint Force Calculation /Integrator</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Y Direction 
+Virtual DOF + Endpoint Force Calculation</Name>
+		<xPCName>BasicModelTarget/Y Direction  Virtual DOF + Endpoint Force Calculation</xPCName>
+		<block>
+			<blkName>Integrator</blkName>
+			<xpcblkName>Y Direction  Virtual DOF + Endpoint Force Calculation/Integrator</xpcblkName>
+			<SLblockPath>BasicModelTarget/Y Direction  Virtual DOF + Endpoint Force Calculation/Integrator</SLblockPath>
+			<isSrc>[0 2 1]</isSrc>
+			<parameter>
+				<paramName>InitialCondition</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Function1: just direct transmissiion for now</sigName>
+			<xpcsigName>Y Direction  Virtual DOF + Endpoint Force Calculation/Function1: just direct transmissiion for now</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Function2: Can be a function of states and parameters</sigName>
+			<xpcsigName>Y Direction  Virtual DOF + Endpoint Force Calculation/Function2: Can be a function of states and parameters</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Integrator</sigName>
+			<xpcsigName>Y Direction  Virtual DOF + Endpoint Force Calculation/Integrator</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<block>
+		<blkName>FilterCutoffFreq</blkName>
+		<xpcblkName>FilterCutoffFreq</xpcblkName>
+		<SLblockPath>BasicModelTarget/FilterCutoffFreq</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>FilterZeta</blkName>
+		<xpcblkName>FilterZeta</xpcblkName>
+		<SLblockPath>BasicModelTarget/FilterZeta</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Input Param</blkName>
+		<xpcblkName>Input Param</xpcblkName>
+		<SLblockPath>BasicModelTarget/Input Param</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Input Param1</blkName>
+		<xpcblkName>Input Param1</xpcblkName>
+		<SLblockPath>BasicModelTarget/Input Param1</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Input Param2</blkName>
+		<xpcblkName>Input Param2</xpcblkName>
+		<SLblockPath>BasicModelTarget/Input Param2</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Input Param3</blkName>
+		<xpcblkName>Input Param3</xpcblkName>
+		<SLblockPath>BasicModelTarget/Input Param3</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>InputParam3</blkName>
+		<xpcblkName>InputParam3</xpcblkName>
+		<SLblockPath>BasicModelTarget/InputParam3</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>RESET</blkName>
+		<xpcblkName>RESET</xpcblkName>
+		<SLblockPath>BasicModelTarget/RESET</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>E Gain</blkName>
+		<xpcblkName>E Gain</xpcblkName>
+		<SLblockPath>BasicModelTarget/E Gain</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain</blkName>
+		<xpcblkName>S Gain</xpcblkName>
+		<SLblockPath>BasicModelTarget/S Gain</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain3</blkName>
+		<xpcblkName>S Gain3</xpcblkName>
+		<SLblockPath>BasicModelTarget/S Gain3</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain4</blkName>
+		<xpcblkName>S Gain4</xpcblkName>
+		<SLblockPath>BasicModelTarget/S Gain4</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Rate Transition1</blkName>
+		<xpcblkName>Rate Transition1</xpcblkName>
+		<SLblockPath>BasicModelTarget/Rate Transition1</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>X0</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Rate Transition2</blkName>
+		<xpcblkName>Rate Transition2</xpcblkName>
+		<SLblockPath>BasicModelTarget/Rate Transition2</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>X0</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Saturation</blkName>
+		<xpcblkName>Saturation</xpcblkName>
+		<SLblockPath>BasicModelTarget/Saturation</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>UpperLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>LowerLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Saturation1</blkName>
+		<xpcblkName>Saturation1</xpcblkName>
+		<SLblockPath>BasicModelTarget/Saturation1</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>UpperLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>LowerLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Saturation2</blkName>
+		<xpcblkName>Saturation2</xpcblkName>
+		<SLblockPath>BasicModelTarget/Saturation2</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>UpperLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>LowerLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>PCI-6031E DA</blkName>
+		<xpcblkName>PCI-6031E DA</xpcblkName>
+		<SLblockPath>BasicModelTarget/PCI-6031E DA</SLblockPath>
+		<isSrc>[0 2 0]</isSrc>
+		<parameter>
+			<paramName>P1</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P2</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P3</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P4</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P5</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P6</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P7</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Send</blkName>
+		<xpcblkName>Send</xpcblkName>
+		<SLblockPath>BasicModelTarget/Send</SLblockPath>
+		<isSrc>[0 1 0]</isSrc>
+		<parameter>
+			<paramName>P1</paramName>
+			<dim>[1, 11]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P2</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P3</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P4</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P5</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<signal>
+		<sigName>Clock</sigName>
+		<xpcsigName>Clock</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>FilterCutoffFreq</sigName>
+		<xpcsigName>FilterCutoffFreq</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>FilterZeta</sigName>
+		<xpcsigName>FilterZeta</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Input Param</sigName>
+		<xpcsigName>Input Param</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Input Param1</sigName>
+		<xpcsigName>Input Param1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Input Param2</sigName>
+		<xpcsigName>Input Param2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Input Param3</sigName>
+		<xpcsigName>Input Param3</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>InputParam3</sigName>
+		<xpcsigName>InputParam3</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>RESET</sigName>
+		<xpcsigName>RESET</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>E Gain</sigName>
+		<xpcsigName>E Gain</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain</sigName>
+		<xpcsigName>S Gain</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain3</sigName>
+		<xpcsigName>S Gain3</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain4</sigName>
+		<xpcsigName>S Gain4</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Divide</sigName>
+		<xpcsigName>Divide</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Product</sigName>
+		<xpcsigName>Product</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Product1</sigName>
+		<xpcsigName>Product1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Product2</sigName>
+		<xpcsigName>Product2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Product3</sigName>
+		<xpcsigName>Product3</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Rate Transition</sigName>
+		<xpcsigName>Rate Transition</xpcsigName>
+		<sigWidth>72</sigWidth>
+		<sigDim>[72, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Rate Transition1</sigName>
+		<xpcsigName>Rate Transition1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Rate Transition2</sigName>
+		<xpcsigName>Rate Transition2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Saturation</sigName>
+		<xpcsigName>Saturation</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Saturation1</sigName>
+		<xpcsigName>Saturation1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Saturation2</sigName>
+		<xpcsigName>Saturation2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Pack1</sigName>
+		<xpcsigName>Pack1</xpcsigName>
+		<sigWidth>72</sigWidth>
+		<sigDim>[72, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Sum</sigName>
+		<xpcsigName>Sum</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Sum1</sigName>
+		<xpcsigName>Sum1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Sum2</sigName>
+		<xpcsigName>Sum2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Zero-Order
+Hold</sigName>
+		<xpcsigName>Zero-Order Hold</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Zero-Order
+Hold1</sigName>
+		<xpcsigName>Zero-Order Hold1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+</Root>

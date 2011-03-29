@@ -10,25 +10,28 @@
 #define CURLVAL -20
 #define SADDLEVAL 10
 #define TIME_OFFSET .25l
-#define KICKMAG 10
-#define KICKDURATION .01
+#define VISCOUS_MAG 150
+#define VISCOUS_DURATION .8
+#define PULSE_DURATION .3
+#define PULSE_MAG 10
 
 ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->primaryScreen()))
 {
 	//Take care of window and input initialization.
 	setFocus(); //Foreground window that gets all X input
 	
-	center=point(-0.019,0.53); //Known from direct observation, do not change
+	center=point((LEFT+RIGHT)/2l,(TOP+BOTTOM)/2l); //Known from direct observation, do not change
 	cursor=center;
 	origin=center;
+	//state=acquireTarget;
 	
-	min=.288; //Screen diameter (shortest dimension) known from direct observation, do not change
+	min=(fabs(LEFT-RIGHT)>fabs(TOP-BOTTOM)?fabs(TOP-BOTTOM):fabs(LEFT-RIGHT)); //Screen diameter (shortest dimension) known from direct observation, do not change
 	target=point(5,5);
 	
 	//Snag a UDP Socket and call a function (readPending) every time there's a new packet.
 	ignoreInput=true;
 	us=new QUdpSocket(this);
-	us->bind(QHostAddress("192.168.0.1"),25000,QUdpSocket::DontShareAddress); //Bind the IP and socket you expect packets to be received from XPC on.
+	us->bind(QHostAddress("192.168.1.1"),25000,QUdpSocket::DontShareAddress); //Bind the IP and socket you expect packets to be received from XPC on.
 	connect(us, SIGNAL(readyRead()),this, SLOT(readPending()));
 	
 	//Develop GUI window
@@ -105,9 +108,11 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	saddle=0;
 	trial=0;
 	subject=0;
-	kickDelay=1000;
-	kickMag=0;
+	probeDelay=9999999; //Several months ~ infinity without the messiness of picking the numerical limit
+	pillowMag=0;
 	ExperimentRunning=false;
+	commandforce=point(0,0);
+	probeOn=-1;
 }
 
 void ControlWidget::readPending()
@@ -141,8 +146,10 @@ void ControlWidget::readPending()
 		out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 		out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-		out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
-		us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.0.2"),25000);
+		out.append(reinterpret_cast<char*>(&pillowMag),sizeof(double));
+		out.append(reinterpret_cast<char*>(&commandforce.X()),sizeof(double));
+		out.append(reinterpret_cast<char*>(&commandforce.Y()),sizeof(double));
+		us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 		return;
 	}
 	
@@ -152,6 +159,8 @@ void ControlWidget::readPending()
 	velocity.Y()=*reinterpret_cast<double*>(in.data()+4*sizeof(double));
 	accel.X()=*reinterpret_cast<double*>(in.data()+5*sizeof(double));
 	accel.Y()=*reinterpret_cast<double*>(in.data()+6*sizeof(double));
+	force.X()=*reinterpret_cast<double*>(in.data()+7*sizeof(double));
+	force.Y()=*reinterpret_cast<double*>(in.data()+8*sizeof(double));
 	
 	if (!leftOrigin) trialStart=now;
 	if(!leftOrigin) if (cursor.dist(origin)>(oRadius+cRadius)) leftOrigin=true;
@@ -181,10 +190,10 @@ void ControlWidget::readPending()
 	switch(state)
 	{
 	case acquireTarget:
-		if (sphere.position.dist(target)<(tRadius+cRadius)) {state=inTarget; targetAcquired=now;}
+		if (cursor.dist(target)<(tRadius+cRadius)) {state=inTarget; targetAcquired=now;}
 		break;
 	case inTarget:
-		if (sphere.position.dist(target)<(tRadius+cRadius))
+		if (cursor.dist(target)<(tRadius+cRadius))
 		{
 			if((now-targetAcquired)>=targetDuration)
 			{
@@ -194,10 +203,9 @@ void ControlWidget::readPending()
 				times.push_front(movetime+TIME_OFFSET);
 				while (times.size()>5) times.erase(times.end());
 				userWidget->setBars(times); */
-				
+				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else target=(target==point(0,0)?point(0,2*min/3)+center:point(0,0)+center);
-				origin=sphere.position;
+				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=50; probeDelay=.04; probeOn=-1;}
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -207,36 +215,51 @@ void ControlWidget::readPending()
 	}
 	
 	double delay=now-trialStart;
-	kickMag=((delay>=kickDelay)&&(delay<=(kickDelay+KICKDURATION)))?KICKMAG:0;
-	
-	//out = {most recent timestamp, curl mag, saddle mag, target x, target y (both in robot coordinates), and kickmag}
+	pillowMag=0;
+	commandforce=point(0,0);
+	switch(probe)
+	{
+		case NONE:
+			break;
+		case VISCOUSITY:
+			if ((delay>=probeDelay)&&(delay<=(probeDelay+VISCOUS_DURATION)))
+			{
+				curl=0;
+				if(probeOn<0) probeOn=delay;
+				pillowMag=VISCOUS_MAG*evalSigmoid(delay-probeOn,.05l); //choose risetime=rise time of motors?
+			}
+			break;
+		case PULSE:
+			if ((delay>=probeDelay)&&(delay<=(probeDelay+PULSE_DURATION)))
+			{
+				curl=0;
+				if(probeOn<0)
+				{
+					probeOn=delay;
+					point tmou=(target-origin).unit();
+					point cmo=(cursor-origin);
+					unitcommandforce=((tmou*tmou.dot(cmo))+origin-cursor).unit();
+					std::cout<< unitcommandforce.X() TAB unitcommandforce.Y() << std::endl;
+				}
+				commandforce=unitcommandforce*PULSE_MAG; //*evalSigmoid(delay-probeOn,.01l); //choose risetime < rise time of motors?
+			}
+			break;
+	}
+		
+	//out = {most recent timestamp, curl mag, saddle mag, target x, target y (both in robot coordinates), and pillowvec}
 	
 	out=QByteArray(in.data(),sizeof(double));//Copy the timestamp from the input
-	switch(stimulus)
-	{
-	case UNSTIMULATED:
-		curl=0;
-		saddle=0;
-		break;
-	case CURL:
-		curl=CURLVAL;
-		saddle=0;
-		break;
-	case SADDLE:
-		curl=0;
-		saddle=SADDLEVAL;
-		break;
-		
-	}
 	out.append(reinterpret_cast<char*>(&curl),sizeof(double));
 	out.append(reinterpret_cast<char*>(&saddle),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.X()),sizeof(double));
 	out.append(reinterpret_cast<char*>(&target.Y()),sizeof(double));
-	out.append(reinterpret_cast<char*>(&kickMag),sizeof(double));
+	out.append(reinterpret_cast<char*>(&pillowMag),sizeof(double));
+	out.append(reinterpret_cast<char*>(&commandforce.X()),sizeof(double));
+	out.append(reinterpret_cast<char*>(&commandforce.Y()),sizeof(double));
 	//This will require additional appends for other stimuli
-	us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.0.2"),25000);
+	us->writeDatagram(out.data(),out.size(),QHostAddress("192.168.1.2"),25000);
 	
-	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB kickMag << endl;
+	outStream << trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB pillowMag TAB commandforce.X() TAB commandforce.Y() << endl;
 }
 
 void ControlWidget::startClicked()
@@ -295,28 +318,33 @@ void ControlWidget::closeEvent(QCloseEvent *event)
 
 point ControlWidget::loadTrial(int T)
 {
+	probeOn=-1;
 	trial=T;
 	if(trialFile.atEnd()) emit(endApp());
 	
 	char line[200];
 	std::string qline;
-	int temptrial,tempstim;
-	double tempx, tempy;
+	int temptrial;
+	unsigned int tempprobe;
+	double tempx, tempy,tempstim;
 	std::cout << "Loading Trial " << T << std::endl;
 	do
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%d\t%lf\t%lf\t%lf",&temptrial,&tempstim,&tempx,&tempy,&kickDelay));
+		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf\t%d",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe));
 		else
 		{
 			std::cout << "Complete failure to read line: " << line << std::endl; return center;
 		}
 	} while ((temptrial < T)&&(!trialFile.atEnd()));
 	
-	stimulus=stimuli(tempstim);
+	if (fabs(tempstim)>.5) {stimulus=stimuli(1); stimulusBox->setCurrentIndex(1);}
+	else {stimulus=stimuli(0); stimulusBox->setCurrentIndex(0);}
+	curl=tempstim;
+	probe=ProbeType(tempprobe);
 	trialNumBox->setValue(T);
-	stimulusBox->setCurrentIndex(tempstim);
+	
 	std::cout << "Finished Loading Trial " << temptrial << std::endl;
 	double min23=.45*min;	
 	return point(tempx,-tempy)*min23+center-point(0,min*.01);

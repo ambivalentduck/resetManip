@@ -1,5 +1,5 @@
 function makeResetinput()
-number=144;
+number=147;
 Stim=1;
 
 fhandle=fopen(['../Data/input',num2str(number),'.dat'],'wt');
@@ -15,8 +15,8 @@ sd=sin(directions);
 cd2=cd/2;
 sd2=sd/2;
 
-xtable=[cd2',cd'];
-ytable=[sd2',sd'];
+xtable=.9*[cd2',cd'];
+ytable=.9*[sd2',sd'];
 %use via xtable(direction, distance), directions 1-3 and distance (.5 or 1)
 %as (1 or 2)
 
@@ -38,6 +38,7 @@ for K=1:length(phases)
     [dir,s,delay]=shuffleStuff(phases(K)/2, (abs(sporadic(K)) == 1));
     for k2=1:phases(K)
         k=ceil(k2/2);
+        probe=0;
         switch sporadic(K)
             case 0 %Untreated
                 stim=0;
@@ -46,17 +47,18 @@ for K=1:length(phases)
                     stim=0;
                 else
                     if s(k)
-                        stim=sign(rand-.5)*(rand*10+10);
+                        stim=sign(rand-.5)*50; % +/- 17
+                        probe=2;
                     else
                         stim=0;
                     end
                 end
         end
         if zero
-            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\n',k2+offset,stim,xtable(dir(k),dist),ytable(dir(k),dist),delay(k));
+            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\t%i\n',k2+offset,stim,xtable(dir(k),dist),ytable(dir(k),dist),delay(k),probe);
             zero=0;
         else
-            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\n',k2+offset,stim,0,0,-1);
+            fprintf(fhandle, '%i\t%i\t%3.3f\t%3.3f\t%3.3f\t%i\n',k2+offset,stim,0,0,-1,probe);
             zero=1;
         end
     end
@@ -84,7 +86,7 @@ resetsperdirection=15;
 delay=-1*ones(size(direction));
 
 if sporadic
-    delaytimes=0:.01:.14;
+    delaytimes=linspace(.02,.05,15);
     rp=randperm(length(delaytimes));
     delaytimes=delaytimes(rp);
     delaytimes=[delaytimes delaytimes delaytimes];

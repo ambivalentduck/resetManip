@@ -1,0 +1,2331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+	<SubSystem>
+		<Name>Endpoint Forces to Motor Torques</Name>
+		<xPCName>modelinference_target/Endpoint Forces to Motor Torques</xPCName>
+		<signal>
+			<sigName>Fxsin(th2)</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)1</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)2</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)3</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Fxsin(th2)3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Sum</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum1</sigName>
+			<xpcsigName>Endpoint Forces to Motor Torques/Sum1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Filtered 
+Velocity Calculations</Name>
+		<xPCName>modelinference_target/Filtered  Velocity Calculations</xPCName>
+		<SubSystem>
+			<Name>Filter</Name>
+			<xPCName>modelinference_target/Filtered  Velocity Calculations/Filter</xPCName>
+			<block>
+				<blkName>Integrator</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter/Integrator</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter/Integrator</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Integrator1</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter/Integrator1</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter/Integrator1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Fcn</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter/Fcn</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter/Integrator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator1</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter/Integrator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Filter1</Name>
+			<xPCName>modelinference_target/Filtered  Velocity Calculations/Filter1</xPCName>
+			<block>
+				<blkName>Integrator</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter1/Integrator</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter1/Integrator</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Integrator1</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter1/Integrator1</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter1/Integrator1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Fcn</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter1/Fcn</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter1/Integrator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator1</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter1/Integrator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Filter2</Name>
+			<xPCName>modelinference_target/Filtered  Velocity Calculations/Filter2</xPCName>
+			<block>
+				<blkName>Integrator</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter2/Integrator</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter2/Integrator</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Integrator1</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter2/Integrator1</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter2/Integrator1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Fcn</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter2/Fcn</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter2/Integrator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator1</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter2/Integrator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Filter3</Name>
+			<xPCName>modelinference_target/Filtered  Velocity Calculations/Filter3</xPCName>
+			<block>
+				<blkName>Integrator</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter3/Integrator</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter3/Integrator</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Integrator1</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter3/Integrator1</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter3/Integrator1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Fcn</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter3/Fcn</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter3/Integrator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator1</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter3/Integrator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Filter4</Name>
+			<xPCName>modelinference_target/Filtered  Velocity Calculations/Filter4</xPCName>
+			<block>
+				<blkName>Integrator</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter4/Integrator</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter4/Integrator</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Integrator1</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter4/Integrator1</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter4/Integrator1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Fcn</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter4/Fcn</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter4/Integrator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator1</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter4/Integrator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Filter5</Name>
+			<xPCName>modelinference_target/Filtered  Velocity Calculations/Filter5</xPCName>
+			<block>
+				<blkName>Integrator</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter5/Integrator</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter5/Integrator</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Integrator1</blkName>
+				<xpcblkName>Filtered  Velocity Calculations/Filter5/Integrator1</xpcblkName>
+				<SLblockPath>modelinference_target/Filtered  Velocity Calculations/Filter5/Integrator1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>InitialCondition</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Fcn</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter5/Fcn</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter5/Integrator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Integrator1</sigName>
+				<xpcsigName>Filtered  Velocity Calculations/Filter5/Integrator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<signal>
+			<sigName>Derivative</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative1</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative2</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative3</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative4</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative4</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Derivative5</sigName>
+			<xpcsigName>Filtered  Velocity Calculations/Derivative5</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Manipulandum 
+Dynamic Compensation:
+will function poorly with unfiltered inputs</Name>
+		<xPCName>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs</xPCName>
+		<SubSystem>
+			<Name>2x2Make</Name>
+			<xPCName>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make</xPCName>
+			<block>
+				<blkName>Gain</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain1</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain1</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain2</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain2</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain2</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain3</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain3</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain3</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Gain</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain1</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain1</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain2</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain2</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain3</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Gain3</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Add</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make/Add</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>2x2Make1</Name>
+			<xPCName>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1</xPCName>
+			<block>
+				<blkName>Gain</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain1</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain1</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain2</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain2</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain2</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Gain3</blkName>
+				<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain3</xpcblkName>
+				<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain3</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>Gain</paramName>
+					<dim>[2, 2]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Gain</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain1</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain1</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain2</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain2</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Gain3</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Gain3</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Add</sigName>
+				<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/2x2Make1/Add</xpcsigName>
+				<sigWidth>4</sigWidth>
+				<sigDim>[2, 2]</sigDim>
+			</signal>
+		</SubSystem>
+		<block>
+			<blkName>A</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/A</xpcblkName>
+			<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/A</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>B</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/B</xpcblkName>
+			<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/B</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>C </blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C </xpcblkName>
+			<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C </SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>C 1</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 1</xpcblkName>
+			<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 1</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>C 2</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 2</xpcblkName>
+			<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/C 2</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Gain</blkName>
+			<xpcblkName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Gain</xpcblkName>
+			<SLblockPath>modelinference_target/Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Gain</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>squared</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/squared</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>squared1</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/squared1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>th1-th2-pi</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/th1-th2-pi</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>th1-th2-pi1</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/th1-th2-pi1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Gain</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Gain</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Matrix Multiply</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Matrix Multiply</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Matrix Multiply1</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Matrix Multiply1</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum</sigName>
+			<xpcsigName>Manipulandum  Dynamic Compensation: will function poorly with unfiltered inputs/Sum</xpcsigName>
+			<sigWidth>2</sigWidth>
+			<sigDim>[2, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Pulse Module</Name>
+		<xPCName>modelinference_target/Pulse Module</xPCName>
+		<SubSystem>
+			<Name>Detect
+Increase</Name>
+			<xPCName>modelinference_target/Pulse Module/Detect Increase</xPCName>
+			<block>
+				<blkName>Delay Input1</blkName>
+				<xpcblkName>Pulse Module/Detect Increase/Delay Input1</xpcblkName>
+				<SLblockPath>modelinference_target/Pulse Module/Detect Increase/Delay Input1</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>X0</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>FixPt
+Relational
+Operator</sigName>
+				<xpcsigName>Pulse Module/Detect Increase/FixPt Relational Operator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Delay Input1</sigName>
+				<xpcsigName>Pulse Module/Detect Increase/Delay Input1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+				<sigLabel>U(k-1)</sigLabel>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Enabled
+Subsystem</Name>
+			<xPCName>modelinference_target/Pulse Module/Enabled Subsystem</xPCName>
+		</SubSystem>
+		<block>
+			<blkName>Data Store
+Memory1</blkName>
+			<xpcblkName>Pulse Module/Data Store Memory1</xpcblkName>
+			<SLblockPath>modelinference_target/Pulse Module/Data Store Memory1</SLblockPath>
+			<isSrc>[0 0 0]</isSrc>
+			<parameter>
+				<paramName>InitialValue</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Input Param</blkName>
+			<xpcblkName>Pulse Module/Input Param</xpcblkName>
+			<SLblockPath>modelinference_target/Pulse Module/Input Param</SLblockPath>
+			<isSrc>[1 0 1]</isSrc>
+			<parameter>
+				<paramName>Value</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Input Param</sigName>
+			<xpcsigName>Pulse Module/Input Param</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Data Store
+Read1</sigName>
+			<xpcsigName>Pulse Module/Data Store Read1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fcn</sigName>
+			<xpcsigName>Pulse Module/Fcn</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fcn1</sigName>
+			<xpcsigName>Pulse Module/Fcn1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Relational
+Operator</sigName>
+			<xpcsigName>Pulse Module/Relational Operator</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Add</sigName>
+			<xpcsigName>Pulse Module/Add</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Switch</sigName>
+			<xpcsigName>Pulse Module/Switch</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Scope (xPC) </Name>
+		<xPCName>modelinference_target/Scope (xPC) </xPCName>
+	</SubSystem>
+	<SubSystem>
+		<Name>Subsystem</Name>
+		<xPCName>modelinference_target/Subsystem</xPCName>
+		<SubSystem>
+			<Name>Elbow Angle</Name>
+			<xPCName>modelinference_target/Subsystem/Elbow Angle</xPCName>
+			<SubSystem>
+				<Name>Parity</Name>
+				<xPCName>modelinference_target/Subsystem/Elbow Angle/Parity</xPCName>
+				<block>
+					<blkName>Constant</blkName>
+					<xpcblkName>Subsystem/Elbow Angle/Parity/Constant</xpcblkName>
+					<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Parity/Constant</SLblockPath>
+					<isSrc>[1 0 1]</isSrc>
+					<parameter>
+						<paramName>Value</paramName>
+						<dim>[1, 1]</dim>
+					</parameter>
+				</block>
+				<signal>
+					<sigName>Math
+Function</sigName>
+					<xpcsigName>Subsystem/Elbow Angle/Parity/Math Function</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+				<signal>
+					<sigName>Sum</sigName>
+					<xpcsigName>Subsystem/Elbow Angle/Parity/Sum</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+			</SubSystem>
+			<block>
+				<blkName>(ALPHA)</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/(ALPHA)</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/(ALPHA)</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits//Radian
+(TRIG_SCALE)</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bits//Radian (TRIG_SCALE)</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Bits//Radian (TRIG_SCALE)</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Const</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Const</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Const</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Constant2</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Constant2</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Constant2</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 17]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Constant3</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Constant3</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Constant3</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Offset Elbow
+(OFFSETEL)
+</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Offset Elbow (OFFSETEL) </xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Offset Elbow (OFFSETEL) </SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Pulse
+Generator1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Pulse Generator1</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Pulse Generator1</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Amplitude</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>Period</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PulseWidth</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PhaseDelay</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bit1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bit1</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Bit1</SLblockPath>
+				<isSrc>[1 0 2]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits1-8
+1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bits1-8 1</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Bits1-8 1</SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits9-1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Bits9-1</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Bits9-1</SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>PCI-DIO-96 1</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/PCI-DIO-96 1</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/PCI-DIO-96 1</SLblockPath>
+				<isSrc>[0 2 0]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P9</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P10</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Unit Delay</blkName>
+				<xpcblkName>Subsystem/Elbow Angle/Unit Delay</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Elbow Angle/Unit Delay</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>X0</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Pulse
+Generator1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Pulse Generator1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Encoder Radians</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Encoder Radians</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Offset in Radians</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Offset in Radians</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit1/p1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bit1/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit1/p2</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bit1/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p2</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p3</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p4</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p5</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p6</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p7</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+1/p8</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits1-8 1/p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p1</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p2</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p3</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p4</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p5</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p6</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p7</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-1/p8</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Bits9-1/p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Sum</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Unit Delay</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Unit Delay</xpcsigName>
+				<sigWidth>17</sigWidth>
+				<sigDim>[17, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Encoder Decimal</sigName>
+				<xpcsigName>Subsystem/Elbow Angle/Encoder Decimal</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Jacobian-Cartesian Transformation</Name>
+			<xPCName>modelinference_target/Subsystem/Jacobian-Cartesian Transformation</xPCName>
+			<signal>
+				<sigName>J00</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J00</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>J01</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J01</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>J10</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J10</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>J11</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/J11</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/Sum</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum1</sigName>
+				<xpcsigName>Subsystem/Jacobian-Cartesian Transformation/Sum1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<SubSystem>
+			<Name>Shoulder Angle</Name>
+			<xPCName>modelinference_target/Subsystem/Shoulder Angle</xPCName>
+			<SubSystem>
+				<Name>Parity</Name>
+				<xPCName>modelinference_target/Subsystem/Shoulder Angle/Parity</xPCName>
+				<block>
+					<blkName>Constant</blkName>
+					<xpcblkName>Subsystem/Shoulder Angle/Parity/Constant</xpcblkName>
+					<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Parity/Constant</SLblockPath>
+					<isSrc>[1 0 1]</isSrc>
+					<parameter>
+						<paramName>Value</paramName>
+						<dim>[1, 1]</dim>
+					</parameter>
+				</block>
+				<signal>
+					<sigName>Math
+Function</sigName>
+					<xpcsigName>Subsystem/Shoulder Angle/Parity/Math Function</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+				<signal>
+					<sigName>Sum</sigName>
+					<xpcsigName>Subsystem/Shoulder Angle/Parity/Sum</xpcsigName>
+					<sigWidth>1</sigWidth>
+					<sigDim>[1, 1]</sigDim>
+				</signal>
+			</SubSystem>
+			<block>
+				<blkName>Bits//Radian
+(TRIG_SCALE)</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bits//Radian (TRIG_SCALE)</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Bits//Radian (TRIG_SCALE)</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Constant1</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Constant1</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Constant1</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Offset Shoulder
+(OFFSETSH)
+</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Offset Shoulder (OFFSETSH) </xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Offset Shoulder (OFFSETSH) </SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Vector 2^17</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Vector 2^17</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Vector 2^17</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Value</paramName>
+					<dim>[1, 17]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Pulse
+Generator</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Pulse Generator</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Pulse Generator</SLblockPath>
+				<isSrc>[1 0 1]</isSrc>
+				<parameter>
+					<paramName>Amplitude</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>Period</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PulseWidth</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>PhaseDelay</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bit17</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bit17</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Bit17</SLblockPath>
+				<isSrc>[1 0 2]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits1-8
+</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bits1-8 </xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Bits1-8 </SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Bits9-16</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Bits9-16</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Bits9-16</SLblockPath>
+				<isSrc>[1 0 8]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 8]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Int &amp; OE</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Int &amp; OE</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Int &amp; OE</SLblockPath>
+				<isSrc>[0 2 0]</isSrc>
+				<parameter>
+					<paramName>P1</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P2</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P3</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P4</paramName>
+					<dim>[1, 2]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P5</paramName>
+					<dim>[1, 3]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P6</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P7</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P8</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P9</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+				<parameter>
+					<paramName>P10</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<block>
+				<blkName>Unit Delay</blkName>
+				<xpcblkName>Subsystem/Shoulder Angle/Unit Delay</xpcblkName>
+				<SLblockPath>modelinference_target/Subsystem/Shoulder Angle/Unit Delay</SLblockPath>
+				<isSrc>[0 1 1]</isSrc>
+				<parameter>
+					<paramName>X0</paramName>
+					<dim>[1, 1]</dim>
+				</parameter>
+			</block>
+			<signal>
+				<sigName>Pulse
+Generator</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Pulse Generator</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Offset in Radians</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Offset in Radians</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Product1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Product1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit17/p1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bit17/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bit17/p2</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bit17/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p2</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p3</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p4</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p5</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p6</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p7</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits1-8
+/p8</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits1-8 /p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p1</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p1</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p2</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p2</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p3</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p3</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p4</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p4</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p5</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p5</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p6</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p6</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p7</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p7</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Bits9-16/p8</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Bits9-16/p8</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Sum</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Sum</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Unit Delay</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Unit Delay</xpcsigName>
+				<sigWidth>17</sigWidth>
+				<sigDim>[17, 1]</sigDim>
+			</signal>
+			<signal>
+				<sigName>Dot Product</sigName>
+				<xpcsigName>Subsystem/Shoulder Angle/Dot Product</xpcsigName>
+				<sigWidth>1</sigWidth>
+				<sigDim>[1, 1]</sigDim>
+			</signal>
+		</SubSystem>
+		<block>
+			<blkName>Xy</blkName>
+			<xpcblkName>Subsystem/Xy</xpcblkName>
+			<SLblockPath>modelinference_target/Subsystem/Xy</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Xy2</blkName>
+			<xpcblkName>Subsystem/Xy2</xpcblkName>
+			<SLblockPath>modelinference_target/Subsystem/Xy2</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>f</blkName>
+			<xpcblkName>Subsystem/f</xpcblkName>
+			<SLblockPath>modelinference_target/Subsystem/f</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>f1</blkName>
+			<xpcblkName>Subsystem/f1</xpcblkName>
+			<SLblockPath>modelinference_target/Subsystem/f1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>Gain</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Rate Transition</blkName>
+			<xpcblkName>Subsystem/Rate Transition</xpcblkName>
+			<SLblockPath>modelinference_target/Subsystem/Rate Transition</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>X0</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>Rate Transition1</blkName>
+			<xpcblkName>Subsystem/Rate Transition1</xpcblkName>
+			<SLblockPath>modelinference_target/Subsystem/Rate Transition1</SLblockPath>
+			<isSrc>[0 1 1]</isSrc>
+			<parameter>
+				<paramName>X0</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<block>
+			<blkName>PCI-6031E AD</blkName>
+			<xpcblkName>Subsystem/PCI-6031E AD</xpcblkName>
+			<SLblockPath>modelinference_target/Subsystem/PCI-6031E AD</SLblockPath>
+			<isSrc>[1 0 6]</isSrc>
+			<parameter>
+				<paramName>P1</paramName>
+				<dim>[1, 6]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P2</paramName>
+				<dim>[1, 6]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P3</paramName>
+				<dim>[1, 6]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P4</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P5</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+			<parameter>
+				<paramName>P6</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>cos_th1</sigName>
+			<xpcsigName>Subsystem/cos_th1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>sin_th2</sigName>
+			<xpcsigName>Subsystem/sin_th2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Xy</sigName>
+			<xpcsigName>Subsystem/Xy</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Xy2</sigName>
+			<xpcsigName>Subsystem/Xy2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>f</sigName>
+			<xpcsigName>Subsystem/f</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>f1</sigName>
+			<xpcsigName>Subsystem/f1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxcos(th2)</sigName>
+			<xpcsigName>Subsystem/Fxcos(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fxsin(th2)</sigName>
+			<xpcsigName>Subsystem/Fxsin(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fycos(th2)</sigName>
+			<xpcsigName>Subsystem/Fycos(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Fysin(th2)</sigName>
+			<xpcsigName>Subsystem/Fysin(th2)</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Rate Transition</sigName>
+			<xpcsigName>Subsystem/Rate Transition</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Rate Transition1</sigName>
+			<xpcsigName>Subsystem/Rate Transition1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p1</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p2</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p2</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p3</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p3</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p4</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p4</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p5</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p5</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>PCI-6031E AD/p6</sigName>
+			<xpcsigName>Subsystem/PCI-6031E AD/p6</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum</sigName>
+			<xpcsigName>Subsystem/Sum</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Sum1</sigName>
+			<xpcsigName>Subsystem/Sum1</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>X Direction 
+Virtual DOF + Endpoint Force Calculation
+</Name>
+		<xPCName>modelinference_target/X Direction  Virtual DOF + Endpoint Force Calculation </xPCName>
+		<block>
+			<blkName>Integrator</blkName>
+			<xpcblkName>X Direction  Virtual DOF + Endpoint Force Calculation /Integrator</xpcblkName>
+			<SLblockPath>modelinference_target/X Direction  Virtual DOF + Endpoint Force Calculation /Integrator</SLblockPath>
+			<isSrc>[0 2 1]</isSrc>
+			<parameter>
+				<paramName>InitialCondition</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Function1: just direct transmissiion for now</sigName>
+			<xpcsigName>X Direction  Virtual DOF + Endpoint Force Calculation /Function1: just direct transmissiion for now</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Function2: Can be a function of states and parameters</sigName>
+			<xpcsigName>X Direction  Virtual DOF + Endpoint Force Calculation /Function2: Can be a function of states and parameters</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Integrator</sigName>
+			<xpcsigName>X Direction  Virtual DOF + Endpoint Force Calculation /Integrator</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<SubSystem>
+		<Name>Y Direction 
+Virtual DOF + Endpoint Force Calculation</Name>
+		<xPCName>modelinference_target/Y Direction  Virtual DOF + Endpoint Force Calculation</xPCName>
+		<block>
+			<blkName>Integrator</blkName>
+			<xpcblkName>Y Direction  Virtual DOF + Endpoint Force Calculation/Integrator</xpcblkName>
+			<SLblockPath>modelinference_target/Y Direction  Virtual DOF + Endpoint Force Calculation/Integrator</SLblockPath>
+			<isSrc>[0 2 1]</isSrc>
+			<parameter>
+				<paramName>InitialCondition</paramName>
+				<dim>[1, 1]</dim>
+			</parameter>
+		</block>
+		<signal>
+			<sigName>Function1: just direct transmissiion for now</sigName>
+			<xpcsigName>Y Direction  Virtual DOF + Endpoint Force Calculation/Function1: just direct transmissiion for now</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Function2: Can be a function of states and parameters</sigName>
+			<xpcsigName>Y Direction  Virtual DOF + Endpoint Force Calculation/Function2: Can be a function of states and parameters</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+		<signal>
+			<sigName>Integrator</sigName>
+			<xpcsigName>Y Direction  Virtual DOF + Endpoint Force Calculation/Integrator</xpcsigName>
+			<sigWidth>1</sigWidth>
+			<sigDim>[1, 1]</sigDim>
+		</signal>
+	</SubSystem>
+	<block>
+		<blkName>FilterCutoffFreq</blkName>
+		<xpcblkName>FilterCutoffFreq</xpcblkName>
+		<SLblockPath>modelinference_target/FilterCutoffFreq</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>FilterZeta</blkName>
+		<xpcblkName>FilterZeta</xpcblkName>
+		<SLblockPath>modelinference_target/FilterZeta</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Go</blkName>
+		<xpcblkName>Go</xpcblkName>
+		<SLblockPath>modelinference_target/Go</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Input Param</blkName>
+		<xpcblkName>Input Param</xpcblkName>
+		<SLblockPath>modelinference_target/Input Param</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Input Param1</blkName>
+		<xpcblkName>Input Param1</xpcblkName>
+		<SLblockPath>modelinference_target/Input Param1</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Input Param2</blkName>
+		<xpcblkName>Input Param2</xpcblkName>
+		<SLblockPath>modelinference_target/Input Param2</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>InputParam3</blkName>
+		<xpcblkName>InputParam3</xpcblkName>
+		<SLblockPath>modelinference_target/InputParam3</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Palpha</blkName>
+		<xpcblkName>Palpha</xpcblkName>
+		<SLblockPath>modelinference_target/Palpha</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>RESET</blkName>
+		<xpcblkName>RESET</xpcblkName>
+		<SLblockPath>modelinference_target/RESET</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>TestForce</blkName>
+		<xpcblkName>TestForce</xpcblkName>
+		<SLblockPath>modelinference_target/TestForce</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Twidth</blkName>
+		<xpcblkName>Twidth</xpcblkName>
+		<SLblockPath>modelinference_target/Twidth</SLblockPath>
+		<isSrc>[1 0 1]</isSrc>
+		<parameter>
+			<paramName>Value</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>E Gain</blkName>
+		<xpcblkName>E Gain</xpcblkName>
+		<SLblockPath>modelinference_target/E Gain</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain</blkName>
+		<xpcblkName>S Gain</xpcblkName>
+		<SLblockPath>modelinference_target/S Gain</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain1</blkName>
+		<xpcblkName>S Gain1</xpcblkName>
+		<SLblockPath>modelinference_target/S Gain1</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain2</blkName>
+		<xpcblkName>S Gain2</xpcblkName>
+		<SLblockPath>modelinference_target/S Gain2</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain3</blkName>
+		<xpcblkName>S Gain3</xpcblkName>
+		<SLblockPath>modelinference_target/S Gain3</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>S Gain4</blkName>
+		<xpcblkName>S Gain4</xpcblkName>
+		<SLblockPath>modelinference_target/S Gain4</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>Gain</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Rate Transition1</blkName>
+		<xpcblkName>Rate Transition1</xpcblkName>
+		<SLblockPath>modelinference_target/Rate Transition1</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>X0</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Rate Transition2</blkName>
+		<xpcblkName>Rate Transition2</xpcblkName>
+		<SLblockPath>modelinference_target/Rate Transition2</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>X0</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Saturation</blkName>
+		<xpcblkName>Saturation</xpcblkName>
+		<SLblockPath>modelinference_target/Saturation</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>UpperLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>LowerLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Saturation1</blkName>
+		<xpcblkName>Saturation1</xpcblkName>
+		<SLblockPath>modelinference_target/Saturation1</SLblockPath>
+		<isSrc>[0 1 1]</isSrc>
+		<parameter>
+			<paramName>UpperLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>LowerLimit</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>PCI-6031E DA</blkName>
+		<xpcblkName>PCI-6031E DA</xpcblkName>
+		<SLblockPath>modelinference_target/PCI-6031E DA</SLblockPath>
+		<isSrc>[0 2 0]</isSrc>
+		<parameter>
+			<paramName>P1</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P2</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P3</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P4</paramName>
+			<dim>[1, 2]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P5</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P6</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P7</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<block>
+		<blkName>Send</blkName>
+		<xpcblkName>Send</xpcblkName>
+		<SLblockPath>modelinference_target/Send</SLblockPath>
+		<isSrc>[0 1 0]</isSrc>
+		<parameter>
+			<paramName>P1</paramName>
+			<dim>[1, 11]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P2</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P3</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P4</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+		<parameter>
+			<paramName>P5</paramName>
+			<dim>[1, 1]</dim>
+		</parameter>
+	</block>
+	<signal>
+		<sigName>Clock</sigName>
+		<xpcsigName>Clock</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>FilterCutoffFreq</sigName>
+		<xpcsigName>FilterCutoffFreq</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>FilterZeta</sigName>
+		<xpcsigName>FilterZeta</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Input Param</sigName>
+		<xpcsigName>Input Param</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Input Param1</sigName>
+		<xpcsigName>Input Param1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Input Param2</sigName>
+		<xpcsigName>Input Param2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>InputParam3</sigName>
+		<xpcsigName>InputParam3</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Palpha</sigName>
+		<xpcsigName>Palpha</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>RESET</sigName>
+		<xpcsigName>RESET</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>TestForce</sigName>
+		<xpcsigName>TestForce</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Twidth</sigName>
+		<xpcsigName>Twidth</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>E Gain</sigName>
+		<xpcsigName>E Gain</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain</sigName>
+		<xpcsigName>S Gain</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain1</sigName>
+		<xpcsigName>S Gain1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain2</sigName>
+		<xpcsigName>S Gain2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain3</sigName>
+		<xpcsigName>S Gain3</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>S Gain4</sigName>
+		<xpcsigName>S Gain4</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Rate Transition</sigName>
+		<xpcsigName>Rate Transition</xpcsigName>
+		<sigWidth>64</sigWidth>
+		<sigDim>[64, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Rate Transition1</sigName>
+		<xpcsigName>Rate Transition1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Rate Transition2</sigName>
+		<xpcsigName>Rate Transition2</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Saturation</sigName>
+		<xpcsigName>Saturation</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Saturation1</sigName>
+		<xpcsigName>Saturation1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Pack1</sigName>
+		<xpcsigName>Pack1</xpcsigName>
+		<sigWidth>64</sigWidth>
+		<sigDim>[64, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Sum</sigName>
+		<xpcsigName>Sum</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Sum1</sigName>
+		<xpcsigName>Sum1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Zero-Order
+Hold</sigName>
+		<xpcsigName>Zero-Order Hold</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+	<signal>
+		<sigName>Zero-Order
+Hold1</sigName>
+		<xpcsigName>Zero-Order Hold1</xpcsigName>
+		<sigWidth>1</sigWidth>
+		<sigDim>[1, 1]</sigDim>
+	</signal>
+</Root>

@@ -1,0 +1,17 @@
+#include "BasicModelTarget.bio"
+#include "BasicModelTarget.lbl"
+#include "BasicModelTarget.sid"
+
+
+const xpc_SigMappingInfo xpcMMI[] =
+  {
+    {
+      {BasicModelTarget_BIO},
+      {BasicModelTarget_SID},
+      {BasicModelTarget_LBL},
+      "",
+      "BasicModelTarget",
+      0,
+      559,
+    },
+  };

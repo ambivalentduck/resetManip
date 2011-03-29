@@ -1,0 +1,17 @@
+#include "modelinference_target.bio"
+#include "modelinference_target.lbl"
+#include "modelinference_target.sid"
+
+
+const xpc_SigMappingInfo xpcMMI[] =
+  {
+    {
+      {modelinference_target_BIO},
+      {modelinference_target_SID},
+      {modelinference_target_LBL},
+      "",
+      "modelinference_target",
+      0,
+      358,
+    },
+  };

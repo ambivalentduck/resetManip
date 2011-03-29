@@ -5,7 +5,7 @@ figure(41)
 clf
 hold on
 
-load('../Data/145withsim.mat');
+load('../Data/147withsim.mat');
 
 lt=length(trials);
 
@@ -39,7 +39,11 @@ for k=1:lt
             plot(-.01+resetT/scale,.48+k/scale,'mo')
             plot(tk.target(1)+resetT/scale,tk.target(2)+k/scale,'mx')
             plot([-.01 tk.target(1)]+resetT/scale,[.48 tk.target(2)]+k/scale,'m-')
-            axis equal
+
         end
+        drawnow
     end
 end
+axis equal
+xlabel('Reset Times, discrete')
+ylabel('Catch Trial')

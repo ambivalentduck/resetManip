@@ -9,9 +9,12 @@ close all
 clear all
 tic
 
+number=147;
+nums=num2str(number);
+
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB Jt fJ getAlpha getAccel forces_in forces_in_time
 
-load(['../Data/145.mat']);
+load(['../Data/',nums,'.mat']);
 
 kp=[15 6; 6 16]*1;
 kd=[2.3 .09; .09 2.4];
@@ -44,11 +47,11 @@ smallstep=0.01;
 toc
 disp('Jacobians complete.')
 
-resetT=[.1650 inf]; %how many reset times, last must ALWAYS be inf
-
+resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
+%resetT=[.2 inf]; %how many reset times, last must ALWAYS be inf
 h = waitbar(0,'Starting');
 
-for TRIAL=2; %1:length(trials)
+for TRIAL=1:20; %1:length(trials)
     pf=trials{TRIAL}.target;
     waitbar(TRIAL/length(trials),h,'Starting');
 
@@ -91,7 +94,7 @@ for TRIAL=2; %1:length(trials)
             %simulate out REMAINING path of the resetted movement only to the last kick time
             [dx, pI, vI, aI]=armdynamics_timeseries(T_(fR(1)),X_(fR(1),:)');
 
-            coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
+            coeff.vals=calcminjerk(pI,pf,[0 0],[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
             coeff.expiration=T_(fR(1))+tf;
 
             switch(reset)
@@ -120,6 +123,6 @@ for TRIAL=2; %1:length(trials)
     toc
 end
 close(h)
-save('../Data/145withsim.mat','trials');
+save(['../Data/',nums,'withsim.mat'],'trials');
 
 plotresetMimic
