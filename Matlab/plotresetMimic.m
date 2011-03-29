@@ -43,7 +43,3 @@ for k=1:lt
         end
     end
 end
-
-xlabel('Reset Times, discrete')
-ylabel('Catch Trial')
-
