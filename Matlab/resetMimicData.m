@@ -47,10 +47,12 @@ smallstep=0.01;
 toc
 disp('Jacobians complete.')
 
-resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
+%resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
+resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be inf
 tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 h = waitbar(0,'Starting');
 
+tocs=[toc];
 for TRIAL=1:20; %1:length(trials)
     TRIAL
     pf=trials{TRIAL}.target;
@@ -88,8 +90,8 @@ for TRIAL=1:20; %1:length(trials)
     for reset=1:2
         for tR=1:length(resetT)-1
             tR
-            waitbar(tR/(length(resetT)-1),h);
             tReset=resetT(tR);
+            waitbar(((reset-1)*length(resetT)+tR)/(2*(length(resetT)-1)),h);
 
             fR=find(T_>=tReset);
 
@@ -124,9 +126,13 @@ for TRIAL=1:20; %1:length(trials)
             trials{TRIAL}.(['reset',num2str(reset)]).t{tR}=[T_(1:fR); Tr(2:end)];
         end
     end
+    tocs(end+1)=toc;
     toc
 end
 close(h)
 save(['../Data/',nums,'withsim.mat'],'trials');
+
+figure(28)
+plot(tocs)
 
 plotresetMimic

@@ -146,6 +146,7 @@ errorbar(2*trials{c}.resetT(end-1)-trials{c}.resetT(end-2),mean(vmat(end,:,k),2)
 for k=1:2
     errorbar(trials{c}.resetT(1:end-1),mean(vmat(1:end-1,:,k),2),1.96*std(vmat(1:end-1,:,k),0,2),color(k))
 end
+plot(trials{3}.resetT(1:end-1),vals{3}(:,3))
 xlabel('Reset Times, discrete')
 ylabel('Error')
 legend('No Reset','FB Only ','FF and FB')
