@@ -39,7 +39,7 @@ p0=[-0.01 .48]';
 ti=0;
 tf=.6;
 tp=1.2;
-step=0.025;
+step=0.01;
 smallstep=0.01;
 
 %Command torques based on Jacobian, so build one
@@ -47,13 +47,16 @@ smallstep=0.01;
 toc
 disp('Jacobians complete.')
 
-resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
-%resetT=[.2 inf]; %how many reset times, last must ALWAYS be inf
+%resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
+resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be inf
+tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 h = waitbar(0,'Starting');
 
-for TRIAL=1:20; %1:length(trials)
+tocs=[toc];
+for TRIAL=21:length(trials); %1:length(trials)
+    TRIAL
     pf=trials{TRIAL}.target;
-    waitbar(TRIAL/length(trials),h,'Starting');
+    waitbar(0,h,['Trial ',num2str(TRIAL)]);
 
     data(1).resetT=resetT;
     forces_in=trials{TRIAL}.force/2;
@@ -70,7 +73,7 @@ for TRIAL=1:20; %1:length(trials)
     coeff0.expiration=tf;
     coeffFF=coeff0;
     coeffFB=coeff0;
-    [T_,X_]=ode45(@armdynamics_timeseries,ti:step:ti+tp,[ini;0;0]);
+    [T_,X_]=ode45(@armdynamics_timeseries,tsim,[ini;0;0]);
     basepos=zeros(size(X_,1),2);
     for k=1:length(T_)
         basepos(k,:)=fkin(X_(k,1:2));
@@ -88,6 +91,7 @@ for TRIAL=1:20; %1:length(trials)
         for tR=1:length(resetT)-1
             tR
             tReset=resetT(tR);
+            waitbar(((reset-1)*length(resetT)+tR)/(2*(length(resetT)-1)),h);
 
             fR=find(T_>=tReset);
 
@@ -110,7 +114,8 @@ for TRIAL=1:20; %1:length(trials)
                     coeffFF=coeff;
                     coeffFB=coeff;
             end
-            [Tr,Xr]=ode45(@armdynamics_timeseries,T_(fR(1)):smallstep:2,X_(fR(1),:));
+            [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 2],X_(fR(1),:));
+            
             resetpos=zeros(size(Xr,1),2);
             for k=1:length(Tr)
                 resetpos(k,:)=fkin(Xr(k,1:2));
@@ -118,11 +123,16 @@ for TRIAL=1:20; %1:length(trials)
             resetpos=[basepos(1:fR(1),:); resetpos];
 
             trials{TRIAL}.(['reset',num2str(reset)]).pos{tR}=resetpos;
+            trials{TRIAL}.(['reset',num2str(reset)]).t{tR}=[T_(1:fR); Tr(2:end)];
         end
     end
+    tocs(end+1)=toc;
     toc
 end
 close(h)
 save(['../Data/',nums,'withsim.mat'],'trials');
+
+figure(28)
+plot(tocs)
 
 plotresetMimic
