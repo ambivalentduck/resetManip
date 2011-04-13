@@ -53,7 +53,7 @@ tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 h = waitbar(0,'Starting');
 
 tocs=[toc];
-for TRIAL=21:length(trials); %1:length(trials)
+for TRIAL=1:length(trials); %1:length(trials)
     TRIAL
     pf=trials{TRIAL}.target;
     waitbar(0,h,['Trial ',num2str(TRIAL)]);

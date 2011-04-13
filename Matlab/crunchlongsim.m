@@ -142,9 +142,14 @@ figure(44)
 clf
 hold on
 color='gb';
-errorbar(2*trials{c}.resetT(end-1)-trials{c}.resetT(end-2),mean(vmat(end,:,k),2),1.96*std(vmat(end,:,k),0,2),'ro')
+tX=[trials{c}.resetT(1:end-1) 2*trials{c}.resetT(end-1)-trials{c}.resetT(end-2)];
+errorbar(tX(end),mean(vmat(end,:,k),2),1.96*std(vmat(end,:,k),0,2),'ro')
 for k=1:2
-    errorbar(trials{c}.resetT(1:end-1),mean(vmat(1:end-1,:,k),2),1.96*std(vmat(1:end-1,:,k),0,2),color(k))
+    errorbar(tX(1:end-1),mean(vmat(1:end-1,:,k),2),1.96*std(vmat(1:end-1,:,k),0,2),color(k))
+end
+for k=1:c
+    plot(tX,vmat(:,k,1),'k')
+    plot(tX,vmat(:,k,2),'m')
 end
 %plot(trials{3}.resetT(1:end-1),vals{3}(1:end-1,3),'m')
 xlabel('Reset Times, discrete')
