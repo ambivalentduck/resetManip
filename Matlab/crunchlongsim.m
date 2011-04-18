@@ -80,7 +80,7 @@ for k=1:lt
         axis equal
     catch ME
         if ME.stack.line~=30
-            ME.message
+            ME.message/home/web/EAv2Xmanip/Matlab
             ME.stack.line
         end
         fail(k)=0;
@@ -143,7 +143,8 @@ clf
 hold on
 color='gb';
 tX=[trials{c}.resetT(1:end-1) 2*trials{c}.resetT(end-1)-trials{c}.resetT(end-2)];
-errorbar(tX(end),mean(vmat(end,:,k),2),1.96*std(vmat(end,:,k),0,2),'ro')
+
+errorbar(tX(end),mean(vmat(end,:,2),2),1.96*std(vmat(end,:,2),0,2),'ro')
 for k=1:2
     errorbar(tX(1:end-1),mean(vmat(1:end-1,:,k),2),1.96*std(vmat(1:end-1,:,k),0,2),color(k))
 end
@@ -155,4 +156,19 @@ end
 xlabel('Reset Times, discrete')
 ylabel('Error')
 legend('No Reset','FB Only ','FF and FB','Trial 3, FF and FB')
+
+x_=[];
+y_=[];
+for k=1:c
+    if besttype(k)==2
+        x_(end+1)=vmat(end,k,2);
+        y_(end+1)=vmat(bestindices(k,2),k,2);
+    end
+end
+figure(45)
+clf
+plot(x_,y_,'.')
+xlabel('No reset model error')
+ylabel('FF and FB reset model error')
+
 
