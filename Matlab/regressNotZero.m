@@ -1,4 +1,14 @@
-function [out,b1]=regressNotZero(x,y)
+function [out,b1,b0,r2, t,compare]=regressNotZero(varargin)
+%In: x list, y list, val to compare slope to
+%Out: is Different, slope, intersect, t value, value for comparison
+
+x=varargin{1};
+y=varargin{2};
+if nargin>2
+    not=varargin{3};
+else
+    not=0;
+end
 
 if size(x,1) ~= size(y,1)
     y=y';
@@ -15,7 +25,7 @@ b0=mean(y)-b1*mean(x);
 sse=syy-b1*sxy;
 s2=sse/(n-2);
 
-t=b1*sqrt(sxx)/sqrt(s2);
+t=(b1-not)*sqrt(sxx)/sqrt(s2);
 
 if n>27
     n=27;
@@ -52,3 +62,5 @@ T95=[6.314
     1.708]; %first 25 vals
 
 out=abs(t)>T95(n-2);
+compare=T95(n-2);
+r2=(sxy/sqrt(sxx*syy))^2;

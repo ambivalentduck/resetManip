@@ -158,18 +158,24 @@ xlabel('Reset Times, discrete')
 ylabel('Error')
 legend('No Reset','FB Only ','FF and FB')
 
-x_=[];
-y_=[];
+x_=zeros(sum(besttype==2),1);
+y_=x_;
+v=0;
 for k=1:c
     if besttype(k)==2
-        x_(end+1)=vmat(end,k,2);
-        y_(end+1)=vmat(bestindices(k,3),k,2);
+        v=v+1;
+        x_(v)=vmat(end,k,2);
+        y_(v)=vmat(bestindices(k,3),k,2);
     end
 end
+[sig,a,b, r2]=regressNotZero(x_,y_,1);
 figure(45)
 clf
-plot(x_,y_,'.')
+plot(x_,y_,'.',x_,a*x_+b,x_,x_)
 xlabel('No reset model error')
 ylabel('FF and FB reset model error')
+legend('Data',['Fit line R^2=',num2str(r2)],'Identity')
+
+[h,p]=ttest2(x_,y_)
 
 
