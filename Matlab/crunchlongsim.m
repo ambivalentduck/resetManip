@@ -150,7 +150,9 @@ for k=1:2
 end
 for k=1:c
     plot(tX,vmat(:,k,1),'k')
+    plot(tX(bestindices(k,2)),vmat(bestindices(k,2),k,1),'kx');
     plot(tX,vmat(:,k,2),'m')
+    plot(tX(bestindices(k,3)),vmat(bestindices(k,3),k,2),'mx');
 end
 xlabel('Reset Times, discrete')
 ylabel('Error')
@@ -161,7 +163,7 @@ y_=[];
 for k=1:c
     if besttype(k)==2
         x_(end+1)=vmat(end,k,2);
-        y_(end+1)=vmat(bestindices(k,2),k,2);
+        y_(end+1)=vmat(bestindices(k,3),k,2);
     end
 end
 figure(45)
