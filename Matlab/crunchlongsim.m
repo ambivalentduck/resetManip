@@ -150,25 +150,33 @@ for k=1:2
 end
 for k=1:c
     plot(tX,vmat(:,k,1),'k')
+    plot(tX(bestindices(k,2)),vmat(bestindices(k,2),k,1),'kx');
     plot(tX,vmat(:,k,2),'m')
+    plot(tX(bestindices(k,3)),vmat(bestindices(k,3),k,2),'mx');
 end
 %plot(trials{3}.resetT(1:end-1),vals{3}(1:end-1,3),'m')
 xlabel('Reset Times, discrete')
 ylabel('Error')
 legend('No Reset','FB Only ','FF and FB','Trial 3, FF and FB')
 
-x_=[];
-y_=[];
+x_=zeros(sum(besttype==2),1);
+y_=x_;
+v=0;
 for k=1:c
     if besttype(k)==2
-        x_(end+1)=vmat(end,k,2);
-        y_(end+1)=vmat(bestindices(k,2),k,2);
+        v=v+1;
+        x_(v)=vmat(end,k,2);
+        y_(v)=vmat(bestindices(k,3),k,2);
     end
 end
+[sig,a,b, r2]=regressNotZero(x_,y_,1);
 figure(45)
 clf
-plot(x_,y_,'.')
+plot(x_,y_,'.',x_,a*x_+b,x_,x_)
 xlabel('No reset model error')
 ylabel('FF and FB reset model error')
+legend('Data',['Fit line R^2=',num2str(r2)],'Identity')
+
+[h,p]=ttest2(x_,y_)
 
 
