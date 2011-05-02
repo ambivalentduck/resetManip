@@ -146,18 +146,26 @@ tX=[trials{c}.resetT(1:end-1) 2*trials{c}.resetT(end-1)-trials{c}.resetT(end-2)]
 
 errorbar(tX(end),mean(vmat(end,:,2),2),1.96*std(vmat(end,:,2),0,2),'ro')
 for k=1:2
-    errorbar(tX(1:end-1),mean(vmat(1:end-1,:,k),2),1.96*std(vmat(1:end-1,:,k),0,2),color(k))
+    %errorbar(tX(1:end-1),mean(vmat(1:end-1,:,k),2),1.96*std(vmat(1:end-1,:,k),0,2),color(k))
 end
+plot(tX(1),NaN,'k.')
+plot(tX(1),NaN,'m.')
 for k=1:c
-    plot(tX,vmat(:,k,1),'k')
+    %plot(tX,vmat(:,k,1),'k')
     plot(tX(bestindices(k,2)),vmat(bestindices(k,2),k,1),'kx');
-    plot(tX,vmat(:,k,2),'m')
     plot(tX(bestindices(k,3)),vmat(bestindices(k,3),k,2),'mx');
+    [v,i]=max(vmat(:,k,1));
+    plot(tX(i),v,'ko');
+    %plot(tX,vmat(:,k,2),'m')
+    [v,i]=max(vmat(:,k,2));
+    plot(tX(i),v,'mo');
+    
 end
 %plot(trials{3}.resetT(1:end-1),vals{3}(1:end-1,3),'m')
 xlabel('Reset Times, discrete')
 ylabel('Error')
-legend('No Reset','FB Only ','FF and FB','Trial 3, FF and FB')
+legend('No Reset \pm Standard Error','FB Only Reset','FF and FB Reset')
+%legend('No Reset \pm Standard Error','FB Only Reset','FF and FB Reset')
 
 x_=zeros(sum(besttype==2),1);
 y_=x_;
