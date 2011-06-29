@@ -78,7 +78,7 @@ for k=1:lt
         plot(tk.target(1),tk.target(2)+k/scale,'mx')
         plot([-.01 tk.target(1)],[.48 tk.target(2)]+k/scale,'m-')
         axis equal
-    catch ME
+    catch MEMatlab
         if ME.stack.line~=30
             ME.message/home/web/EAv2Xmanip/Matlab
             ME.stack.line
@@ -188,3 +188,32 @@ legend('Data',['Fit line R^2=',num2str(r2)],'Identity')
 [h,p]=ttest2(x_,y_)
 
 
+figure(46)
+clf
+t1=t(1:2:end-1);
+n=hist(t(bestindices(:,3)),t1);
+hold on
+fn=filter(ones(4,1)/4,1,n);
+bar(t1,[n',fn'])
+plot(t1,fn,'r')
+L=length(fn);
+NFFT = 2^nextpow2(L); % Next power of 2 from length of y
+Y = fft(n,NFFT)/L;
+m=max(n);
+dt=diff(t);
+peak_at=(1/dt(1))/2*linspace(0,1,NFFT/2);
+peak_at(6)
+%plot(m*2*abs(Y(1:NFFT/2)),'r')
+% recon=zeros(size(t1));
+% for k=1:NFFT/2
+%     recon=recon+2*real(Y(k))*cos(2*pi*peak_at(k)*(t1-t1(1))+imag(Y(k)));
+% end
+% %plot(t1,-4*cos(2*pi*peak_at(6)*t1+imag(Y(6))))
+% plot(t1,recon)
+
+figure(47)
+clf
+hold on
+plot(peak_at,m*2*abs(Y(1:NFFT/2)),'b')
+xlabel('Frequency, Hz')
+ylabel('|FFT(t)|')
