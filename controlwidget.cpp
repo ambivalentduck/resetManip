@@ -153,6 +153,18 @@ void ControlWidget::readPending()
 		return;
 	}
 	
+	times.push_back(now);
+	data.push_back(in);
+	bool old_enough=false;
+	while((now-times.front())>.050)
+	{
+		times.pop_front();
+		in=data.front();
+		data.pop_front();
+		old_enough=true;
+	}
+	if(!old_enough) return;
+	
 	cursor.X()=*reinterpret_cast<double*>(in.data()+sizeof(double));
 	cursor.Y()=*reinterpret_cast<double*>(in.data()+2*sizeof(double));
 	velocity.X()=*reinterpret_cast<double*>(in.data()+3*sizeof(double));
@@ -197,12 +209,6 @@ void ControlWidget::readPending()
 		{
 			if((now-targetAcquired)>=targetDuration)
 			{
-				/* double movetime=targetAcquired-trialStart;
-				QString qs1, qs2("Movement Time was ");
-				qs1.setNum(movetime);
-				times.push_front(movetime+TIME_OFFSET);
-				while (times.size()>5) times.erase(times.end());
-				userWidget->setBars(times); */
 				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
 				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=50; probeDelay=.04; probeOn=-1;}
