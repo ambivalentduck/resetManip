@@ -49,7 +49,8 @@ private:
 	enum ProbeType {NONE=0, VISCOUSITY=1, PULSE=2} probe;
 	std::vector<QWidget*> grayList;
 	std::vector<DisplayWidget::Sphere> sphereVec;
-	std::deque<double> times;
+	std::deque<timespec> times;
+	std::deque<QByteArray> data;
 	DisplayWidget::Sphere sphere;
 
 	timespec zero, now, trialStart, targetAcquired;
