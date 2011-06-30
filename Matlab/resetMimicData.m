@@ -9,7 +9,7 @@ close all
 clear all
 tic
 
-number=147;
+number=148;
 nums=num2str(number);
 
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB Jt fJ getAlpha getAccel forces_in forces_in_time
@@ -50,13 +50,13 @@ disp('Jacobians complete.')
 %resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
 resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be inf
 tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
-h = waitbar(0,'Starting');
+progressbar('Trial','Reset')
 
 tocs=[toc];
 for TRIAL=1:length(trials); %1:length(trials)
     TRIAL
     pf=trials{TRIAL}.target;
-    waitbar(0,h,['Trial ',num2str(TRIAL)]);
+    progressbar(TRIAL/length(trials),0);
 
     data(1).resetT=resetT;
     forces_in=trials{TRIAL}.force/2;
@@ -91,7 +91,7 @@ for TRIAL=1:length(trials); %1:length(trials)
         for tR=1:length(resetT)-1
             tR
             tReset=resetT(tR);
-            waitbar(((reset-1)*length(resetT)+tR)/(2*(length(resetT)-1)),h);
+            progressbar([],((reset-1)*length(resetT)+tR)/(2*(length(resetT)-1)));
 
             fR=find(T_>=tReset);
 
@@ -129,7 +129,7 @@ for TRIAL=1:length(trials); %1:length(trials)
     tocs(end+1)=toc;
     toc
 end
-close(h)
+
 save(['../Data/',nums,'withsim.mat'],'trials');
 
 figure(28)
