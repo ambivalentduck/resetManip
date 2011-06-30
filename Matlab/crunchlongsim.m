@@ -6,7 +6,8 @@ figure(42)
 clf
 hold on
 
-load('../Data/147withsim.mat');
+subnum=147;
+load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);
 
@@ -88,6 +89,10 @@ for k=1:lt
 end
 close(h)
 
+figure(42)
+title(num2str(subnum))
+set(gcf,'Name','Raw reaches + Best Sim Fits')
+
 vmat=zeros(workinglrt,sum(fail==1),2);
 c=0;
 for k=1:lt
@@ -122,6 +127,8 @@ ylabel('Catch Trial')
 
 figure(43)
 clf
+set(gcf,'Name','Histogram of best times')
+title(num2str(subnum))
 for k=1:length(u)
     ulabs{k}=num2str(su(k));
 end
@@ -140,6 +147,8 @@ legend('No Reset','FB Only ','FF and FB')
 
 figure(44)
 clf
+set(gcf,'Name','Reset Time vs Fit Quality')
+title(num2str(subnum))
 hold on
 color='gb';
 tX=[trials{c}.resetT(1:end-1) 2*trials{c}.resetT(end-1)-trials{c}.resetT(end-2)];
@@ -190,6 +199,8 @@ legend('Data',['Fit line R^2=',num2str(r2)],'Identity')
 
 figure(46)
 clf
+set(gcf,'Name','FF + FB Reset Time Histogram')
+title(num2str(subnum))
 t1=t(1:2:end-1);
 n=hist(t(bestindices(:,3)),t1);
 hold on
@@ -202,7 +213,9 @@ Y = fft(n,NFFT)/L;
 m=max(n);
 dt=diff(t);
 peak_at=(1/dt(1))/2*linspace(0,1,NFFT/2);
-peak_at(6)
+ylabel('Absolute Frequency')
+xlabel('Time into reach, sec')
+legend('Best Times (FF + FB only)','Above, but filtered','Line to make trend clearer')
 %plot(m*2*abs(Y(1:NFFT/2)),'r')
 % recon=zeros(size(t1));
 % for k=1:NFFT/2
@@ -214,6 +227,8 @@ peak_at(6)
 figure(47)
 clf
 hold on
+set(gcf,'Name','FF + FB Reset Time Frequency Analysis')
+title(num2str(subnum))
 plot(peak_at,m*2*abs(Y(1:NFFT/2)),'b')
 xlabel('Frequency, Hz')
 ylabel('|FFT(t)|')
