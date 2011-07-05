@@ -24,6 +24,7 @@ public:
 	
 private:
 	QSpinBox *trialNumBox, *subjectBox;
+	QDoubleSpinBox *delayBox;
 	QPushButton *startButton; 	
 	QComboBox *stimulusBox;
 	QFormLayout * layout;
@@ -43,7 +44,7 @@ private:
 	QTextStream outStream, trialStream;
 	
 	double * minJerkParams[6];
-	double viscousity, curl, saddle, inertia, probeDelay, pillowMag, min, probeOn;
+	double viscousity, curl, saddle, inertia, probeDelay, pillowMag, min, probeOn, visualdelay;
 	enum stimuli {UNSTIMULATED=0, CURL=1, SADDLE=2} stimulus;
 	enum GameState {acquireTarget=0, inTarget=1} state;
 	enum ProbeType {NONE=0, VISCOUSITY=1, PULSE=2} probe;
@@ -68,7 +69,7 @@ public slots:
 	void setSubject(int i) {subject=i;}
 	double evalSigmoid(double t, double risetime) {double a=10l/risetime; t-=risetime/2l; return (a*t/sqrt(1l+pow(a*t,2))+1l)/2l;}
 	void setStimulus(int i) {stimulus=stimuli(i);}
-	
+	void setDelay(double d) {if (d<=0.0) visualdelay=-1; else visualdelay=d;}
 };
 
 #endif
