@@ -156,7 +156,7 @@ void ControlWidget::readPending()
 	times.push_back(now);
 	data.push_back(in);
 	bool old_enough=false;
-	while((now-times.front())>.1)
+	while((now-times.front())>.016)
 	{
 		times.pop_front();
 		in=data.front();
