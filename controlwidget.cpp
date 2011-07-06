@@ -58,9 +58,16 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	stimulusBox->insertItem(0,"Unstimulated");
 	stimulusBox->insertItem(1,"Curl");
 	stimulusBox->insertItem(2,"Saddle");
-	grayList.push_back(stimulusBox);
 	stimulus=UNSTIMULATED;
 	connect(stimulusBox, SIGNAL(activated(int)), this, SLOT(setStimulus(int)));
+	
+	layout->addRow(tr("Added Delay:"), delayBox=new QDoubleSpinBox(this));
+	delayBox->setValue(0);
+	delayBox->setMaximum(2);
+	delayBox->setMinimum(0);
+	delayBox->setDecimals(3);
+	visualdelay=-1;
+	connect(delayBox, SIGNAL(valueChanged(double)), this, SLOT(setDelay(double)));
 	
 	setLayout(layout);
 	
@@ -102,6 +109,8 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	sphereVec.push_back(sphere);
 	userWidget->setSpheres(sphereVec);
 	sphereVec.clear();
+	
+	inSize=0;
 	
 	//Initialize everything UPD-related to values that prevent problems
 	curl=0;
@@ -156,14 +165,18 @@ void ControlWidget::readPending()
 	times.push_back(now);
 	data.push_back(in);
 	bool old_enough=false;
-	while((now-times.front())>.016)
+	if (visualdelay>0)
 	{
-		times.pop_front();
-		in=data.front();
-		data.pop_front();
-		old_enough=true;
+		while((now-times.front())>=visualdelay)
+		{
+			times.pop_front();
+			in=data.front();
+			data.pop_front();
+			old_enough=true;
+		}
+		if(!old_enough) return;
 	}
-	if(!old_enough) return;
+	
 	
 	cursor.X()=*reinterpret_cast<double*>(in.data()+sizeof(double));
 	cursor.Y()=*reinterpret_cast<double*>(in.data()+2*sizeof(double));
