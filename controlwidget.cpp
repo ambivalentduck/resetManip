@@ -117,7 +117,7 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	saddle=0;
 	trial=0;
 	subject=0;
-	probeDelay=9999999; //Several months ~ infinity without the messiness of picking the numerical limit
+	probeDelay=9999999; //Several months ~ infinity
 	pillowMag=0;
 	ExperimentRunning=false;
 	commandforce=point(0,0);
@@ -224,7 +224,7 @@ void ControlWidget::readPending()
 			{
 				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=50; probeDelay=.04; probeOn=-1;}
+				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center);}
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -345,13 +345,13 @@ point ControlWidget::loadTrial(int T)
 	std::string qline;
 	int temptrial;
 	unsigned int tempprobe;
-	double tempx, tempy,tempstim;
+	double tempx, tempy,tempstim,tempdelay;
 	std::cout << "Loading Trial " << T << std::endl;
 	do
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf\t%d",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe));
+		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf\t%d\t%d",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe,&tempdelay));
 		else
 		{
 			std::cout << "Complete failure to read line: " << line << std::endl; return center;
@@ -363,6 +363,8 @@ point ControlWidget::loadTrial(int T)
 	curl=tempstim;
 	probe=ProbeType(tempprobe);
 	trialNumBox->setValue(T);
+	visualdelay=tempdelay;
+	delayBox->setValue(visualdelay);
 	
 	std::cout << "Finished Loading Trial " << temptrial << std::endl;
 	double min23=.45*min;	
