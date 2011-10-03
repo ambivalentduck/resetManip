@@ -6,7 +6,8 @@ figure(42)
 clf
 hold on
 
-load('../Data/148withsim.mat');
+subnum=147;
+load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);
 
@@ -78,7 +79,7 @@ for k=1:lt
         plot(tk.target(1),tk.target(2)+k/scale,'mx')
         plot([-.01 tk.target(1)],[.48 tk.target(2)]+k/scale,'m-')
         axis equal
-    catch ME
+    catch MEMatlab
         if ME.stack.line~=30
             ME.message/home/web/EAv2Xmanip/Matlab
             ME.stack.line
@@ -87,6 +88,10 @@ for k=1:lt
     end
 end
 close(h)
+
+figure(42)
+title(num2str(subnum))
+set(gcf,'Name','Raw reaches + Best Sim Fits')
 
 vmat=zeros(workinglrt,sum(fail==1),2);
 c=0;
@@ -122,6 +127,8 @@ ylabel('Catch Trial')
 
 figure(43)
 clf
+set(gcf,'Name','Histogram of best times')
+title(num2str(subnum))
 for k=1:length(u)
     ulabs{k}=num2str(su(k));
 end
@@ -140,6 +147,8 @@ legend('No Reset','FB Only ','FF and FB')
 
 figure(44)
 clf
+set(gcf,'Name','Reset Time vs Fit Quality')
+title(num2str(subnum))
 hold on
 color='gb';
 tX=[trials{c}.resetT(1:end-1) 2*trials{c}.resetT(end-1)-trials{c}.resetT(end-2)];
@@ -188,3 +197,38 @@ legend('Data',['Fit line R^2=',num2str(r2)],'Identity')
 [h,p]=ttest2(x_,y_)
 
 
+figure(46)
+clf
+set(gcf,'Name','FF + FB Reset Time Histogram')
+title(num2str(subnum))
+t1=t(1:2:end-1);
+n=hist(t(bestindices(:,3)),t1);
+hold on
+fn=filter(ones(4,1)/4,1,n);
+bar(t1,[n',fn'])
+plot(t1,fn,'r')
+L=length(fn);
+NFFT = 2^nextpow2(L); % Next power of 2 from length of y
+Y = fft(n,NFFT)/L;
+m=max(n);
+dt=diff(t);
+peak_at=(1/dt(1))/2*linspace(0,1,NFFT/2);
+ylabel('Absolute Frequency')
+xlabel('Time into reach, sec')
+legend('Best Times (FF + FB only)','Above, but filtered','Line to make trend clearer')
+%plot(m*2*abs(Y(1:NFFT/2)),'r')
+% recon=zeros(size(t1));
+% for k=1:NFFT/2
+%     recon=recon+2*real(Y(k))*cos(2*pi*peak_at(k)*(t1-t1(1))+imag(Y(k)));
+% end
+% %plot(t1,-4*cos(2*pi*peak_at(6)*t1+imag(Y(6))))
+% plot(t1,recon)
+
+figure(47)
+clf
+hold on
+set(gcf,'Name','FF + FB Reset Time Frequency Analysis')
+title(num2str(subnum))
+plot(peak_at,m*2*abs(Y(1:NFFT/2)),'b')
+xlabel('Frequency, Hz')
+ylabel('|FFT(t)|')

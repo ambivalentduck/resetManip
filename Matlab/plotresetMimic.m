@@ -1,11 +1,9 @@
-clear all
+function plotresetMimic(trials)
 
 color=['rgb'];
 figure(41)
 clf
 hold on
-
-load('../Data/147withsim.mat');
 
 lt=length(trials);
 
