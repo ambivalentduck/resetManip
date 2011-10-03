@@ -9,7 +9,7 @@ close all
 clear all
 tic
 
-number=666;
+number=1;
 nums=num2str(number);
 
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in forces_in_time
@@ -30,9 +30,9 @@ m2=1.52;
 I1=.0141;
 I2=.0188;
 
-x0=[-0.019; 1]; %Shoulder location, just assume that they're an inch from fully outstretched
+x0=[-0.016; 1]; %Shoulder location, just assume that they're an inch from fully outstretched
 
-p0=[-0.01 .48]';
+p0=[-0.016; .463]';
 
 %Consequence: Workspace is a circle with center at 0, radius .67
 
@@ -53,7 +53,7 @@ tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 progressbar('Trial','Reset')
 
 tocs=[toc];
-for TRIAL=3; %1:length(trials)
+for TRIAL=1:length(trials)
     TRIAL
     pf=trials{TRIAL}.target;
     progressbar(TRIAL/length(trials),0);

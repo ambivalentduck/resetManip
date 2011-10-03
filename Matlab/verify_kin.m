@@ -1,5 +1,7 @@
 global l1 l2 x0
 
+l1=1;
+l2=.8;
 circle=-pi:0.1:pi;
 error=zeros(length(circle),length(circle));
 
