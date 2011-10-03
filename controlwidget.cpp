@@ -6,6 +6,7 @@
 #define oRadius min/80
 #define cRadius min/40
 #define tRadius min/40
+#define calRadius min/40
 #define TAB << "\t" <<
 #define CURLVAL -20
 #define SADDLEVAL 10
@@ -58,9 +59,16 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	stimulusBox->insertItem(0,"Unstimulated");
 	stimulusBox->insertItem(1,"Curl");
 	stimulusBox->insertItem(2,"Saddle");
-	grayList.push_back(stimulusBox);
 	stimulus=UNSTIMULATED;
 	connect(stimulusBox, SIGNAL(activated(int)), this, SLOT(setStimulus(int)));
+	
+	layout->addRow(tr("Added Delay:"), delayBox=new QDoubleSpinBox(this));
+	delayBox->setValue(0);
+	delayBox->setMaximum(2);
+	delayBox->setMinimum(0);
+	delayBox->setDecimals(3);
+	visualdelay=-1;
+	connect(delayBox, SIGNAL(valueChanged(double)), this, SLOT(setDelay(double)));
 	
 	setLayout(layout);
 	
@@ -80,35 +88,52 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	
 	//Set up a "calibration" field. Should be a 1/4 circle in each corner
 	sphereVec.clear();
+	sphere.color=point(0,.5,0);
+	sphere.position=center;
+	sphere.radius=min;
+	sphereVec.push_back(sphere);
 	sphere.color=point(.5,.5,.5);
 	sphere.position=center;
-	sphere.radius=min/2;
+	sphere.radius=min/2l;
 	sphereVec.push_back(sphere);
+	sphere.color=point(1,0,0);
+	sphere.position=center;
+	sphere.radius=calRadius;
+	sphereVec.push_back(sphere);
+	point unit(1,0);
+	for(double k=0;k<4;k++)
+	{
+		sphere.color=point(1,0,0);
+		sphere.position=center+unit.rotateZero(k*3.14159l/2l)*(min/2l);
+		sphere.radius=calRadius;
+		sphereVec.push_back(sphere);
+	}
 	sphere.color=point(.5,.5,.5); //Grey
 	sphere.position=point(LEFT,TOP);
-	sphere.radius=oRadius;
+	sphere.radius=calRadius;
 	sphereVec.push_back(sphere);
 	sphere.color=point(.5,.5,.5); //Grey
 	sphere.position=point(LEFT,BOTTOM);
-	sphere.radius=oRadius;
+	sphere.radius=calRadius;
 	sphereVec.push_back(sphere);
 	sphere.color=point(.5,.5,.5); //Grey
 	sphere.position=point(RIGHT,TOP);
-	sphere.radius=oRadius;
+	sphere.radius=calRadius;
 	sphereVec.push_back(sphere);
 	sphere.color=point(.5,.5,.5); //Grey
 	sphere.position=point(RIGHT,BOTTOM);
-	sphere.radius=oRadius;
+	sphere.radius=calRadius;
 	sphereVec.push_back(sphere);
 	userWidget->setSpheres(sphereVec);
-	sphereVec.clear();
+	
+	inSize=0;
 	
 	//Initialize everything UPD-related to values that prevent problems
 	curl=0;
 	saddle=0;
 	trial=0;
 	subject=0;
-	probeDelay=9999999; //Several months ~ infinity without the messiness of picking the numerical limit
+	probeDelay=9999999; //Several months ~ infinity
 	pillowMag=0;
 	ExperimentRunning=false;
 	commandforce=point(0,0);
@@ -156,14 +181,18 @@ void ControlWidget::readPending()
 	times.push_back(now);
 	data.push_back(in);
 	bool old_enough=false;
-	while((now-times.front())>.1)
+	if (visualdelay>0)
 	{
-		times.pop_front();
-		in=data.front();
-		data.pop_front();
-		old_enough=true;
+		while((now-times.front())>=visualdelay)
+		{
+			times.pop_front();
+			in=data.front();
+			data.pop_front();
+			old_enough=true;
+		}
+		if(!old_enough) return;
 	}
-	if(!old_enough) return;
+	
 	
 	cursor.X()=*reinterpret_cast<double*>(in.data()+sizeof(double));
 	cursor.Y()=*reinterpret_cast<double*>(in.data()+2*sizeof(double));
@@ -211,7 +240,7 @@ void ControlWidget::readPending()
 			{
 				origin=target;
 				if(trial>=1) {target=loadTrial(trial+1);}
-				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center); probe=PULSE; curl=50; probeDelay=.04; probeOn=-1;}
+				else {target=(target==(point(0,0)+center)?point(0,min/3)+center:point(0,0)+center);}
 				state=acquireTarget;
 				leftOrigin=false;
 			}
@@ -332,13 +361,13 @@ point ControlWidget::loadTrial(int T)
 	std::string qline;
 	int temptrial;
 	unsigned int tempprobe;
-	double tempx, tempy,tempstim;
+	double tempx, tempy,tempstim,tempdelay;
 	std::cout << "Loading Trial " << T << std::endl;
 	do
 	{
 		trialFile.readLine(line,200);
 		std::cout << line << std::endl;
-		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf\t%d",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe));
+		if(sscanf(line, "%d\t%lf\t%lf\t%lf\t%lf\t%d\t%lf",&temptrial,&tempstim,&tempx,&tempy,&probeDelay,&tempprobe,&tempdelay));
 		else
 		{
 			std::cout << "Complete failure to read line: " << line << std::endl; return center;
@@ -350,6 +379,8 @@ point ControlWidget::loadTrial(int T)
 	curl=tempstim;
 	probe=ProbeType(tempprobe);
 	trialNumBox->setValue(T);
+	visualdelay=tempdelay;
+	delayBox->setValue(visualdelay);
 	
 	std::cout << "Finished Loading Trial " << temptrial << std::endl;
 	double min23=.45*min;	
