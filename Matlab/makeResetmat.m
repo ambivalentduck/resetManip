@@ -1,5 +1,4 @@
 function makeResetmat(name)
-name='149';
 
 input=load(['../Data/input',name,'.dat']);
 output=load(['../Data/output',name,'.dat']);
@@ -41,7 +40,7 @@ for k=1:length(f)
     trials{k}.time=trials{k}.time-trials{k}.time(ff(1));
     trials{k}.time=.6*trials{k}.time/(2*trials{k}.time(pks(1)));
 
-    trials{k}.force(trials{k}.time>1)=0; %Nothing relevant happens this far out?
+    %trials{k}.force(trials{k}.time>1)=0; %Nothing relevant happens this far out?
 
     fa=find(categories==categories(fk));
     faa=find(fa==fk);

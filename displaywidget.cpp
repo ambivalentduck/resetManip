@@ -1,14 +1,15 @@
 #include "displaywidget.h"
 #include <GL/glu.h>
 #include <cmath>
-
-#define LEFTBAR .1l*LEFT+.9l*RIGHT
-
 #include <iostream>
+
+#define BUFFSIZE 1024
 
 DisplayWidget::DisplayWidget(QWidget *parent,bool FullScreen)
 :QGLWidget(QGLFormat(QGL::DoubleBuffer|QGL::AlphaChannel|QGL::SampleBuffers|QGL::AccumBuffer), parent, 0, FullScreen?Qt::X11BypassWindowManagerHint:Qt::Widget)
 {
+	pbuffer = new QGLPixelBuffer(QSize(BUFFSIZE,BUFFSIZE),QGLFormat(QGL::DoubleBuffer|QGL::AlphaChannel|QGL::SampleBuffers|QGL::AccumBuffer),this);
+	
 	//Take care of window and input initialization.
 	timer.start(16, this); //Draw again shortly after constructor finishes
 	if(FullScreen)
@@ -21,7 +22,7 @@ DisplayWidget::DisplayWidget(QWidget *parent,bool FullScreen)
 	setAutoFillBackground(false); //Try to let glClear work...
 	setAutoBufferSwap(false); //Don't let QT swap automatically, we want to control timing.
 	backgroundColor=point(0,0,0);
-	min=.4436;
+	min=(fabs(LEFT-RIGHT)>fabs(TOP-BOTTOM)?fabs(TOP-BOTTOM):fabs(LEFT-RIGHT)); //Screen diameter (shortest dimension) known from direct observation, do not change
 }
 
 DisplayWidget::~DisplayWidget()
@@ -44,15 +45,34 @@ void DisplayWidget::initializeGL()
 	
 	glEnable(GL_POINT_SMOOTH);
 	glPointSize(1);
+	
+	pbuffer->makeCurrent();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	
+	glClearColor(0,0,0,1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glShadeModel(GL_FLAT);
+	glViewport(0,0,BUFFSIZE,BUFFSIZE);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(LEFT,RIGHT,BOTTOM,TOP,-1,1);
+
+	dyntexture=pbuffer->generateDynamicTexture();
 }
 
 void DisplayWidget::resizeGL(int w, int h)
 {
+	makeCurrent();
 	W=w; H=h;
 	glViewport(0,0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(LEFT,RIGHT,BOTTOM,TOP,1,-1);
+	//Render from projector's perspective, projector must be 0,0,0, looking down -Z
+	glFrustum(LEFT-PROJECTORX,RIGHT-PROJECTORX,PROJECTORY-BOTTOM,PROJECTORY-TOP,.999*PROJECTORZ,1.495);
 	update();
 }
 
@@ -60,6 +80,8 @@ void DisplayWidget::paintGL()
 {
 	timer.stop();
 	dataMutex.lock();
+
+	pbuffer->makeCurrent();
 	glClearColor(backgroundColor.X(), backgroundColor.Y(), backgroundColor.Z(),1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glShadeModel(GL_FLAT);
@@ -83,32 +105,31 @@ void DisplayWidget::paintGL()
 		glCallList(sphereList);
 		glPopMatrix();
 	}
-	
-	glColor3d(1,1,1);
-	renderText(LEFT,.39,0, text);
-	
-	//Goal is to allocate the rightmost 10th of the screen, draw rectangles with 1:height scaling
-	//Color should be green in band, fade to red outside it
-	//Band is purple
-	double barwidth=.1*(RIGHT-LEFTBAR)/double(times.size());
-	double left=LEFTBAR;
-	for(std::deque<double>::iterator it=times.begin();it!=times.end();++it)
-	{
-		double sat=exp(-pow((*it-(UPPERBAR+LOWERBAR)/2l)*5l,2));
-		glColor3d(1l-sat,sat,0);
-		glRectd(left,BOTTOM,left+barwidth,*it*(TOP-BOTTOM)+BOTTOM);
-		left+=barwidth;
-	}
-	if (times.size()>0)
-	{
-		glColor3d(1,0,1);
-		glRectd(LEFTBAR,BOTTOM+LOWERBAR*(TOP-BOTTOM)-.001,RIGHT,BOTTOM+LOWERBAR*(TOP-BOTTOM)+.001);
-		glRectd(LEFTBAR,BOTTOM+UPPERBAR*(TOP-BOTTOM)-.001,RIGHT,BOTTOM+UPPERBAR*(TOP-BOTTOM)+.001);
-	}
+
+	pbuffer->updateDynamicTexture(dyntexture);
+
+	makeCurrent();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glScaled(1,-1,1);
+	glTranslated(-PROJECTORX,-PROJECTORY,-PROJECTORZ); //Projector now ignored
+		
+	glClearColor(0,0,0,1);  //Unused area should be unlit
+	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	glBindTexture(GL_TEXTURE_2D,dyntexture);
+	glBegin(GL_POLYGON);
+		glTexCoord2f(0,0); glVertex2f(LEFT,BOTTOM);
+		glTexCoord2f(0,1); glVertex2f(LEFT,TOP);
+		glTexCoord2f(1,1); glVertex2f(RIGHT,TOP);
+		glTexCoord2f(1,0); glVertex2f(RIGHT,BOTTOM);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
 	
 	dataMutex.unlock();
 	swapBuffers();
-	glFinish();  //Get precise timing, blocks until swap succeeds.  Swap happens during refresh.
+	glFinish();  //Get precise timing by recording time after this, blocks until swap succeeds.  Swap happens during refresh.
 	timer.start(15, this); //60 Hz = 16.6 ms, guarantee a paint in each refresh and almost immediately before refresh to minimize lag.
 }
 

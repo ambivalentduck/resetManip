@@ -47,6 +47,7 @@ public:
 	Point<T> raypointvec(Point<T> x0, Point<T> x1);
 	Point<double> unit();
 	Point<T> rotate(double theta, Point<T> u);
+	Point<T> rotateZero(double theta);
 	Point<T> reflect(double theta);
 	T theta() {return atan2(p[0],p[1]);}   
 	
@@ -85,8 +86,7 @@ template<typename T> double Point<T>::dist(Point<T> p2) {return sqrt((p[0]-p2.p[
 template<typename T> T Point<T>::linedist(Point<T> x0, Point<T> x1)
 {
 	Point<T> M=(x1-x0);
-	T m=M.mag();
-	return (M*(x0-*this)).mag()/(m*m);
+	return (*this-(*this|M)).mag()/(M|M); //Underwent changes recently, needs *thorough* checking
 }
 template<typename T> T Point<T>::raydist(Point<T> x0, Point<T> x1) 
 {
@@ -128,13 +128,20 @@ template<typename T> Point<T> Point<T>::raypointvec(Point<T> x0, Point<T> x1)
 	return *this-(x0+M*t0);
 } 
 
-template<typename T> Point<double> Point<T>::unit() {T m=this->mag(); if(m==0) return *this; return (*this)/m;} //Never return inf
+template<typename T> Point<double> Point<T>::unit() {T m=this->mag(); if(m==0l) return *this; return (*this)/m;}
 
 template<typename T> Point<T> Point<T>::rotate(double theta, Point<T> u)
 {
 	Point<T> U=u.unit();
 	double c=cos(theta);
 	return (*this)*c+U*(*this)*sin(theta)+U*(U|(*this))*(1.0-c);
+}
+
+template<typename T> Point<T> Point<T>::rotateZero(double theta)
+{
+	double c=cos(theta);
+	double s=sin(theta);
+	return Point<T>(c*p[0]-s*p[1],s*p[0]+c*p[1],p[2]);
 }
 
 template<typename T> Point<T> Point<T>::reflect(double theta)

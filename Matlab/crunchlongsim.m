@@ -6,7 +6,7 @@ figure(42)
 clf
 hold on
 
-subnum=149;
+subnum=1;
 load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);

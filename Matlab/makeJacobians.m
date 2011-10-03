@@ -1,4 +1,4 @@
-function [fJ, Jt, getAlpha, getAccel]=makeJacobians
+function [fJinline, Jtinline, getAlphainline, getAccelinline]=makeJacobians
 
 syms theta1 theta2 real;
 theta=[theta1; theta2];
@@ -17,10 +17,19 @@ fJt2dy2=inline(vectorize(diff(fk(2),theta2,2)));
 fJt1dxdy=inline(vectorize(diff(diff(fk(1),theta1),theta2)));
 fJt2dxdy=inline(vectorize(diff(diff(fk(2),theta1),theta2)));
 
-getAccel=@(theta,omega,alpha)[fJ11(theta(1),theta(2)),fJ12(theta(1),theta(2));fJ21(theta(1),theta(2)),fJ22(theta(1),theta(2))]*alpha+[fJt1dx2(theta(1),theta(2))*omega(1)+fJt1dxdy(theta(1),theta(2))*omega(2),fJt1dy2(theta(1),theta(2))*omega(2)+fJt1dxdy(theta(1),theta(2))*omega(1);fJt2dx2(theta(1),theta(2))*omega(1)+fJt2dxdy(theta(1),theta(2))*omega(2),fJt2dy2(theta(1),theta(2))*omega(2)+fJt2dxdy(theta(1),theta(2))*omega(1)]*omega;
+getAccelinline=@(theta,omega,alpha)[fJ11(theta(1),theta(2)),fJ12(theta(1),theta(2));fJ21(theta(1),theta(2)),fJ22(theta(1),theta(2))]*alpha+[fJt1dx2(theta(1),theta(2))*omega(1)+fJt1dxdy(theta(1),theta(2))*omega(2),fJt1dy2(theta(1),theta(2))*omega(2)+fJt1dxdy(theta(1),theta(2))*omega(1);fJt2dx2(theta(1),theta(2))*omega(1)+fJt2dxdy(theta(1),theta(2))*omega(2),fJt2dy2(theta(1),theta(2))*omega(2)+fJt2dxdy(theta(1),theta(2))*omega(1)]*omega;
 
-fJ=@(theta) [fJ11(theta(1),theta(2)),fJ12(theta(1),theta(2));fJ21(theta(1),theta(2)),fJ22(theta(1),theta(2))];  % v=fJ * omega
-Jt=@(theta) fJ(theta)'; % torque = Jt * Force
+fJinline=@(theta) [fJ11(theta(1),theta(2)),fJ12(theta(1),theta(2));fJ21(theta(1),theta(2)),fJ22(theta(1),theta(2))];  % v=fJ * omega
+Jtinline=@(theta) fJ(theta)'; % torque = Jt * Force
+
+fh=fopen('fJ.m','w');
+fprintf(fh,'function out=fJ(theta)\ntheta1=theta(1);\ntheta2=theta(2);\n');
+fprintf(fh,['fJ11=',vectorize(diff(fk(1),theta1)),';\n']);
+fprintf(fh,['fJ21=',vectorize(diff(fk(2),theta1)),';\n']);
+fprintf(fh,['fJ12=',vectorize(diff(fk(1),theta2)),';\n']);
+fprintf(fh,['fJ22=',vectorize(diff(fk(2),theta2)),';\n']);
+fprintf(fh,'out=[fJ11,fJ12;fJ21,fJ22];\n');
+fclose(fh);
 
 % syms x y real;
 % p=[x; y];
@@ -42,6 +51,19 @@ Jt=@(theta) fJ(theta)'; % torque = Jt * Force
 
 % getAlpha=@(p,v,a) [J11(p(1),p(2)),J12(p(1),p(2));J21(p(1),p(2)),J22(p(1),p(2))]*a+[Jt1dx2(p(1),p(2))*v(1)+Jt1dxdy(p(1),p(2))*v(2),Jt1dy2(p(1),p(2))*v(2)+Jt1dxdy(p(1),p(2))*v(1);Jt2dx2(p(1),p(2))*v(1)+Jt2dxdy(p(1),p(2))*v(2),Jt2dy2(p(1),p(2))*v(2)+Jt2dxdy(p(1),p(2))*v(1)]*v;
 
-getAlpha=@(theta,omega,accel) [fJ11(theta(1),theta(2)),fJ12(theta(1),theta(2));fJ21(theta(1),theta(2)),fJ22(theta(1),theta(2))]\(accel-[fJt1dx2(theta(1),theta(2))*omega(1)+fJt1dxdy(theta(1),theta(2))*omega(2),fJt1dy2(theta(1),theta(2))*omega(2)+fJt1dxdy(theta(1),theta(2))*omega(1);fJt2dx2(theta(1),theta(2))*omega(1)+fJt2dxdy(theta(1),theta(2))*omega(2),fJt2dy2(theta(1),theta(2))*omega(2)+fJt2dxdy(theta(1),theta(2))*omega(1)]*omega);
+getAlphainline=@(theta,omega,accel) fJ(theta)\(accel-[fJt1dx2(theta(1),theta(2))*omega(1)+fJt1dxdy(theta(1),theta(2))*omega(2),fJt1dy2(theta(1),theta(2))*omega(2)+fJt1dxdy(theta(1),theta(2))*omega(1);fJt2dx2(theta(1),theta(2))*omega(1)+fJt2dxdy(theta(1),theta(2))*omega(2),fJt2dy2(theta(1),theta(2))*omega(2)+fJt2dxdy(theta(1),theta(2))*omega(1)]*omega);
+fh=fopen('getAlpha.m','w');
+fprintf(fh,'function out=getAlpha(theta,omega,accel)\ntheta1=theta(1);\ntheta2=theta(2);\n');
+fprintf(fh,['fJt1dx2=',vectorize(diff(fk(1),theta1,2)),';\n']);
+fprintf(fh,['fJt1dy2=',vectorize(diff(fk(1),theta2,2)),';\n']);
+fprintf(fh,['fJt2dx2=',vectorize(diff(fk(2),theta1,2)),';\n']);
+fprintf(fh,['fJt2dy2=',vectorize(diff(fk(2),theta2,2)),';\n']);
+fprintf(fh,['fJt1dxdy=',vectorize(diff(diff(fk(1),theta1),theta2)),';\n']);
+fprintf(fh,['fJt2dxdy=',vectorize(diff(diff(fk(2),theta1),theta2)),';\n']);
+fprintf(fh,'out=fJ(theta)\\(accel-[fJt1dx2*omega(1)+fJt1dxdy*omega(2),fJt1dy2*omega(2)+fJt1dxdy*omega(1);fJt2dx2*omega(1)+fJt2dxdy*omega(2),fJt2dy2*omega(2)+fJt2dxdy*omega(1)]*omega);\n')
+fclose(fh);
+
+
+
 %No inverse kinematics in this formulation :), note no longer p,v,a,
 %instead theta, omega, a
