@@ -27,15 +27,16 @@ fail=ones(lt,1);
 for k=1:lt
     waitbar(k/lt,h,'Starting');
     tk=trials{k};
+    trials{k}.accumerror=accumulatedError(tk.pos,tk.target);
     try
         lrt=length(tk.resetT);
         workinglrt=lrt;
-
+       
         realpathchunks=sqrt(sum(diff(tk.pos).^2,2));
         realpath=cumsum(realpathchunks);
         realpath=[0; realpath(realpath<3*realpath(end)/4)];
         realpos=tk.pos(1:length(realpath),:);
-
+        
         pos0=tk.reset0.pos;
         path0=[0; cumsum(sqrt(sum(diff(pos0).^2,2)))];
         corresponding0=twoNearestNeighbor(pos0,path0,realpath);
@@ -57,8 +58,8 @@ for k=1:lt
             area2=sum(sqrt(sum(abs(realpos-corresponding2).^2,2)).*realpathchunks(1:length(realpath)));
             vals{k}(resetT,3)=area2;
         end
-        [v1,resetT1]=min(vals{k}(1:end-1,2));
-        [v2,resetT2]=min(vals{k}(1:end-1,3));
+        [v1,resetT1]=min(vals{k}(1:end-1,2)); %v1 is feedback-only
+        [v2,resetT2]=min(vals{k}(1:end-1,3)); %v2 is both-reset
 
         f=find(tk.requested);
         %plot actual reset0 reset1 reset2
@@ -104,6 +105,22 @@ for k=1:lt
         vmat(end,c,2)=vals{k}(end,1);
     end
 end
+
+% figure(666)
+% clf
+% set(gcf,'Name','3D Plot Request By Jim')
+% timebins=0:.1:1;
+% errorbins=0:.3:3;
+% 
+% for k=1:length(trials)
+% 
+% for k=1:length(errorbins-1)
+%     for kk=1:length(timebins-1)
+% 
+%         
+% hacktimes=trials{1}.resetT(1:end-1);
+% hacktimes(end+1)=2*hacktimes(end)-hacktimes(end-1);
+% [X,Y,n]=hist2d(hacktimes,[tk{:}.accumerror]);
 
 bestindices=ones(sum(fail==1),3)*lrt;
 best0=vmat(end,:,1);
@@ -196,34 +213,35 @@ legend('Data',['Fit line R^2=',num2str(r2)],'Identity')
 
 [h,p]=ttest2(x_,y_)
 
-
+%% Histogram, Weighted Type3 times
 figure(46)
 clf
 set(gcf,'Name','FF + FB Reset Time Histogram')
-title(num2str(subnum))
+title(['Subject ',num2str(subnum),': FF+FB Best Times Histogram'])
 t1=t(1:2:end-1);
-n=hist(t(bestindices(:,3)),t1);
+cheaphack=length(bestindices(:,3));
+n1=hist(t(bestindices(1:floor(cheaphack/3),3)),t1);
+n1=n1/sum(n1);
+n2=hist(t(bestindices(floor(2*cheaphack/3):cheaphack,3)),t1);
+n2=n2/sum(n2);
 hold on
+bar(t1,[n1',n2'])
+fn1=filter(ones(4,1)/4,1,n1);
+fn2=filter(ones(4,1)/4,1,n2);
+plot(t1,fn1,'b',t1,fn2,'r')
+ylabel('Relative Frequency')
+xlabel('Time into reach, sec')
+legend('No Exposure to Delay','Post-Exposure to Delay')
+
+%% Fourier Analysis
+n=hist(t(bestindices(:,3)),t1);
 fn=filter(ones(4,1)/4,1,n);
-bar(t1,[n',fn'])
-plot(t1,fn,'r')
 L=length(fn);
 NFFT = 2^nextpow2(L); % Next power of 2 from length of y
 Y = fft(n,NFFT)/L;
 m=max(n);
 dt=diff(t);
 peak_at=(1/dt(1))/2*linspace(0,1,NFFT/2);
-ylabel('Absolute Frequency')
-xlabel('Time into reach, sec')
-legend('Best Times (FF + FB only)','Above, but filtered','Line to make trend clearer')
-%plot(m*2*abs(Y(1:NFFT/2)),'r')
-% recon=zeros(size(t1));
-% for k=1:NFFT/2
-%     recon=recon+2*real(Y(k))*cos(2*pi*peak_at(k)*(t1-t1(1))+imag(Y(k)));
-% end
-% %plot(t1,-4*cos(2*pi*peak_at(6)*t1+imag(Y(6))))
-% plot(t1,recon)
-
 figure(47)
 clf
 hold on
