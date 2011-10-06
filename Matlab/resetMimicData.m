@@ -16,21 +16,23 @@ global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in 
 
 load(['../Data/',nums,'.mat']);
 
-kp=[15 6; 6 16]*1;
+kp=[15 6; 6 16];
 kd=[2.3 .09; .09 2.4];
 
 %%assume two link
-l1=.33;
-lc1=.165;
-l2=.34;
-lc2=0.19;
+%l1=.33;
+l1=.24;
+lc1=.165*l1/.33;
+%l2=.34;
+l2=.33;
+lc2=0.19*l2/.34;
 m1=1.93;
 m2=1.52;
 %model using parameters from shadmehr and mussa-ivaldi
 I1=.0141;
 I2=.0188;
 
-x0=[-0.016; 1]; %Shoulder location, just assume that they're an inch from fully outstretched
+x0=[-0.016; .463+.47]; %Shoulder location, just assume that they're an inch from fully outstretched
 
 p0=[-0.016; .463]';
 

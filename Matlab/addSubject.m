@@ -1,4 +1,4 @@
-function makeResetmat(name)
+function addSubject(name)
 
 input=load(['../Data/input',name,'.dat']);
 output=load(['../Data/output',name,'.dat']);
@@ -27,6 +27,7 @@ for k=1:length(f)
     trials{k}.requested=output(fo,12);
     trials{k}.mag=input(fk,2);
     trials{k}.delay=input(fk,5);
+    trials{k}.visualdelay=input(fk,7);
     trials{k}.time=output(fo,2);
     try
         [pkv, pks]=findpeaks(speed,'minpeakheight',.2);
