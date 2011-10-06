@@ -178,6 +178,9 @@ void ControlWidget::readPending()
 		return;
 	}
 	
+	//Data from force input is not delayed since the subject observes it with no delay.
+	force.X()=*reinterpret_cast<double*>(in.data()+7*sizeof(double));
+	force.Y()=*reinterpret_cast<double*>(in.data()+8*sizeof(double));
 	times.push_back(now);
 	data.push_back(in);
 	bool old_enough=false;
@@ -200,8 +203,7 @@ void ControlWidget::readPending()
 	velocity.Y()=*reinterpret_cast<double*>(in.data()+4*sizeof(double));
 	accel.X()=*reinterpret_cast<double*>(in.data()+5*sizeof(double));
 	accel.Y()=*reinterpret_cast<double*>(in.data()+6*sizeof(double));
-	force.X()=*reinterpret_cast<double*>(in.data()+7*sizeof(double));
-	force.Y()=*reinterpret_cast<double*>(in.data()+8*sizeof(double));
+	//Data from force input is not delayed since the subject observes it with no delay.
 	
 	if (!leftOrigin) trialStart=now;
 	if(!leftOrigin) if (cursor.dist(origin)>(oRadius+cRadius)) leftOrigin=true;
