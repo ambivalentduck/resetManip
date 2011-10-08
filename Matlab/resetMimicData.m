@@ -21,9 +21,11 @@ kd=[2.3 .09; .09 2.4];
 
 %%assume two link
 %l1=.33;
-l1=.24;
+%l1=.24; Subject 1
+l1=.255;
 lc1=.165*l1/.33;
 %l2=.34;
+%l2=.33; Subject 1
 l2=.33;
 lc2=0.19*l2/.34;
 m1=1.93;
@@ -32,7 +34,9 @@ m2=1.52;
 I1=.0141;
 I2=.0188;
 
-x0=[-0.016; .463+.47]; %Shoulder location, just assume that they're an inch from fully outstretched
+%Shoulder location
+%x0=[-0.016; .463+.47]; %Subject 1
+x0=[-0.016; .463+.46]; %Subject 2
 
 p0=[-0.016; .463]';
 
