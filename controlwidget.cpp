@@ -302,7 +302,7 @@ void ControlWidget::readPending()
 
 void ControlWidget::startClicked()
 {
-	userWidget->setBGColor(point(0,0,0));
+	userWidget->setDeepBGColor(point(0,0,0));
 	if(subject>0)
 	{
 		goGray();
