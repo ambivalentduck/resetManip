@@ -19,14 +19,9 @@ load(['../Data/',nums,'.mat']);
 kp=[15 6; 6 16];
 kd=[2.3 .09; .09 2.4];
 
+[l1, l2, shoulder]=getSubjectParams(nums);
 %%assume two link
-%l1=.33;
-%l1=.24; Subject 1
-l1=.255;
 lc1=.165*l1/.33;
-%l2=.34;
-%l2=.33; Subject 1
-l2=.33;
 lc2=0.19*l2/.34;
 m1=1.93;
 m2=1.52;
@@ -35,10 +30,9 @@ I1=.0141;
 I2=.0188;
 
 %Shoulder location
-%x0=[-0.016; .463+.47]; %Subject 1
-x0=[-0.016; .463+.46]; %Subject 2
+x0=[-0.016; .463]+shoulder';
 
-p0=[-0.016; .463]';
+p0=[-0.016; .463];
 
 %Consequence: Workspace is a circle with center at 0, radius .67
 
@@ -59,7 +53,7 @@ tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 progressbar('Trial','Reset')
 
 tocs=[toc];
-for TRIAL=1:length(trials)
+for TRIAL=1:length(trials) %120:130 %length(trials)
     TRIAL
     pf=trials{TRIAL}.target;
     progressbar(TRIAL/length(trials),0);

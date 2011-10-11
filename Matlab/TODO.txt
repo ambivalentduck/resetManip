@@ -1,0 +1,9 @@
+To-do list:
+1.  Report the true forces, not a delayed version in controlwidget.cpp
+---Possibly report *both,* separate files if necessary
+2.  Run more (all?) subjects for standard reach length
+2a. Run some subjects for non-standard reach length
+3.  Modify the addSubject code to account for 
+4.  Make a suite of unit tests
+5.  Add Jim's new plot to the plotting
+
