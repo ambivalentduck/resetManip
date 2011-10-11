@@ -22,6 +22,7 @@ DisplayWidget::DisplayWidget(QWidget *parent,bool FullScreen)
 	setAutoFillBackground(false); //Try to let glClear work...
 	setAutoBufferSwap(false); //Don't let QT swap automatically, we want to control timing.
 	backgroundColor=point(0,0,0);
+	deepBackgroundColor=point(0,0,0);
 	min=(fabs(LEFT-RIGHT)>fabs(TOP-BOTTOM)?fabs(TOP-BOTTOM):fabs(LEFT-RIGHT)); //Screen diameter (shortest dimension) known from direct observation, do not change
 }
 
@@ -114,7 +115,7 @@ void DisplayWidget::paintGL()
 	glScaled(1,-1,1);
 	glTranslated(-PROJECTORX,-PROJECTORY,-PROJECTORZ); //Projector now ignored
 		
-	glClearColor(0,0,0,1);  //Unused area should be unlit
+	glClearColor(deepBackgroundColor.X(), deepBackgroundColor.Y(), deepBackgroundColor.Z(),1);  //Unused area is unlit by default
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);

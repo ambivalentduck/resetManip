@@ -125,6 +125,7 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	sphere.radius=calRadius;
 	sphereVec.push_back(sphere);
 	userWidget->setSpheres(sphereVec);
+	userWidget->setDeepBGColor(point(1,0,0));
 	
 	inSize=0;
 	
@@ -301,6 +302,7 @@ void ControlWidget::readPending()
 
 void ControlWidget::startClicked()
 {
+	userWidget->setBGColor(point(0,0,0));
 	if(subject>0)
 	{
 		goGray();

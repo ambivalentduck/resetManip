@@ -11,13 +11,13 @@
 #include "point.h"
 
 
-#define LEFT .3193l
-#define RIGHT -.3334l
-#define TOP .2203l
-#define BOTTOM .7033l
-#define PROJECTORX -.02524l
-#define PROJECTORY .670401l
-#define PROJECTORZ 1.25l
+#define LEFT .325l
+#define RIGHT -.344l
+#define TOP .198l
+#define BOTTOM .698l
+#define PROJECTORX -.0121l
+#define PROJECTORY .663l
+#define PROJECTORZ 1.327l
 
 #define LOWERBAR .50l
 #define UPPERBAR .65l
@@ -41,6 +41,7 @@ public:
 	void resizeGL(int w, int h);
 	void timerEvent(QTimerEvent * event) {updateGL();}
 	
+	void setDeepBGColor(point color) {dataMutex.lock(); deepBackgroundColor=color; dataMutex.unlock();}
 	void setBGColor(point color) {dataMutex.lock(); backgroundColor=color; dataMutex.unlock();}
 	void setSpheres(std::vector<Sphere> s) {dataMutex.lock(); spheres=s; dataMutex.unlock();}
 	void setBars(std::deque<double> t) {dataMutex.lock(); times=t; dataMutex.unlock();}
@@ -52,7 +53,7 @@ private:
 	QBasicTimer timer;
 	std::vector<Sphere> spheres;
 	std::deque<double> times;
-	point backgroundColor;
+	point backgroundColor,deepBackgroundColor;
 	QMutex dataMutex;
 	double min;
 	QString text;
