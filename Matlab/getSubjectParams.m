@@ -16,7 +16,7 @@ switch num
     case '9'
         l1=.29;
         l2=.36;
-        shoulder=[2.7 40.5];
+        shoulder=[.027 .405];
     otherwise
         l1=.33;
         l2=.34;

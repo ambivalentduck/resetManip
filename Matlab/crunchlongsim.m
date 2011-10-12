@@ -6,7 +6,7 @@ figure(42)
 clf
 hold on
 
-subnum=1;
+subnum=9;
 load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);
@@ -106,22 +106,6 @@ for k=1:lt
     end
 end
 
-% figure(666)
-% clf
-% set(gcf,'Name','3D Plot Request By Jim')
-% timebins=0:.1:1;
-% errorbins=0:.3:3;
-% 
-% for k=1:length(trials)
-% 
-% for k=1:length(errorbins-1)
-%     for kk=1:length(timebins-1)
-% 
-%         
-% hacktimes=trials{1}.resetT(1:end-1);
-% hacktimes(end+1)=2*hacktimes(end)-hacktimes(end-1);
-% [X,Y,n]=hist2d(hacktimes,[tk{:}.accumerror]);
-
 bestindices=ones(sum(fail==1),3)*lrt;
 best0=vmat(end,:,1);
 [best1,bestindices(:,2)]=min(vmat(1:end-1,:,1),[],1);
@@ -130,8 +114,7 @@ best0=vmat(end,:,1);
 [bestval,ind]=min([best0' best1' best2'],[],2);
 besttype=ind-1;
 besttime=besttype;
-t=linspace(.05, .26, 50);
-t=[t inf];
+t=trials{1}.resetT; %%Isn't this correct?
 for k=1:sum(fail==1)
     besttime(k)=t(bestindices(k,besttype(k)+1));
 end
@@ -146,9 +129,6 @@ figure(43)
 clf
 set(gcf,'Name','Histogram of best times')
 title(num2str(subnum))
-for k=1:length(u)
-    ulabs{k}=num2str(su(k));
-end
 
 n=zeros(3,length(u));
 
@@ -156,8 +136,7 @@ n(1,end)=sum(besttype==0);
 for k=1:2
     n(k+1,1:end-1)=hist(besttime(besttype==k),u(1:end-1));
 end
-bar(n')
-set(gca, 'xticklabel',ulabs);
+bar([su(1:end-1);2*su(end-1)-su(end-2)],n')
 xlabel('Reset Times, discrete')
 ylabel('Quantity')
 legend('No Reset','FB Only ','FF and FB')
@@ -213,7 +192,7 @@ legend('Data',['Fit line R^2=',num2str(r2)],'Identity')
 
 [h,p]=ttest2(x_,y_)
 
-%% Histogram, Weighted Type3 times
+%% Histogram, NOT-Weighted Type3 times
 figure(46)
 clf
 set(gcf,'Name','FF + FB Reset Time Histogram')
@@ -250,3 +229,21 @@ title(num2str(subnum))
 plot(peak_at,m*2*abs(Y(1:NFFT/2)),'b')
 xlabel('Frequency, Hz')
 ylabel('|FFT(t)|')
+
+%% 3D Histogram, adding Error as Factor
+figure(51)
+clf
+set(gcf,'Name','3D Histogram adding Accumulated Error')
+interest=floor(2*length(trials)/3):length(trials);
+accumerror_uptoreset=zeros(size(interest));
+for k=interest
+    c=k-interest(1)+1;
+    resettime=t(bestindices(k,3));
+    [val,index]=min((resettime-trials{k}.time).^2);
+    accumerror_uptoreset(c)=trials{k}.accumerror(index);
+end
+[n,X,Y]=hist2d(t(bestindices(interest,3)),accumerror_uptoreset,15);
+%imagesc(X(1,:),Y(:,1),n); colorbar
+surf(X,Y,n)
+xlabel('Time, sec')
+ylabel('Accumulated Error, meters')
