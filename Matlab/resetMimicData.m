@@ -9,7 +9,7 @@ close all
 clear all
 tic
 
-number=1;
+number=9;
 nums=num2str(number);
 
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in forces_in_time

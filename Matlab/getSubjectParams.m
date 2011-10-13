@@ -9,6 +9,14 @@ switch num
         l1=.255;
         l2=.33;
         shoulder=[0 .46];
+    case '3'
+        l1=.25;
+        l2=.31;
+        shoulder=[0 .37]; %???
+    case '9'
+        l1=.29;
+        l2=.36;
+        shoulder=[.027 .405];
     otherwise
         l1=.33;
         l2=.34;
