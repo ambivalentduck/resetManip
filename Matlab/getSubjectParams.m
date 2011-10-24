@@ -25,6 +25,14 @@ switch num
         l1=.27;
         l2=.31;
         shoulder=[.02 .5];
+    case '7'
+        l1=.25;
+        l2=.30;
+        shoulder=[0 .45];
+    case '8'
+        l1=.34;
+        l2=.31;
+        shoulder=[0 .45];
     case '9'
         l1=.29;
         l2=.36;
