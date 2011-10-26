@@ -9,7 +9,7 @@ close all
 clear all
 tic
 
-number=9;
+number=1;
 nums=num2str(number);
 
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in forces_in_time
@@ -37,40 +37,63 @@ p0=[-0.016; .463];
 %Consequence: Workspace is a circle with center at 0, radius .67
 
 ti=0;
-tf=.6;
+tf=.8;
 tp=1.2;
 step=0.01;
 smallstep=0.01;
+
+trip=1;
+files=dir('.');
+for k=1:length(files)
+    if strcmp(files(k).name,'fJ.m')
+        dvec=datevec(now-files(k).datenum);
+        if dvec(6)<5
+            trip=false;
+        end
+        break;
+    end
+end
+if trip
+    makeJacobians;
+    disp('Made fresh Jacobians, rerun');
+    return
+end
+        
 
 %Command torques based on Jacobian, so build one
 [fJ,Jt, getAlpha, getAccel]=makeJacobians;
 toc
 disp('Jacobians complete.')
 
-%resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
+%resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must
+%ALWAYS be inf
 resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be inf
-tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 progressbar('Trial','Reset')
 
 tocs=[toc];
 for TRIAL=1:length(trials) %120:130 %length(trials)
     TRIAL
+    tf=trials{TRIAL}.intendedTime;
+    tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
+    
     pf=trials{TRIAL}.target;
     progressbar(TRIAL/length(trials),0);
 
     data(1).resetT=resetT;
-    forces_in=trials{TRIAL}.force/2;
+    forces_in=trials{TRIAL}.force; %Why /2? Was I debugging?
     forces_in_time=trials{TRIAL}.time;
 
     [val,tzero]=min(abs(trials{TRIAL}.time));
     p0=trials{TRIAL}.pos(tzero,:)';
-    v0=trials{TRIAL}.vel(tzero,:)';
-    a0=trials{TRIAL}.accel(tzero,:)';
+%     v0=trials{TRIAL}.vel(tzero,:)';
+%     a0=trials{TRIAL}.accel(tzero,:)';
     
     %Get basic unreset but curled movement
     ini=ikin(p0);
-    coeff0.vals=calcminjerk(p0,pf,v0,[0 0],a0,[0 0],ti,tf);
+    %coeff0.vals=calcminjerk(p0,pf,v0,[0 0],a0,[0 0],ti,tf);
+    coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],ti,tf);
     coeff0.expiration=tf;
+    
     coeffFF=coeff0;
     coeffFB=coeff0;
     [T_,X_]=ode45(@armdynamics_timeseries,tsim,[ini;0;0]);

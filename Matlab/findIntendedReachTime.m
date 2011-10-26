@@ -4,7 +4,7 @@ figure(6)
 clf
 hold on
 
-subject=9;
+subject=7;
 
 i=load(['../Data/input',num2str(subject),'.dat']);
 l=load(['../Data/output',num2str(subject),'.dat']);
@@ -48,8 +48,12 @@ for k=1:length(fi)
     
     timescaling(k)=1.7*(timeo(falling)-timeo(rising)); %empirical measure of underestimate
     
+    tonset=-.35*(timeo(falling)-timeo(rising))+timeo(rising);
+    tfinal=1.35*(timeo(falling)-timeo(rising))+timeo(rising);
+    
     %plot(timef, speedf/pkv(1))
-    plot(timef, speedf)
+    plot(timef, speedf,'b',(timeo-tonset)/(tfinal-tonset),speedf,'r.')
+    timescaling(k)=tfinal-tonset;
     catch
         fails(end+1)=max(speedf);
         timescaling(k)=-1;

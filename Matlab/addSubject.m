@@ -30,24 +30,22 @@ for k=1:length(f)
     trials{k}.visualdelay=input(fk,7);
     trials{k}.time=output(fo,2);
     try
-        [pkv, pks]=findpeaks(speedf,'minpeakheight',.3);
-        thresh=find(speedf(1:pks(1))>pkv(1)*.2); %.2 is empirical for subject 1
-        rising=thresh(1);
-        thresh=find(speedf(pks(1):end)<pkv(1)*.5); %.5 is empirical for subject 1
+        [pkv, pks]=findpeaks(speed,'minpeakheight',.3);
+        thresh=find(speed(1:pks(1))<pkv(1)*.2); %.2 is empirical for subject 1
+        rising=thresh(end)+1;
+        thresh=find(speed(pks(1):end)<pkv(1)*.5); %.5 is empirical for subject 1
         falling=thresh(1)+pks(1)-1;
 
-        timescaling(k)=2*((trials{k}.time(falling)-trials{k}.time(rising))); %empirical measure of underestimate
-        trials{k}.time=timef-timef(rising);
+        tonset=-.35*(trials{k}.time(falling)-trials{k}.time(rising))+trials{k}.time(rising);
+        tfinal=1.35*(trials{k}.time(falling)-trials{k}.time(rising))+trials{k}.time(rising);
+
+        trials{k}.time=trials{k}.time-tonset;
+        trials{k}.intendedTime=tfinal-tonset;
+        tfinal-tonset
     catch
+        k
         plot(speed)
     end
-    %trials{k}.time=trials{k}.time-trials{k}.time(pks(1))+.4; %Peak alignment
-
-    %Assume that intended reach time is 600 ms, align and scale!
-    trials{k}.time=trials{k}.time-trials{k}.time(ff(1));
-    trials{k}.intendedTime=2;
-
-    %trials{k}.force(trials{k}.time>1)=0; %Nothing relevant happens this far out?
 
     fa=find(categories==categories(fk));
     faa=find(fa==fk);
