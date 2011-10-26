@@ -203,14 +203,16 @@ n1=hist(t(bestindices(1:floor(cheaphack/3),3)),t1);
 n1=n1/sum(n1);
 n2=hist(t(bestindices(floor(2*cheaphack/3):cheaphack,3)),t1);
 n2=n2/sum(n2);
+n3=hist(t(bestindices(floor(cheaphack/3):floor(2*cheaphack/3),3)),t1);
+n3=n3/sum(n3);
 hold on
-bar(t1,[n1',n2'])
+bar(t1,[n1',n2',n3'])
 fn1=filter(ones(4,1)/4,1,n1);
 fn2=filter(ones(4,1)/4,1,n2);
-plot(t1,fn1,'b',t1,fn2,'r')
+plot(t1,fn1,'b',t1,fn2,'g')
 ylabel('Relative Frequency')
 xlabel('Time into reach, sec')
-legend('No Exposure to Delay','Post-Exposure to Delay')
+legend('No Exposure to Delay','Post-Exposure to Delay','Midsection')
 
 %% Fourier Analysis
 n=hist(t(bestindices(:,3)),t1);
@@ -241,9 +243,35 @@ for k=interest
     resettime=t(bestindices(k,3));
     [val,index]=min((resettime-trials{k}.time).^2);
     accumerror_uptoreset(c)=trials{k}.accumerror(index);
+    concatme(c).time=trials{k}.time';
+    concatme(c).accumerror=trials{k}.accumerror;
 end
 [n,X,Y]=hist2d(t(bestindices(interest,3)),accumerror_uptoreset,15);
+n=n/sum(sum(n));
+n0=hist2d([concatme.time],[concatme.accumerror],X(1,:),Y(:,1));
+n0=n0/sum(sum(n0));
 %imagesc(X(1,:),Y(:,1),n); colorbar
 surf(X,Y,n)
 xlabel('Time, sec')
 ylabel('Accumulated Error, meters')
+zlabel('Frequency of Reset')
+
+figure(52)
+clf
+set(gcf,'Name','3D Histogram adding Accumulated Error')
+relative=n-n0;
+relative(end,end)=0;
+relative(1,1)=0;
+r=log(relative-min(min(relative))+1);
+surf(X,Y,n/n0)
+xlabel('Time, sec')
+ylabel('Accumulated Error, meters')
+zlabel('Frequency of Reset Minus Frequency in Data at Large')
+
+figure(53)
+clf
+set(gcf,'Name','3D Histogram adding Accumulated Error')
+surf(X,Y,log(n0+.00001))
+xlabel('Time, sec')
+ylabel('Accumulated Error, meters')
+zlabel('Log Frequency in Data at Large')
