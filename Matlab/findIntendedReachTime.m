@@ -4,8 +4,10 @@ figure(6)
 clf
 hold on
 
-i=load(['../Data/input1.dat']);
-l=load(['../Data/output1.dat']);
+subject=9;
+
+i=load(['../Data/input',num2str(subject),'.dat']);
+l=load(['../Data/output',num2str(subject),'.dat']);
 speed=mag(l(:,[5 6]));
 
 time=l(:,2);
@@ -23,8 +25,8 @@ time=l(:,2);
 
 fi=find(i(:,5)<0);
 timescaling=zeros(size(fi));
-pk1scaling=timescaling;
-threshval=.3;
+timeonset=timescaling;
+threshval=.2;
 fails=[];
 
 for k=1:length(fi)
@@ -33,16 +35,21 @@ for k=1:length(fi)
     timef=time(f);
     try
     [pkv, pks]=findpeaks(speedf,'minpeakheight',.3);
-    thresh=find(speedf(1:pks(1))>pkv(1)*threshval);
-    rising=thresh(1);
-    thresh=find(speedf(pks(1):end)<pkv(1)*threshval);
+    thresh=find(speedf(1:pks(1))<pkv(1)*threshval);
+    rising=thresh(end)+1;
+    thresh=find(speedf(pks(1):end)<pkv(1)*.5);
     falling=thresh(1)+pks(1)-1;
-
-    timescaling(k)=1.6*((timef(falling)-timef(rising))); %empirical measure of underestimate
-    timef=timef-timef(rising);
-    timef=timef/(timef(falling));
     
-    plot(timef, speedf/pkv(1))
+    timeo=timef;
+    timef=timef-timef(rising);
+    timef=timef/timef(falling);
+    timef=timef+.35;
+    timef=timef/1.7;
+    
+    timescaling(k)=1.7*(timeo(falling)-timeo(rising)); %empirical measure of underestimate
+    
+    %plot(timef, speedf/pkv(1))
+    plot(timef, speedf)
     catch
         fails(end+1)=max(speedf);
         timescaling(k)=-1;
@@ -50,6 +57,7 @@ for k=1:length(fi)
 end
 xlim([-5 5])
 
+timescaling=timescaling(timescaling~=-1);
 mu=mean(timescaling)
 sigma=std(timescaling)
 
