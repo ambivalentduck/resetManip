@@ -6,14 +6,14 @@ figure(42)
 clf
 hold on
 
-subnum=9;
+subnum=1;
 load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);
 
 T=0:.01:2*pi;
-sT=.288/80*sin(T);
-cT=.288/80*cos(T);
+sT=.02*sin(T);
+cT=.02*cos(T);
 
 scale=2;
 legend_drawn=0;
@@ -74,8 +74,8 @@ for k=1:lt
         end
         plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
         plot(-.01+sT,.48+cT+k/scale,'m-')
-        plot(tk.target(1)+2*sT,tk.target(2)+2*cT+k/scale,'m-')
-        plot(tk.pos(1,1)+2*sT,tk.pos(1,2)+2*cT+k/scale,'b')
+        plot(tk.target(1)+sT,tk.target(2)+cT+k/scale,'m-')
+        plot(tk.pos(1,1)+sT,tk.pos(1,2)+cT+k/scale,'b')
         plot(-.01,.48+k/scale,'mo')
         plot(tk.target(1),tk.target(2)+k/scale,'mx')
         plot([-.01 tk.target(1)],[.48 tk.target(2)]+k/scale,'m-')

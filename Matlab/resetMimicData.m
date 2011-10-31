@@ -30,9 +30,7 @@ I1=.0141;
 I2=.0188;
 
 %Shoulder location
-x0=[-0.016; .463]+shoulder';
-
-p0=[-0.016; .463];
+x0=middleTarget'+shoulder';
 
 %Consequence: Workspace is a circle with center at 0, radius .67
 
@@ -71,7 +69,7 @@ resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be 
 progressbar('Trial','Reset')
 
 tocs=[toc];
-for TRIAL=1:length(trials) %120:130 %length(trials)
+for TRIAL=1:20 %length(trials)
     TRIAL
     tf=trials{TRIAL}.intendedTime;
     tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];

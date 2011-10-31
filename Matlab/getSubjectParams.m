@@ -2,9 +2,9 @@ function [l1, l2, shoulder]=getSubjectParams(num)
 
 switch num
     case '1'
-        l1=.24;
-        l2=.33;
-        shoulder=[0 .47];
+        l1=.245;
+        l2=.335;
+        shoulder=[0 .45];
     case '2'
         l1=.255;
         l2=.33;
