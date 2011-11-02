@@ -6,7 +6,7 @@ figure(42)
 clf
 hold on
 
-subnum=2;
+subnum=1;
 load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);
@@ -263,7 +263,7 @@ relative=n-n0;
 relative(end,end)=0;
 relative(1,1)=0;
 r=log(relative-min(min(relative))+1);
-surf(X,Y,n/n0)
+surf(X,Y,n./n0)
 xlabel('Time, sec')
 ylabel('Accumulated Error, meters')
 zlabel('Frequency of Reset Minus Frequency in Data at Large')
