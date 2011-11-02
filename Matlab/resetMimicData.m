@@ -63,8 +63,6 @@ end
 toc
 disp('Jacobians complete.')
 
-%resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must
-%ALWAYS be inf
 resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be inf
 progressbar('Trial','Reset')
 

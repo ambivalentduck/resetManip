@@ -6,7 +6,7 @@ figure(42)
 clf
 hold on
 
-subnum=2;
+subnum=7;
 load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);
@@ -136,9 +136,12 @@ n(1,end)=sum(besttype==0);
 for k=1:2
     n(k+1,1:end-1)=hist(besttime(besttype==k),u(1:end-1));
 end
+n=n/sum(sum(n));
 bar([su(1:end-1);2*su(end-1)-su(end-2)],n')
+subject.nAll=n';
+subject.timesAll=[su(1:end-1);2*su(end-1)-su(end-2)];
 xlabel('Reset Times, discrete')
-ylabel('Quantity')
+ylabel('Frequency')
 legend('No Reset','FB Only ','FF and FB')
 
 figure(44)
@@ -199,20 +202,31 @@ set(gcf,'Name','FF + FB Reset Time Histogram')
 title(['Subject ',num2str(subnum),': FF+FB Best Times Histogram'])
 t1=t(1:2:end-1);
 cheaphack=length(bestindices(:,3));
-n1=hist(t(bestindices(1:floor(cheaphack/3),3)),t1);
+n1=hist(t(bestindices(1:45,3)),t1);
 n1=n1/sum(n1);
-n2=hist(t(bestindices(floor(2*cheaphack/3):cheaphack,3)),t1);
+n2=hist(t(bestindices(91:end,3)),t1);
 n2=n2/sum(n2);
-n3=hist(t(bestindices(floor(cheaphack/3):floor(2*cheaphack/3),3)),t1);
+n3=hist(t(bestindices(46:90,3)),t1);
 n3=n3/sum(n3);
 hold on
 bar(t1,[n1',n2',n3'])
-fn1=filter(ones(4,1)/4,1,n1);
-fn2=filter(ones(4,1)/4,1,n2);
-plot(t1,fn1,'b',t1,fn2,'g')
+fn1=smooth(n1,5,'rlowess');
+fn2=smooth(n2,5,'rlowess');
+fn3=smooth(n3,5,'rlowess');
+plot(t1,fn1,'b',t1,fn2,'g',t1,fn3,'r')
 ylabel('Relative Frequency')
 xlabel('Time into reach, sec')
-legend('No Exposure to Delay','Post-Exposure to Delay','Midsection')
+if trials{46}.visualdelay>0
+    legend('No Exposure to Delay','Post-Exposure to Delay','Delay')
+else
+    legend('First Third','Last Third','Mid Third')
+
+end
+subject.nBoth=[n1;n2;n3];
+subject.timeBoth=t1;
+subject.delay=trials{46}.visualdelay>0
+save(['../Data/',num2str(subnum),'counts.mat'],'subject');
+
 
 %% Fourier Analysis
 n=hist(t(bestindices(:,3)),t1);
@@ -263,7 +277,7 @@ relative=n-n0;
 relative(end,end)=0;
 relative(1,1)=0;
 r=log(relative-min(min(relative))+1);
-surf(X,Y,n/n0)
+surf(X,Y,n./n0)
 xlabel('Time, sec')
 ylabel('Accumulated Error, meters')
 zlabel('Frequency of Reset Minus Frequency in Data at Large')
