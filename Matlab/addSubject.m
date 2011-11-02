@@ -3,16 +3,25 @@ function addSubject(name)
 input=load(['../Data/input',name,'.dat']);
 output=load(['../Data/output',name,'.dat']);
 
+%Since targets aren't specified in file, find them from endpoints
+[b, m, n]=unique(output(:,1),'last');
 angles=atan2(input(:,4),input(:,3));
 f=find(angles<0);
 angles(f)=angles(f)+2*pi;
 [angletypes,useless,categories]=unique(angles);
+fi=find(input(:,5)<0);
+pos=output(m(fi),3:4);
+
+maxdists=zeros(4,1);
+targets=zeros(4,2);
+for k=1:4
+    ends=pos((categories(fi)==k),:);
+    targets(k,:)=mean(ends);
+    %dists=mag(ends-(targets(k,:)'*ones(1,size(ends,1)))');
+    %maxdists(k)=max(dists);
+end
 
 f=find(input(:,5)>0);
-
-%  xrobot=7.7638*xinput+.0776
-%  yrobot=-7.7640*yinput+3.2283
-% center is right around -0.01,
 
 for k=1:length(f)
     fk=f(k);
@@ -21,8 +30,7 @@ for k=1:length(f)
     trials{k}.vel=output(fo,[5 6]);
     trials{k}.accel=output(fo,[7 8]);
     speed=mag(trials{k}.vel);
-    %one=ones(size(trials{k}.pos,1),1);
-    %trials{k}.pos=trials{k}.pos-[trials{k}.pos(1,1)*one trials{k}.pos(1,2)*one];
+    
     trials{k}.force=output(fo,[9 10]);
     trials{k}.requested=output(fo,12);
     trials{k}.mag=input(fk,2);
@@ -41,7 +49,6 @@ for k=1:length(f)
 
         trials{k}.time=trials{k}.time-tonset;
         trials{k}.intendedTime=tfinal-tonset;
-        tfinal-tonset
     catch
         k
         plot(speed)
@@ -51,14 +58,9 @@ for k=1:length(f)
     faa=find(fa==fk);
     trials{k}.prior=output(output(:,1)==fa(faa-1),[3 4]);
     trials{k}.priorf=output(output(:,1)==fa(faa-1),[9 10]);
-    
-    %It's an error that target isn't coming off the device, this
-    %calculation may not always work due to recalibration (screen moves,
-    %device doesn't
-    %Solution: take average of endpoint of non-reset trials?
-    trials{k}.target=input(fk,[3 4]).*[1 -1]*.2250-[0 .005];
+    trials{k}.target=targets(categories(f(k)),:);
 end
 
+middleTarget=targets(1,:);
 
-
-save(['../Data/',name,'.mat'],'trials')
+save(['../Data/',name,'.mat'],'trials','middleTarget')
