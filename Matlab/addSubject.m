@@ -51,7 +51,12 @@ for k=1:length(f)
     faa=find(fa==fk);
     trials{k}.prior=output(output(:,1)==fa(faa-1),[3 4]);
     trials{k}.priorf=output(output(:,1)==fa(faa-1),[9 10]);
-    trials{k}.target=input(fk,[3 4]).*[1 -1]*.18+[-0.01 .48];
+    
+    %It's an error that target isn't coming off the device, this
+    %calculation may not always work due to recalibration (screen moves,
+    %device doesn't
+    %Solution: take average of endpoint of non-reset trials?
+    trials{k}.target=input(fk,[3 4]).*[1 -1]*.2250-[0 .005];
 end
 
 
