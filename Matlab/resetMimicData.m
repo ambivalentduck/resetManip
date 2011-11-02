@@ -9,7 +9,7 @@ close all
 clear all
 tic
 
-number=1;
+number=7;
 nums=num2str(number);
 
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in forces_in_time
@@ -17,7 +17,7 @@ global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in 
 load(['../Data/',nums,'.mat']);
 
 kp=[15 6; 6 16];
-kd=[2.3 .09; .09 2.4];
+kd=[2.3 .09; .09 2.4]*2;
 
 [l1, l2, shoulder]=getSubjectParams(nums);
 %%assume two link
@@ -69,7 +69,7 @@ resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be 
 progressbar('Trial','Reset')
 
 tocs=[toc];
-for TRIAL=1:20 %length(trials)
+for TRIAL=1:length(trials)
     TRIAL
     tf=trials{TRIAL}.intendedTime;
     tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
@@ -156,4 +156,4 @@ save(['../Data/',nums,'withsim.mat'],'trials');
 figure(28)
 plot(tocs)
 
-plotresetMimic(trials)
+%plotresetMimic(trials)
