@@ -9,7 +9,7 @@ close all
 clear all
 tic
 
-number=8;
+number=9;
 nums=num2str(number);
 
 global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in forces_in_time
@@ -117,6 +117,7 @@ for TRIAL=1:length(trials)
             %simulate out REMAINING path of the resetted movement only to the last kick time
             [dx, pI, vI, aI]=armdynamics_timeseries(T_(fR(1)),X_(fR(1),:)');
 
+            %Good god, no...  Why starting V=0?
             coeff.vals=calcminjerk(pI,pf,[0 0],[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
             coeff.expiration=T_(fR(1))+tf;
 
