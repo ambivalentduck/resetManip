@@ -97,7 +97,7 @@ end
 
 figure(5)
 clf
-set(gcf,'Name','All: Weighted Reset Hist')
+set(gcf,'Name','All: Weighted Reset Hist, Quality')
 weighted={};
 h2=zeros(la,1);
 mh2=h2;
@@ -144,3 +144,40 @@ h2
 mh2
 h3
 mh3
+
+figure(6)
+clf
+set(gcf,'Name','All: Weighted Reset Hist, Improvement')
+weighted={};
+h2=zeros(la,1);
+mh2=h2;
+h3=zeros(la,1);
+mh3=h3;
+T=linspace(.05, .52, 50);
+for k=1:la
+    k
+    vmat=all{k}.vmat;
+    t1=vmat(1:end-1,1:45,1);
+    t2=vmat(1:end-1,1:45,2);
+    sVM=size(vmat);
+    
+    for kk=1:45
+        vmat(1:end-1,kk,1)=vmat(1:end-1,kk,1)-vmat(end-1,kk,1);
+        vmat(1:end-1,kk,2)=vmat(1:end-1,kk,2)-vmat(end-1,kk,2);
+    end
+
+    subplot(ceil(la/2),2,k)
+    vmat=vmat(:,1:45,:);
+    mV=min(min(min(vmat)));
+    MV=max(max(max(vmat)));
+    vmat=(vmat-mV)/(MV-mV);
+    sV=sum(vmat,2);
+    sV=reshape(sV,sVM(1),2);
+    
+    sV(:,1)=sV(:,1)-min(sV(:,1));
+    sV(:,2)=sV(:,2)-min(sV(:,2));
+    sV(:,1)=sV(:,1)/sum(sV(:,1));
+    sV(:,2)=sV(:,2)/sum(sV(:,2));
+    
+    bar([T .54],[[zeros(50,1);.00001] [sV(1:end-1,:);0 0]])
+end
