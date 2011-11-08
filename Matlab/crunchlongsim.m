@@ -80,9 +80,9 @@ for k=1:lt
         plot(tk.target(1),tk.target(2)+k/scale,'mx')
         plot([-.01 tk.target(1)],[.48 tk.target(2)]+k/scale,'m-')
         axis equal
-    catch MEMatlab
+    catch ME
         if ME.stack.line~=30
-            ME.message/home/web/EAv2Xmanip/Matlab
+            ME.message
             ME.stack.line
         end
         fail(k)=0;

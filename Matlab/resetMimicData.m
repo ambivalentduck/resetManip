@@ -1,18 +1,10 @@
-try
-    close(h)
-catch
-    disp 'No waitbars to close'
-end
+function resetMimicData(number)
 
-clc
-close all
-clear all
 tic
 
-number=1;
 nums=num2str(number);
 
-global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in forces_in_time
+global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf coeffFF coeffFB getAccel forces_in forces_in_time fJ getAlpha
 
 load(['../Data/',nums,'.mat']);
 
@@ -40,28 +32,22 @@ tp=1.2;
 step=0.01;
 smallstep=0.01;
 
-trip=1;
-files=dir('.');
-for k=1:length(files)
-    if strcmp(files(k).name,'fJ.m')
-        dvec=datevec(now-files(k).datenum);
-        if dvec(6)<5
-            trip=false;
-        end
-        break;
-    end
-end
-if trip
-    makeJacobians;
-    disp('Made fresh Jacobians, rerun');
-    return
-end
-        
-
+%Dynamic code modification requires random function names
+hash=floor(rand(5,1)*20+2);
+hash=char('A'+hash)';
+aName=['getAlpha',hash];
+fName=['fJ',hash];
 %Command torques based on Jacobian, so build one
-[fJ,Jt, getAlpha, getAccel]=makeJacobians;
+[fJ,Jt, getAlpha, getAccel]=makeJacobians(aName,fName);
+pause(.1)
 toc
 disp('Jacobians complete.')
+fJ=str2func(fName);
+feval(fName,[5 6])
+getAlpha=str2func(aName);
+feval(aName,[1 2]',[3 4]',[5 6]')
+
+
 
 %resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must
 %ALWAYS be inf
@@ -69,11 +55,11 @@ resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be 
 progressbar('Trial','Reset')
 
 tocs=[toc];
-for TRIAL=1:20 %length(trials)
+for TRIAL=1 %:length(trials)
     TRIAL
     tf=trials{TRIAL}.intendedTime;
     tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
-    
+
     pf=trials{TRIAL}.target;
     progressbar(TRIAL/length(trials),0);
 
@@ -83,15 +69,15 @@ for TRIAL=1:20 %length(trials)
 
     [val,tzero]=min(abs(trials{TRIAL}.time));
     p0=trials{TRIAL}.pos(tzero,:)';
-%     v0=trials{TRIAL}.vel(tzero,:)';
-%     a0=trials{TRIAL}.accel(tzero,:)';
-    
+    %     v0=trials{TRIAL}.vel(tzero,:)';
+    %     a0=trials{TRIAL}.accel(tzero,:)';
+
     %Get basic unreset but curled movement
     ini=ikin(p0);
     %coeff0.vals=calcminjerk(p0,pf,v0,[0 0],a0,[0 0],ti,tf);
     coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],ti,tf);
     coeff0.expiration=tf;
-    
+
     coeffFF=coeff0;
     coeffFB=coeff0;
     [T_,X_]=ode45(@armdynamics_timeseries,tsim,[ini;0;0]);
@@ -102,7 +88,7 @@ for TRIAL=1:20 %length(trials)
 
     trials{TRIAL}.resetT=resetT;
     trials{TRIAL}.reset0.pos=basepos;
-    
+
     %Reset types:
     %0 - No reset, reset time = infinity
     %1 - Reset with feedback only
@@ -136,7 +122,7 @@ for TRIAL=1:20 %length(trials)
                     coeffFB=coeff;
             end
             [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 2],X_(fR(1),:));
-            
+
             resetpos=zeros(size(Xr,1),2);
             for k=1:length(Tr)
                 resetpos(k,:)=fkin(Xr(k,1:2));
@@ -153,7 +139,8 @@ end
 
 save(['../Data/',nums,'withsim.mat'],'trials');
 
-figure(28)
+figure
 plot(tocs)
 
-plotresetMimic(trials)
+delete([aName,'.m'])
+delete([fName,'.m'])

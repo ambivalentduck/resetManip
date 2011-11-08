@@ -1,6 +1,6 @@
 function [dx, p_real, v_real, a_real,f_handle]=armdynamics_timeseries(t,x)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB pf getAccel forces_in forces_in_time
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB pf getAccel forces_in forces_in_time fJ getAlpha
 
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
