@@ -1,5 +1,7 @@
 function resetMimicData(number)
 
+warning off all
+
 tic
 
 nums=num2str(number);
