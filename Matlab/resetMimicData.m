@@ -52,7 +52,7 @@ feval(aName,[1 2]',[3 4]',[5 6]')
 %resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must
 %ALWAYS be inf
 resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be inf
-progressbar('Trial','Reset')
+progressbar('Trial','Reset');
 
 tocs=[toc];
 for TRIAL=1:length(trials)
@@ -61,10 +61,10 @@ for TRIAL=1:length(trials)
     tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 
     pf=trials{TRIAL}.target;
-    progressbar(TRIAL/length(trials),0);
+    progressbar((TRIAL-1)/length(trials),0);
 
     data(1).resetT=resetT;
-    forces_in=trials{TRIAL}.force; %Why /2? Was I debugging?
+    forces_in=trials{TRIAL}.force;
     forces_in_time=trials{TRIAL}.time;
 
     [val,tzero]=min(abs(trials{TRIAL}.time));
@@ -96,16 +96,17 @@ for TRIAL=1:length(trials)
 
     for reset=1:2
         for tR=1:length(resetT)-1
-            tR
             tReset=resetT(tR);
-            progressbar([],((reset-1)*length(resetT)+tR)/(2*(length(resetT)-1)));
+            progressbar([],((reset-1)*length(resetT)+tR-1)/(2*(length(resetT)-1)));
 
             fR=find(T_>=tReset);
 
             %simulate out REMAINING path of the resetted movement only to the last kick time
+            coeffFF=coeff0; %Since we're querying the non-reset model
+            coeffFB=coeff0; %Since we're querying the non-reset model
             [dx, pI, vI, aI]=armdynamics_timeseries(T_(fR(1)),X_(fR(1),:)');
 
-            coeff.vals=calcminjerk(pI,pf,vI,[0 0],aI,[0 0],T_(fR(1)),T_(fR(1))+tf);
+            coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
             coeff.expiration=T_(fR(1))+tf;
 
             switch(reset)

@@ -18,7 +18,6 @@ for k=1:lt
     tk=trials{k};
     try
         lrt=length(tk.resetT);
-
         for resetT=1:lrt-1
             f=find(tk.requested);
             %plot actual reset0 reset1 reset2
