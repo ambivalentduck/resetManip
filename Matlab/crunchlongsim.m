@@ -1,12 +1,10 @@
-clc
-clear all
+function crunchlongsim(subnum)
 
 color=['rgb'];
 figure(42)
 clf
 hold on
 
-subnum=1;
 load(['../Data/',num2str(subnum),'withsim.mat']);
 
 lt=length(trials);
@@ -31,12 +29,12 @@ for k=1:lt
     try
         lrt=length(tk.resetT);
         workinglrt=lrt;
-       
+
         realpathchunks=sqrt(sum(diff(tk.pos).^2,2));
         realpath=cumsum(realpathchunks);
         realpath=[0; realpath(realpath<3*realpath(end)/4)];
         realpos=tk.pos(1:length(realpath),:);
-        
+
         pos0=tk.reset0.pos;
         path0=[0; cumsum(sqrt(sum(diff(pos0).^2,2)))];
         corresponding0=twoNearestNeighbor(pos0,path0,realpath);
@@ -79,6 +77,7 @@ for k=1:lt
         plot(-.01,.48+k/scale,'mo')
         plot(tk.target(1),tk.target(2)+k/scale,'mx')
         plot([-.01 tk.target(1)],[.48 tk.target(2)]+k/scale,'m-')
+
         axis equal
     catch ME
         if ME.stack.line~=30
@@ -90,9 +89,6 @@ for k=1:lt
 end
 close(h)
 
-figure(42)
-title(num2str(subnum))
-set(gcf,'Name','Raw reaches + Best Sim Fits')
 
 vmat=zeros(workinglrt,sum(fail==1),2);
 c=0;
@@ -106,12 +102,138 @@ for k=1:lt
     end
 end
 
+figure(666)
+clf
+title(num2str(subnum))
+set(gcf,'Name','Best and worst with raws')
+hold on
 bestindices=ones(sum(fail==1),3)*lrt;
-best0=vmat(end,:,1);
-[best1,bestindices(:,2)]=min(vmat(1:end-1,:,1),[],1);
-[best2,bestindices(:,3)]=min(vmat(1:end-1,:,2),[],1);
+bestvalues=zeros(size(bestindices));
+bestvalues(:,1)=vmat(end,:,1);
+[bestvalues(:,2),bestindices(:,2)]=min(vmat(1:end-1,:,1),[],1);
+[bestvalues(:,3),bestindices(:,3)]=min(vmat(1:end-1,:,2),[],1);
+bestvalues(:,2)=bestvalues(:,2)-bestvalues(:,1);
+bestvalues(:,3)=bestvalues(:,3)-bestvalues(:,1);
+worstindices=ones(sum(fail==1),3)*lrt;
+worstvalues=zeros(size(worstindices));
+worstvalues(:,1)=vmat(end,:,1);
+[worstvalues(:,2),worstindices(:,2)]=max(vmat(1:end-1,:,1),[],1);
+[worstvalues(:,3),worstindices(:,3)]=max(vmat(1:end-1,:,2),[],1);
+worstvalues(:,2)=worstvalues(:,2)-worstvalues(:,1);
+worstvalues(:,3)=worstvalues(:,3)-worstvalues(:,1);
 
-[bestval,ind]=min([best0' best1' best2'],[],2);
+[s,i_worst]=sort(worstvalues,'descend');
+[s,i_best]=sort(bestvalues,'ascend');
+
+for k=1:5 %lt
+    %The best of the best is the lowest among best values
+    %First type of reset
+    K=0;
+    tk=trials{i_best(k,2)};
+    resetT1=bestindices(i_best(k,2),2);
+    resetT2=bestindices(i_best(k,2),3);
+
+    f=find(tk.requested);
+    %plot actual reset0 reset1 reset2
+    plot(tk.pos(:,1)+K/scale,tk.pos(:,2)+k/scale,'b')
+    plot(tk.pos(f,1)+K/scale,tk.pos(f,2)+k/scale,'c')
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(tk.reset1.pos{resetT1}(:,1)+K/scale,tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
+    plot(tk.reset2.pos{resetT2}(:,1)+K/scale,tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
+    if (~legend_drawn)
+        legend('Actual','Probe Force On','No reset','Feedback only reset','FB and FF reset')
+        legend_drawn=1;
+    end
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(-.01+sT+K/scale,.48+cT+k/scale,'m-')
+    plot(tk.target(1)+sT+K/scale,tk.target(2)+cT+k/scale,'m-')
+    plot(tk.pos(1,1)+sT+K/scale,tk.pos(1,2)+cT+k/scale,'b')
+    plot(-.01+K/scale,.48+k/scale,'mo')
+    plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
+    plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
+    
+    %second type of reset
+    K=1;
+    tk=trials{i_best(k,3)};
+    resetT1=bestindices(i_best(k,3),2);
+    resetT2=bestindices(i_best(k,3),3);
+    f=find(tk.requested);
+    %plot actual reset0 reset1 reset2
+    plot(tk.pos(:,1)+K/scale,tk.pos(:,2)+k/scale,'b')
+    plot(tk.pos(f,1)+K/scale,tk.pos(f,2)+k/scale,'c')
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(tk.reset1.pos{resetT1}(:,1)+K/scale,tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
+    plot(tk.reset2.pos{resetT2}(:,1)+K/scale,tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
+    if (~legend_drawn)
+        legend('Actual','Probe Force On','No reset','Feedback only reset','FB and FF reset')
+        legend_drawn=1;
+    end
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(-.01+sT+K/scale,.48+cT+k/scale,'m-')
+    plot(tk.target(1)+sT+K/scale,tk.target(2)+cT+k/scale,'m-')
+    plot(tk.pos(1,1)+sT+K/scale,tk.pos(1,2)+cT+k/scale,'b')
+    plot(-.01+K/scale,.48+k/scale,'mo')
+    plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
+    plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
+    
+    %Worst of the worst
+    %first type
+    K=3;
+    tk=trials{i_worst(k,2)};
+    resetT1=worstindices(i_worst(k,2),2);
+    resetT2=worstindices(i_worst(k,2),3);
+
+    f=find(tk.requested);
+    %plot actual reset0 reset1 reset2
+    plot(tk.pos(:,1)+K/scale,tk.pos(:,2)+k/scale,'b')
+    plot(tk.pos(f,1)+K/scale,tk.pos(f,2)+k/scale,'c')
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(tk.reset1.pos{resetT1}(:,1)+K/scale,tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
+    plot(tk.reset2.pos{resetT2}(:,1)+K/scale,tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
+    if (~legend_drawn)
+        legend('Actual','Probe Force On','No reset','Feedback only reset','FB and FF reset')
+        legend_drawn=1;
+    end
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(-.01+sT+K/scale,.48+cT+k/scale,'m-')
+    plot(tk.target(1)+sT+K/scale,tk.target(2)+cT+k/scale,'m-')
+    plot(tk.pos(1,1)+sT+K/scale,tk.pos(1,2)+cT+k/scale,'b')
+    plot(-.01+K/scale,.48+k/scale,'mo')
+    plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
+    plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
+    
+    K=4;
+    tk=trials{i_worst(k,3)};
+    resetT1=worstindices(i_worst(k,3),2);
+    resetT2=worstindices(i_worst(k,3),3);
+    f=find(tk.requested);
+    %plot actual reset0 reset1 reset2
+    plot(tk.pos(:,1)+K/scale,tk.pos(:,2)+k/scale,'b')
+    plot(tk.pos(f,1)+K/scale,tk.pos(f,2)+k/scale,'c')
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(tk.reset1.pos{resetT1}(:,1)+K/scale,tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
+    plot(tk.reset2.pos{resetT2}(:,1)+K/scale,tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
+    if (~legend_drawn)
+        legend('Actual','Probe Force On','No reset','Feedback only reset','FB and FF reset')
+        legend_drawn=1;
+    end
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(-.01+sT+K/scale,.48+cT+k/scale,'m-')
+    plot(tk.target(1)+sT+K/scale,tk.target(2)+cT+k/scale,'m-')
+    plot(tk.pos(1,1)+sT+K/scale,tk.pos(1,2)+cT+k/scale,'b')
+    plot(-.01+K/scale,.48+k/scale,'mo')
+    plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
+    plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
+end
+axis equal
+
+figure(42)
+title(num2str(subnum))
+set(gcf,'Name','Raw reaches + Best Sim Fits')
+
+ 
+
+[bestval,ind]=min(bestvalues,[],2);
 besttype=ind-1;
 besttime=besttype;
 t=trials{1}.resetT; %%Isn't this correct?
@@ -136,9 +258,12 @@ n(1,end)=sum(besttype==0);
 for k=1:2
     n(k+1,1:end-1)=hist(besttime(besttype==k),u(1:end-1));
 end
+n=n/sum(sum(n));
 bar([su(1:end-1);2*su(end-1)-su(end-2)],n')
+subject.nAll=n';
+subject.timesAll=[su(1:end-1);2*su(end-1)-su(end-2)];
 xlabel('Reset Times, discrete')
-ylabel('Quantity')
+ylabel('Frequency')
 legend('No Reset','FB Only ','FF and FB')
 
 figure(44)
@@ -164,7 +289,7 @@ for k=1:c
     %plot(tX,vmat(:,k,2),'m')
     [v,i]=max(vmat(:,k,2));
     plot(tX(i),v,'mo');
-    
+
 end
 %plot(trials{3}.resetT(1:end-1),vals{3}(1:end-1,3),'m')
 xlabel('Reset Times, discrete')
@@ -199,20 +324,32 @@ set(gcf,'Name','FF + FB Reset Time Histogram')
 title(['Subject ',num2str(subnum),': FF+FB Best Times Histogram'])
 t1=t(1:2:end-1);
 cheaphack=length(bestindices(:,3));
-n1=hist(t(bestindices(1:floor(cheaphack/3),3)),t1);
+n1=hist(t(bestindices(1:45,3)),t1);
 n1=n1/sum(n1);
-n2=hist(t(bestindices(floor(2*cheaphack/3):cheaphack,3)),t1);
+n2=hist(t(bestindices(91:end,3)),t1);
 n2=n2/sum(n2);
-n3=hist(t(bestindices(floor(cheaphack/3):floor(2*cheaphack/3),3)),t1);
+n3=hist(t(bestindices(46:90,3)),t1);
 n3=n3/sum(n3);
 hold on
 bar(t1,[n1',n2',n3'])
-fn1=filter(ones(4,1)/4,1,n1);
-fn2=filter(ones(4,1)/4,1,n2);
-plot(t1,fn1,'b',t1,fn2,'g')
+fn1=smooth(n1,5,'rlowess');
+fn2=smooth(n2,5,'rlowess');
+fn3=smooth(n3,5,'rlowess');
+plot(t1,fn1,'b',t1,fn2,'g',t1,fn3,'r')
 ylabel('Relative Frequency')
 xlabel('Time into reach, sec')
-legend('No Exposure to Delay','Post-Exposure to Delay','Midsection')
+if trials{46}.visualdelay>0
+    legend('No Exposure to Delay','Post-Exposure to Delay','Delay')
+else
+    legend('First Third','Last Third','Mid Third')
+
+end
+subject.nBoth=[n1;n2;n3];
+subject.timeBoth=t1;
+subject.delay=trials{46}.visualdelay>0
+subject.vmat=vmat;
+save(['../Data/',num2str(subnum),'counts.mat'],'subject');
+
 
 %% Fourier Analysis
 n=hist(t(bestindices(:,3)),t1);
@@ -263,7 +400,7 @@ relative=n-n0;
 relative(end,end)=0;
 relative(1,1)=0;
 r=log(relative-min(min(relative))+1);
-surf(X,Y,n/n0)
+surf(X,Y,n./n0)
 xlabel('Time, sec')
 ylabel('Accumulated Error, meters')
 zlabel('Frequency of Reset Minus Frequency in Data at Large')

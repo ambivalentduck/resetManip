@@ -6,7 +6,7 @@ function out=twoNearestNeighbor(x,t,t0)
 out=zeros(length(t0),size(x,2));
 
 for k=1:length(t0);
-    time=sort(t-t0(k));
+    time=t-t0(k);
     found=find(time>0);
     if numel(found)==0
         out(k,:)=x(end,:);
