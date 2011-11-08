@@ -124,9 +124,9 @@ for TRIAL=1:length(trials)
             end
             [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 2],X_(fR(1),:));
 
-            resetpos=zeros(size(Xr,1),2);
-            for k=1:length(Tr)
-                resetpos(k,:)=fkin(Xr(k,1:2));
+            resetpos=zeros(size(Xr,1)-1,2);
+            for k=1:length(Tr)-1
+                resetpos(k,:)=fkin(Xr(k+1,1:2));
             end
             resetpos=[basepos(1:fR(1),:); resetpos];
 
