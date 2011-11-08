@@ -55,7 +55,7 @@ resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be 
 progressbar('Trial','Reset')
 
 tocs=[toc];
-for TRIAL=1 %:length(trials)
+for TRIAL=1:length(trials)
     TRIAL
     tf=trials{TRIAL}.intendedTime;
     tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
@@ -105,7 +105,7 @@ for TRIAL=1 %:length(trials)
             %simulate out REMAINING path of the resetted movement only to the last kick time
             [dx, pI, vI, aI]=armdynamics_timeseries(T_(fR(1)),X_(fR(1),:)');
 
-            coeff.vals=calcminjerk(pI,pf,[0 0],[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
+            coeff.vals=calcminjerk(pI,pf,vI,[0 0],aI,[0 0],T_(fR(1)),T_(fR(1))+tf);
             coeff.expiration=T_(fR(1))+tf;
 
             switch(reset)
