@@ -100,6 +100,7 @@ for TRIAL=1:length(trials)
         for tR=1:length(resetT)-1
             tReset=resetT(tR);
             progressbar([],((reset-1)*length(resetT)+tR-1)/(2*(length(resetT)-1)));
+            disp(numstr((reset-1)*length(resetT)+tR-1)/(2*(length(resetT)-1)))
 
             fR=find(T_>=tReset);
 
