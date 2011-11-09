@@ -1,11 +1,7 @@
 To do:
 
-1. Have matrix of fit qualities (trials, Reset types)
-2. Sort each column
-3. Plot each column
+Trial 97, .88 worth of progress is a lock-up.  Why?
 
-4. Find reset time (excluding VERY early reset and VERY late reset) weighted by fit quality
----Fit quality should be *added* fidelity, not total fidelity
----For reset=0, inf, always 0.
+Blue bar?
 
-5. Some sort of stats on added quality to prove significance
+For hist(9 tiles, 9 tile block for "all")
