@@ -434,7 +434,7 @@ for k=interest
     concatme(c).time=trials{k}.time';
     concatme(c).accumerror=trials{k}.accumerror;
 end
-[n,X,Y]=hist2d(t(bestindices(interest,3)),accumerror_uptoreset,15);
+[n,X,Y]=hist2d(t(bestindices(interest,3)),accumerror_uptoreset,50);
 n=n/sum(sum(n));
 n0=hist2d([concatme.time],[concatme.accumerror],X(1,:),Y(:,1));
 n0=n0/sum(sum(n0));

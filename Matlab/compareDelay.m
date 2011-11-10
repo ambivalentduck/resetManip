@@ -146,21 +146,30 @@ for k=1:la
     set(gca,'Xlim',[.05 .52]);
 end
 subplot(5,3,10:15)
-temp=sum(sVA,3);
-m=sum(m);
+temp=mean(sVA,3);
+temps=std(sVA,[],3);
+s=std(m);
+m=mean(m);
+hold on
 plot([T(1) T(end)],[m m],'b',T,temp(:,2),'g',T,temp(:,3),'r')
+%errorbar(T,m*ones(size(T)),s/3*ones(size(T)),'b')
+%errorbar(T,temp(:,2),temps(:,2)/3,'g')
+%errorbar(T,temp(:,3),temps(:,3)/3,'r')
 set(gca,'ytick',[])
 set(gca,'Xlim',[.05 .52]);
-ylabel('Regularized Error, Unitless')
+ylabel('Mean Scaled Error, Unitless')
 xlabel('Reset Time, Seconds')
 
-
+try
+    p2
 [h2 p2']
 mh2
 [h3 p3']
+p3
 mh3
 [h23' p23']
 m23' %Negative values indicate
+end
 
 figure(6)
 clf
@@ -236,6 +245,6 @@ for k=1:la
     %axis image
 end
 subplot(5,3,10:15)
-bar(T,sum(h,3)/(45*la))
+bar(T,sum(h,3)/(45*la),'stacked')
 ylabel('Frequency, Relative')
 xlabel('Reset Time, Seconds')
