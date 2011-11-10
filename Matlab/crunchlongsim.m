@@ -242,6 +242,7 @@ for k=1:5 %lt
     plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
     plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
     
+    try
     K=5;
     tk=trials{neither(k)};
     resetT1=bestindices(neither(k),2);
@@ -266,10 +267,11 @@ for k=1:5 %lt
     plot(-.01+K/scale,.48+k/scale,'mo')
     plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
     plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
+    end
 end
 axis equal
 set(gca,'YTick',[],'XTick',[])
-save('SfNPoster.mat')
+%save('SfNPoster3.mat')
 Best_Worst_Matrix
 
 figure(42)
@@ -420,29 +422,43 @@ xlabel('Frequency, Hz')
 ylabel('|FFT(t)|')
 
 %% 3D Histogram, adding Error as Factor
-try
 figure(51)
 clf
 set(gcf,'Name','3D Histogram adding Accumulated Error')
 interest=1:45; %floor(2*length(trials)/3):length(trials);
 accumerror_uptoreset=zeros(size(interest));
+c=0;
 for k=interest
-    c=k-interest(1)+1;
-    resettime=t(bestindices(k,3));
+%     c=c+1;
+%     resettime=t(bestindices(k,3));
+%     [val,index]=min((resettime-trials{k}.time).^2);
+%     accumerror_uptoreset(c)=trials{k}.accumerror(index);
+%     concatme(c).time=trials{k}.time';
+%     concatme(c).accumerror=trials{k}.accumerror;
+
+    c=c+1;
+    resettime=t(bestindices(k,2));
     [val,index]=min((resettime-trials{k}.time).^2);
     accumerror_uptoreset(c)=trials{k}.accumerror(index);
     concatme(c).time=trials{k}.time';
     concatme(c).accumerror=trials{k}.accumerror;
+
 end
-[n,X,Y]=hist2d(t(bestindices(interest,3)),accumerror_uptoreset,50);
-n=n/sum(sum(n));
+tT=[t(bestindices(interest,2)) t(bestindices(interest,3))];
+[n,X,Y]=hist2d(t(bestindices(interest,2)),accumerror_uptoreset,50);
+%[n,X,Y]=hist2d(tT,accumerror_uptoreset,50);
+%n=n/sum(sum(n));
 n0=hist2d([concatme.time],[concatme.accumerror],X(1,:),Y(:,1));
 n0=n0/sum(sum(n0));
-imagesc(X(1,:),Y(:,1),log(n+.007)); colorbar
+%n=n(end:-1:1,:,:);
+%imagesc(X(1,:),Y(:,1),log(n+.007)); colorbar
+imagesc(X(1,:),Y(:,1),n); h=colorbar;
+set(h,'YTick',[0:5])
+set(gca,'YDir','normal')
 %surf(X,Y,n)
 xlabel('Time, sec')
 ylabel('Accumulated Error, meters')
-title('Log Frequency of Reset')
+
 
 figure(52)
 clf
@@ -465,4 +481,3 @@ imagesc(X(1,:),Y(:,1),log(n0+.00001)); colorbar
 xlabel('Time, sec')
 ylabel('Accumulated Error, log(meters)')
 title('Log Frequency in Reaches with Curl')
-end

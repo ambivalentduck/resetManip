@@ -1,7 +1,3 @@
 To do:
 
 Trial 97, .88 worth of progress is a lock-up.  Why?
-
-Blue bar?
-
-For hist(9 tiles, 9 tile block for "all")

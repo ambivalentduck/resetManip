@@ -1,6 +1,6 @@
 function best_worst
 
-load SfNPoster.mat
+load SfNPoster3.mat
 
 vmat=zeros(workinglrt,sum(fail==1),2);
 c=0;
@@ -82,6 +82,7 @@ for k=1:5 %lt
     Best_Worst_Matrix(6-k,4)=i_best(k,3);
     doPlot(tk, resetT1,resetT2,k,K,sT,cT)
     
+    try
     K=5;
     tk=trials{neither(k)};
     Best_Worst_Matrix(6-k,5)=neither(k);
@@ -90,7 +91,7 @@ for k=1:5 %lt
     resetT2=CC;
     doPlot(tk, resetT1,resetT2,k,K,sT,cT)
     end
-
+    end
 end
 axis equal
 axis off

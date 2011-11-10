@@ -239,12 +239,14 @@ for k=1:la
         h(:,4-kk,k)=hist(T(comp_ind(kk==aind,kk)),T)';
     end
     subplot(5,3,k)
-    bar(T,h(:,:,k)/45)
-    set(gca,'ytick',[])
-    %axis off
+    bar(T,h(:,:,k)/45,'stacked')
+    set(gca,'ytick',[],'xtick',[])
+    title(['Subject ',num2str(k)])
+    axis tight
     %axis image
 end
 subplot(5,3,10:15)
 bar(T,sum(h,3)/(45*la),'stacked')
-ylabel('Frequency, Relative')
+ylabel('Sum Relative Frequency')
 xlabel('Reset Time, Seconds')
+axis tight
