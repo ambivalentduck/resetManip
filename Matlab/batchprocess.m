@@ -1,4 +1,3 @@
-for k=1:4
-    addSubject(num2str(k))
+for k=4:9
     resetMimicData(k)
 end

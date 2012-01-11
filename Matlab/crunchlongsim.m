@@ -112,18 +112,29 @@ bestvalues=zeros(size(bestindices));
 bestvalues(:,1)=vmat(end,:,1);
 [bestvalues(:,2),bestindices(:,2)]=min(vmat(1:end-1,:,1),[],1);
 [bestvalues(:,3),bestindices(:,3)]=min(vmat(1:end-1,:,2),[],1);
-bestvalues(:,2)=bestvalues(:,2)-bestvalues(:,1);
-bestvalues(:,3)=bestvalues(:,3)-bestvalues(:,1);
 worstindices=ones(sum(fail==1),3)*lrt;
 worstvalues=zeros(size(worstindices));
 worstvalues(:,1)=vmat(end,:,1);
 [worstvalues(:,2),worstindices(:,2)]=max(vmat(1:end-1,:,1),[],1);
 [worstvalues(:,3),worstindices(:,3)]=max(vmat(1:end-1,:,2),[],1);
+
+if 0 %Set to 1 to consider best improvement, loss instead of overall fit quality
+bestvalues(:,2)=bestvalues(:,2)-bestvalues(:,1);
+bestvalues(:,3)=bestvalues(:,3)-bestvalues(:,1);
 worstvalues(:,2)=worstvalues(:,2)-worstvalues(:,1);
 worstvalues(:,3)=worstvalues(:,3)-worstvalues(:,1);
+end
+
+[v,i]=min(bestvalues,[],2);
+[s,neither]=sort(v(i==1),'ascend');
+f=find(i==1);
+neither=f(neither);
 
 [s,i_worst]=sort(worstvalues,'descend');
 [s,i_best]=sort(bestvalues,'ascend');
+
+Best_Worst_Matrix=zeros(5,5);
+
 
 for k=1:5 %lt
     %The best of the best is the lowest among best values
@@ -132,6 +143,7 @@ for k=1:5 %lt
     tk=trials{i_best(k,2)};
     resetT1=bestindices(i_best(k,2),2);
     resetT2=bestindices(i_best(k,2),3);
+    Best_Worst_Matrix(6-k,1)=resetT2;
 
     f=find(tk.requested);
     %plot actual reset0 reset1 reset2
@@ -157,6 +169,8 @@ for k=1:5 %lt
     tk=trials{i_best(k,3)};
     resetT1=bestindices(i_best(k,3),2);
     resetT2=bestindices(i_best(k,3),3);
+    Best_Worst_Matrix(6-k,2)=resetT2;
+    
     f=find(tk.requested);
     %plot actual reset0 reset1 reset2
     plot(tk.pos(:,1)+K/scale,tk.pos(:,2)+k/scale,'b')
@@ -182,6 +196,7 @@ for k=1:5 %lt
     tk=trials{i_worst(k,2)};
     resetT1=worstindices(i_worst(k,2),2);
     resetT2=worstindices(i_worst(k,2),3);
+    Best_Worst_Matrix(6-k,3)=resetT2;
 
     f=find(tk.requested);
     %plot actual reset0 reset1 reset2
@@ -206,6 +221,8 @@ for k=1:5 %lt
     tk=trials{i_worst(k,3)};
     resetT1=worstindices(i_worst(k,3),2);
     resetT2=worstindices(i_worst(k,3),3);
+    Best_Worst_Matrix(6-k,4)=resetT2;
+    
     f=find(tk.requested);
     %plot actual reset0 reset1 reset2
     plot(tk.pos(:,1)+K/scale,tk.pos(:,2)+k/scale,'b')
@@ -224,8 +241,38 @@ for k=1:5 %lt
     plot(-.01+K/scale,.48+k/scale,'mo')
     plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
     plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
+    
+    try
+    K=5;
+    tk=trials{neither(k)};
+    resetT1=bestindices(neither(k),2);
+    resetT2=bestindices(neither(k),3);
+    Best_Worst_Matrix(6-k,5)=neither(k);
+    
+    f=find(tk.requested);
+    %plot actual reset0 reset1 reset2
+    plot(tk.pos(:,1)+K/scale,tk.pos(:,2)+k/scale,'b')
+    plot(tk.pos(f,1)+K/scale,tk.pos(f,2)+k/scale,'c')
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(tk.reset1.pos{resetT1}(:,1)+K/scale,tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
+    plot(tk.reset2.pos{resetT2}(:,1)+K/scale,tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
+    if (~legend_drawn)
+        legend('Actual','Probe Force On','No reset','Feedback only reset','FB and FF reset')
+        legend_drawn=1;
+    end
+    plot(tk.reset0.pos(:,1)+K/scale,tk.reset0.pos(:,2)+k/scale,'r')
+    plot(-.01+sT+K/scale,.48+cT+k/scale,'m-')
+    plot(tk.target(1)+sT+K/scale,tk.target(2)+cT+k/scale,'m-')
+    plot(tk.pos(1,1)+sT+K/scale,tk.pos(1,2)+cT+k/scale,'b')
+    plot(-.01+K/scale,.48+k/scale,'mo')
+    plot(tk.target(1)+K/scale,tk.target(2)+k/scale,'mx')
+    plot([-.01 tk.target(1)]+K/scale,[.48 tk.target(2)]+k/scale,'m-')
+    end
 end
 axis equal
+set(gca,'YTick',[],'XTick',[])
+%save('SfNPoster3.mat')
+Best_Worst_Matrix
 
 figure(42)
 title(num2str(subnum))
@@ -326,10 +373,15 @@ t1=t(1:2:end-1);
 cheaphack=length(bestindices(:,3));
 n1=hist(t(bestindices(1:45,3)),t1);
 n1=n1/sum(n1);
-n2=hist(t(bestindices(91:end,3)),t1);
-n2=n2/sum(n2);
-n3=hist(t(bestindices(46:90,3)),t1);
-n3=n3/sum(n3);
+try
+    n2=hist(t(bestindices(91:end,3)),t1);
+    n2=n2/sum(n2);
+    n3=hist(t(bestindices(46:90,3)),t1);
+    n3=n3/sum(n3);
+catch
+    n2=zeros(size(n1));
+    n3=n2;
+end
 hold on
 bar(t1,[n1',n2',n3'])
 fn1=smooth(n1,5,'rlowess');
@@ -373,25 +425,40 @@ ylabel('|FFT(t)|')
 figure(51)
 clf
 set(gcf,'Name','3D Histogram adding Accumulated Error')
-interest=floor(2*length(trials)/3):length(trials);
+interest=1:45; %floor(2*length(trials)/3):length(trials);
 accumerror_uptoreset=zeros(size(interest));
+c=0;
 for k=interest
-    c=k-interest(1)+1;
-    resettime=t(bestindices(k,3));
+%     c=c+1;
+%     resettime=t(bestindices(k,3));
+%     [val,index]=min((resettime-trials{k}.time).^2);
+%     accumerror_uptoreset(c)=trials{k}.accumerror(index);
+%     concatme(c).time=trials{k}.time';
+%     concatme(c).accumerror=trials{k}.accumerror;
+
+    c=c+1;
+    resettime=t(bestindices(k,2));
     [val,index]=min((resettime-trials{k}.time).^2);
     accumerror_uptoreset(c)=trials{k}.accumerror(index);
     concatme(c).time=trials{k}.time';
     concatme(c).accumerror=trials{k}.accumerror;
+
 end
-[n,X,Y]=hist2d(t(bestindices(interest,3)),accumerror_uptoreset,15);
-n=n/sum(sum(n));
+tT=[t(bestindices(interest,2)) t(bestindices(interest,3))];
+[n,X,Y]=hist2d(t(bestindices(interest,2)),accumerror_uptoreset,50);
+%[n,X,Y]=hist2d(tT,accumerror_uptoreset,50);
+%n=n/sum(sum(n));
 n0=hist2d([concatme.time],[concatme.accumerror],X(1,:),Y(:,1));
 n0=n0/sum(sum(n0));
-%imagesc(X(1,:),Y(:,1),n); colorbar
-surf(X,Y,n)
+%n=n(end:-1:1,:,:);
+%imagesc(X(1,:),Y(:,1),log(n+.007)); colorbar
+imagesc(X(1,:),Y(:,1),n); h=colorbar;
+set(h,'YTick',[0:5])
+set(gca,'YDir','normal')
+%surf(X,Y,n)
 xlabel('Time, sec')
 ylabel('Accumulated Error, meters')
-zlabel('Frequency of Reset')
+
 
 figure(52)
 clf
@@ -400,15 +467,17 @@ relative=n-n0;
 relative(end,end)=0;
 relative(1,1)=0;
 r=log(relative-min(min(relative))+1);
-surf(X,Y,n./n0)
+%surf(X,Y,n./n0)
+imagesc(X(1,:),Y(:,1),log(n./n0+.00001)); colorbar
 xlabel('Time, sec')
-ylabel('Accumulated Error, meters')
-zlabel('Frequency of Reset Minus Frequency in Data at Large')
+ylabel('Accumulated Error, Unitless')
+title('Log Frequency Ratio Given Reset versus Independent of Reset')
 
 figure(53)
 clf
 set(gcf,'Name','3D Histogram adding Accumulated Error')
-surf(X,Y,log(n0+.00001))
+%surf(X,Y,log(n0+.00001))
+imagesc(X(1,:),Y(:,1),log(n0+.00001)); colorbar
 xlabel('Time, sec')
-ylabel('Accumulated Error, meters')
-zlabel('Log Frequency in Data at Large')
+ylabel('Accumulated Error, log(meters)')
+title('Log Frequency in Reaches with Curl')
