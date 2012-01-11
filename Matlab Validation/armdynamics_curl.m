@@ -59,7 +59,7 @@ torque_ff=D_expected*alpha+C_expected;
 fJxt=fJ(x(1:2))';
 
 %Add torque due to outside forces
-F=5*fJ(x(1:2))*x(3:4)*(t<.2);
+F=5*fJ(x(1:2))*x(3:4); %*(t<.2);
 
 torque_outside=fJxt*F;
 
