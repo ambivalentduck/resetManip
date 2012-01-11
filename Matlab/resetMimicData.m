@@ -110,7 +110,7 @@ for TRIAL=1:45 %1:length(trials)
             coeffFB=coeff0; %Since we're querying the non-reset model
             [dx, pI, vI, aI]=armdynamics_timeseries(T_(fR(1)),X_(fR(1),:)');
 
-            coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
+            coeff.vals=calcminjerk(pI,pf,vI,[0 0],aI,[0 0],T_(fR(1)),T_(fR(1))+tf);
             coeff.expiration=T_(fR(1))+tf;
 
             switch(reset)
