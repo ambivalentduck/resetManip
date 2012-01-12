@@ -7,7 +7,7 @@ figure(42)
 clf
 hold on
 
-load('../Data/validation_simplest.mat');
+load('../Data/validation_simplest_pulse.mat');
 
 lt=3;
 
@@ -24,9 +24,10 @@ best=-ones(lt,1);
 h = waitbar(0,'Starting');
 fail=ones(lt,1);
 
-for k=1:3
-    waitbar(k/lt,h,'Starting');
-    tk=data{k};
+for K=1:length(data)
+    waitbar(K/lt,h,'Starting');
+    tk=data{K};
+    k=mod(K-1,3)+1;
 
     try
         lrt=length(tk.resetT);
