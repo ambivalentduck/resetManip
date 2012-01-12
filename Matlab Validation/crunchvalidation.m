@@ -1,7 +1,7 @@
 function crunchvalidation(subnum, draw)
 
 subnum=1;
-draw=0;
+draw=1;
 
 color=['rgb'];
 figure(42)
