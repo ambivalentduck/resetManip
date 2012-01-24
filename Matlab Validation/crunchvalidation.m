@@ -8,7 +8,7 @@ figure(42)
 clf
 hold on
 
-load('../Data/validation_simplest_pulse.mat');
+load('../Data/validation_simplest.mat');
 
 lt=length(data);
 
