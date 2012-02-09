@@ -8,7 +8,7 @@ tic
 
 nums=num2str(number);
 
-global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf getAccel forces_in forces_in_time fJ getAlpha state k coeffFF absTime coeffFB
+global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf getAccel forces_in forces_in_time fJ getAlpha state coeffFF absTime coeffFB
 
 load(['../Data/',nums,'.mat']);
 
@@ -62,7 +62,7 @@ tocs=[toc];
 trialKey=[1 3 4];
 errorlevels=[.08 .02 .005];
 TRIAL_K=0;
-reps=40;
+reps=4;
 realreset=.31;
 
 for E_LEVEL=1:3
@@ -76,7 +76,10 @@ for E_LEVEL=1:3
                 data{TRIAL_K}.errorlevel=errorlevels(E_LEVEL);
                 data{TRIAL_K}.direction=TRIALK;
 
-                tf=trials{TRIAL}.intendedTime;
+                %tf=trials{TRIAL}.intendedTime;  %Not a fixed number,
+                %unsuitable for pure modeling
+                tf=.555; %mean of intended times
+                
                 tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 
                 pf=trials{TRIAL}.target;
@@ -121,7 +124,7 @@ for E_LEVEL=1:3
                         coeffFF=coeff;
                         coeffFB=coeff;
                 end
-                [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 2],X_(fR(1),:));
+                [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 1.5],X_(fR(1),:));
                 T_=[T_(1:fR); Tr];
                 X_=[X_(1:fR,:); Xr];
 
