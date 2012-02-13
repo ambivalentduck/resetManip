@@ -62,11 +62,13 @@ tocs=[toc];
 trialKey=[1 3 4];
 errorlevels=[.08 .02 .005];
 TRIAL_K=0;
+reps=4;
+realreset=.31;
 
 for E_LEVEL=1:3
     progressbar((E_LEVEL-1)/3);
-    for EXAMPLE=1:40
-        progressbar([],(EXAMPLE-1)/40);
+    for EXAMPLE=1:reps
+        progressbar([],(EXAMPLE-1)/reps);
         for TRIALK=1:3 %one of each DIRECTION
             for BASISTYPE=[1 2]
                 TRIAL=trialKey(TRIALK);
@@ -74,7 +76,10 @@ for E_LEVEL=1:3
                 data{TRIAL_K}.errorlevel=errorlevels(E_LEVEL);
                 data{TRIAL_K}.direction=TRIALK;
 
-                tf=trials{TRIAL}.intendedTime;
+                %tf=trials{TRIAL}.intendedTime;  %Not a fixed number,
+                %unsuitable for pure modeling
+                tf=.555; %mean of intended times
+                
                 tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 
                 pf=trials{TRIAL}.target;
@@ -91,10 +96,21 @@ for E_LEVEL=1:3
                 coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],ti,tf);
                 coeff0.expiration=tf;
 
+
                 coeffFF=coeff0;
                 coeffFB=coeff0;
                 [T_,X_]=ode45(@armdynamics_curl,tsim,[ini;0;0]);
-                fR=find(T_>=tReset);
+                basepos=zeros(size(X_,1),2);
+                baseV=zeros(size(X_,1),2);
+                forces_in=zeros(size(X_,1),2);
+                forces_in_time=T_;
+                for k=1:length(T_)
+                    [trash, basepos(k,:), trash1, trash2, forces_in(k,:)]=armdynamics_curl(T_(k),X_(k,:)');
+                end
+
+                fR=find(T_>=realreset);
+                pI=basepos(fR(1),:);
+                vI=((basepos(fR(1),:)-basepos(fR(1)-1,:))/(T_(fR(1))-T_(fR(1)-1))+(basepos(fR(1)+1,:)-basepos(fR(1),:))/(T_(fR(1)+1)-T_(fR(1))))/2;
                 coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
                 coeff.expiration=T_(fR(1))+tf;
                 switch(BASISTYPE)
@@ -108,18 +124,9 @@ for E_LEVEL=1:3
                         coeffFF=coeff;
                         coeffFB=coeff;
                 end
-                [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 2],X_(fR(1),:));
-                T_=[T_(1:fR) Tr];
-                X_=[X_(1:fR) Xr];
-
-
-                basepos=zeros(size(X_,1),2);
-                baseV=zeros(size(X_,1),2);
-                forces_in=zeros(size(X_,1),2);
-                forces_in_time=T_;
-                for k=1:length(T_)
-                    [trash, basepos(k,:), trash1, trash2, forces_in(k,:)]=armdynamics_curl(T_(k),X_(k,:)');
-                end
+                [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 1.5],X_(fR(1),:));
+                T_=[T_(1:fR); Tr];
+                X_=[X_(1:fR,:); Xr];
 
                 data{TRIAL_K}.resetT=resetT;
                 data{TRIAL_K}.reset0.pos=basepos;
@@ -134,6 +141,7 @@ for E_LEVEL=1:3
                 %medium is about .02
 
                 data{TRIAL_K}.pos=basepos;
+                data{TRIAL_K}.realReset=realreset;
 
                 %Reset types:
                 %0 - No reset, reset time = infinity

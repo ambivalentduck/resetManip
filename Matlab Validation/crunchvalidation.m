@@ -1,14 +1,14 @@
 function crunchvalidation(subnum, draw)
 
 subnum=1;
-draw=1;
+draw=0;
 
 color=['rgb'];
 figure(42)
 clf
 hold on
 
-load('../Data/validation_simplest_curl_pulse.mat');
+load('../Data/validation_simplest.mat');
 
 lt=length(data);
 

@@ -58,8 +58,18 @@ torque_ff=D_expected*alpha+C_expected;
 
 fJxt=fJ(x(1:2))';
 
+Pf=minjerk(coeffFB.vals,coeffFB.expiration);
+tT=[Pf-fkin(x(1:2))];
+ntT=norm(tT);
+if ntT>0
+    utT=tT/norm(tT);
+else
+    utT=0;
+end
+
 %Add torque due to outside forces
-F=5*fJ(x(1:2))*x(3:4); %*(t<.2);
+F=5*[0 1;-1 0]*fJ(x(1:2))*x(3:4)*(t<.2)... %curl that turn soff at .2
+  +10*utT*((t>.3) && (t<.33)); %kick
 
 torque_outside=fJxt*F;
 
