@@ -8,7 +8,7 @@ tic
 
 nums=num2str(number);
 
-global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf getAccel forces_in forces_in_time fJ getAlpha state k coeffFF absTime coeffFB
+global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf getAccel forces_in forces_in_time fJ getAlpha state coeffFF absTime coeffFB
 
 load(['../Data/',nums,'.mat']);
 
