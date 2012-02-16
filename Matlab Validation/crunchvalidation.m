@@ -10,8 +10,6 @@ hold on
 
 load('../Data/validation_simplest.mat');
 
-lt=length(data);
-
 T=0:.01:2*pi;
 sT=.02*sin(T);
 cT=.02*cos(T);
@@ -19,79 +17,47 @@ cT=.02*cos(T);
 scale=2;
 legend_drawn=0;
 
+lt=length(data);
 vals=cell(lt,1);
 best=-ones(lt,1);
 
 h = waitbar(0,'Starting');
 fail=ones(lt,1);
 
-for k=1:lt
-    d(k)=data{k};
-end
+%Three passes.
+%1. Data to error metric(s)
+%2. Error metrics to representations of quality, maybe "best" maybe
+%statistica
+%3. Quality to wide conclusions about false-negative, positive rates.  Not
+%necessarily matlab.
 
-for K=1:length(data)
+
+for K=1:lt
     waitbar(K/lt,h,'Starting');
-    tk=data{K};
-    k=mod(K-1,3)+1;
-
-    try
-        lrt=length(tk.resetT);
-        workinglrt=lrt;
-
-        realpathchunks=sqrt(sum(diff(tk.pos).^2,2));
-        realpath=cumsum(realpathchunks);
-        realpath=[0; realpath(realpath<3*realpath(end)/4)];
-        realpos=tk.pos(1:length(realpath),:);
-
-        pos0=tk.reset0.pos;
-        path0=[0; cumsum(sqrt(sum(diff(pos0).^2,2)))];
-        corresponding0=twoNearestNeighbor(pos0,path0,realpath);
-        area0=sum(sqrt(sum(abs(realpos-corresponding0).^2,2)).*realpathchunks(1:length(realpath)));
-
-        vals{K}=zeros(lrt,3);
-        vals{K}(end,1)=area0;
-
-        for resetT=1:lrt-1
-            pos1=tk.reset1.pos{resetT};
-            path1=[0; cumsum(sqrt(sum(diff(pos1).^2,2)))];
-            corresponding1=twoNearestNeighbor(pos1,path1,realpath);
-            area1=sum(sqrt(sum(abs(realpos-corresponding1).^2,2)).*realpathchunks(1:length(realpath)));
-            vals{K}(resetT,2)=area1;
-
-            pos2=tk.reset2.pos{resetT};
-            path2=[0; cumsum(sqrt(sum(diff(pos2).^2,2)))];
-            corresponding2=twoNearestNeighbor(pos2,path2,realpath);
-            area2=sum(sqrt(sum(abs(realpos-corresponding2).^2,2)).*realpathchunks(1:length(realpath)));
-            vals{K}(resetT,3)=area2;
+    pathRaw=[0; cumsum(sqrt(sum(diff(data{K}.pos).^2,2)))];
+    for R=0:2
+        for k=1:length(data{K}.['reset',num2str(R)].t)
+    
+    
+    if draw
+        plot(tk.pos(:,1),tk.pos(:,2)+k/scale,'b')
+        %plot(tk.pos(f,1),tk.pos(f,2)+k/scale,'c')
+        plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
+        plot(tk.reset1.pos{resetT1}(:,1),tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
+        plot(tk.reset2.pos{resetT2}(:,1),tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
+        if (~legend_drawn)
+            legend('Noise added','No reset','Feedback only reset','FB and FF reset')
+            legend_drawn=1;
         end
-        [v1,resetT1]=min(vals{k}(1:end-1,2)); %v1 is feedback-only
-        [v2,resetT2]=min(vals{k}(1:end-1,3)); %v2 is both-reset
-
-        if draw
-            plot(tk.pos(:,1),tk.pos(:,2)+k/scale,'b')
-            %plot(tk.pos(f,1),tk.pos(f,2)+k/scale,'c')
-            plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
-            plot(tk.reset1.pos{resetT1}(:,1),tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
-            plot(tk.reset2.pos{resetT2}(:,1),tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
-            if (~legend_drawn)
-                legend('Noise added','No reset','Feedback only reset','FB and FF reset')
-                legend_drawn=1;
-            end
-            plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
-            plot(tk.target(1)+sT,tk.target(2)+cT+k/scale,'m-')
-            plot(tk.pos(1,1)+sT,tk.pos(1,2)+cT+k/scale,'b')
-            plot(tk.target(1),tk.target(2)+k/scale,'mx')
-            plot([tk.pos(1,1) tk.target(1)],[tk.pos(1,2) tk.target(2)]+k/scale,'m-')
-        end
-        axis equal
-    catch ME
-        if ME.stack.line~=30
-            ME.message
-            ME.stack.line
-        end
-        fail(k)=0;
+        plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
+        plot(tk.target(1)+sT,tk.target(2)+cT+k/scale,'m-')
+        plot(tk.pos(1,1)+sT,tk.pos(1,2)+cT+k/scale,'b')
+        plot(tk.target(1),tk.target(2)+k/scale,'mx')
+        plot([tk.pos(1,1) tk.target(1)],[tk.pos(1,2) tk.target(2)]+k/scale,'m-')
     end
+    axis equal
 end
+
 close(h)
 
 
@@ -106,6 +72,8 @@ for k=1:lt
         vmat(end,c,2)=vals{k}(end,1);
     end
 end
+%vmat is (reset times) x (trials) x (reset type 1 or 2)
+
 
 [ue,b,levels]=unique([d.errorlevel]);
 [ud,b,directions]=unique([d.direction]);
@@ -115,7 +83,7 @@ clf
 tX=[data{1}.resetT(1:end-1) 2*data{1}.resetT(end-1)-data{1}.resetT(end-2)];
 ave=zeros(lrt,2);
 sd=ave;
-for k=1:3
+for k=1:length(ud)
     for kk=1:length(ue)
         subplot(3,3,(k-1)*3+kk)
         hold on
@@ -141,4 +109,26 @@ for k=1:3
         end
     end
 end
+
+function e=areaBetweenTime(t1, pos1, t0, pos0)
+u=union(t0,t1);
+posu0=twoNearestNeighbor(pos0,t0,u);
+posu1=twoNearestNeighbor(pos1,t1,u);
+e=sum(sqrt(sum(posu1-posu0).^2).*gradient(u));
+
+function [e,path0]=areaBetweenPath(pos1, pos0, varargin) %path1, path0 are next two optional args
+if nargin<3
+    path1=[0; cumsum(sqrt(sum(diff(pos1).^2,2)))];
+else
+    path1=varargin{1};
+end
+if nargin<4
+    path0=[0; cumsum(sqrt(sum(diff(pos0).^2,2)))];
+else
+    path0=varargin{2};
+end
+u=union(path0,path1);
+posp0=twoNearestNeighbor(pos0,path0,u);
+posp1=twoNearestNeighbor(pos1,path1,u);
+e=sum(sqrt(sum(posu1-posu0).^2).*gradient(u));
 
