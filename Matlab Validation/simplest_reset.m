@@ -8,7 +8,7 @@ tic
 
 nums=num2str(number);
 
-global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf getAccel forces_in forces_in_time fJ getAlpha state coeffFF absTime coeffFB
+global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 pf getAccel forces_in forces_in_time fJ getAlpha coeffFF absTime coeffFB
 
 load(['../Data/',nums,'.mat']);
 
@@ -28,13 +28,6 @@ I2=.0188;
 %Shoulder location
 x0=middleTarget'+shoulder'; %Consequence: Workspace is a circle with center at 0, radius .67
 
-ti=0;
-tf=.555; %mean of intended times
-tp=1.2;
-step=0.01;
-smallstep=0.01;
-tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
-
 %Dynamic code modification requires random function names
 hash=floor(rand(5,1)*20+2);
 hash=char('A'+hash)';
@@ -50,11 +43,15 @@ feval(fName,[5 6])
 getAlpha=str2func(aName);
 feval(aName,[1 2]',[3 4]',[5 6]')
 
+ti=0;
+tf=.555; %mean of intended times
+tp=1.2;
+step=0.01;
+smallstep=0.01;
 
-%resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must
-%ALWAYS be inf
+%resetT=[linspace(.05, .26, 50) inf]; %how many reset times, last must ALWAYS be inf
 resetT=[linspace(.05, .52, 50) inf]; %how many reset times, last must ALWAYS be inf
-progressbar('Error Level','Example','Direction','Reset');
+tsim=[ti:step:resetT(1) resetT(2:end-2) resetT(end-1):step:tf+tp];
 
 tocs=[toc];
 trialKey=[1 3 4];
@@ -63,27 +60,29 @@ TRIAL_K=0;
 reps=4;
 realreset=.31;
 
+progressbar('Error Level','Example','Direction','Reset');
+
 for E_LEVEL=1:length(errorlevels)
-    progressbar((E_LEVEL-1)/length(errorlevels);
+    progressbar((E_LEVEL-1)/length(errorlevels));
     for EXAMPLE=1:reps
         progressbar([],(EXAMPLE-1)/reps);
         for TRIALK=1:3 %one of each DIRECTION
             for BASISTYPE=[1 2]
                 TRIAL=trialKey(TRIALK);
                 TRIAL_K=TRIAL_K+1;
+                progressbar([],[],(TRIALK-1)/3,0);
+                
                 data{TRIAL_K}.errorlevel=errorlevels(E_LEVEL);
                 data{TRIAL_K}.direction=TRIALK;
-                data{TRIAL_K}.target=trials{TRIAL}.target;
-
-                pf=trials{TRIAL}.target;
-                progressbar([],[],(TRIALK-1)/3,0);
+                data{TRIAL_K}.target=trials{TRIAL}.target; %#ok<USENS>
 
                 [val,IndZero]=min(abs(trials{TRIAL}.time));
                 p0=trials{TRIAL}.pos(IndZero,:)';
                 %     v0=trials{TRIAL}.vel(IndZero,:)';
                 %     a0=trials{TRIAL}.accel(IndZero,:)';
+                pf=trials{TRIAL}.target;
 
-                %Get basic unreset but curled movement
+                %Get basic unreset movement
                 ini=ikin(p0);
                 %coeff0.vals=calcminjerk(p0,pf,v0,[0 0],a0,[0 0],ti,tf);
                 coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],ti,tf);
@@ -91,24 +90,25 @@ for E_LEVEL=1:length(errorlevels)
 
                 coeffFF=coeff0;
                 coeffFB=coeff0;
-                [T_,X_]=ode45(@armdynamics_curl,tsim,[ini;0;0]);
-                basepos=zeros(size(X_,1),2);
-                forces_in=zeros(size(X_,1),2);
-                forces_in_time=T_;
-                for k=1:length(T_)
-                    [trash, basepos(k,:), trash1, trash2, forces_in(k,:)]=armdynamics_curl(T_(k),X_(k,:)');
+                [T0,X0]=ode45(@armdynamics_curl,tsim,[ini;0;0]);
+                basepos=zeros(length(T0),2);
+                forces_in=zeros(length(T0),2);
+
+                for k=1:length(T0) %Fully define forces_in and basepos for no reset
+                    [trash, basepos(k,:), trash1, trash2, forces_in(k,:)]=armdynamics_curl(T0(k),X0(k,:)');
                 end
+                basepos0=basepos;
                 
                 data{TRIAL_K}.resetT=resetT;
                 data{TRIAL_K}.reset0.pos=basepos;
-                data{TRIAL_K}.reset0.t=T_;
+                data{TRIAL_K}.reset0.t=T0;
 
                 if realreset>0
-                    fR=find(T_>=realreset);
+                    fR=find(T0>=realreset);
                     pI=basepos(fR(1),:);
-                    vI=((basepos(fR(1),:)-basepos(fR(1)-1,:))/(T_(fR(1))-T_(fR(1)-1))+(basepos(fR(1)+1,:)-basepos(fR(1),:))/(T_(fR(1)+1)-T_(fR(1))))/2;
-                    coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
-                    coeff.expiration=T_(fR(1))+tf;
+                    vI=((basepos(fR(1),:)-basepos(fR(1)-1,:))/(T0(fR(1))-T0(fR(1)-1))+(basepos(fR(1)+1,:)-basepos(fR(1),:))/(T0(fR(1)+1)-T0(fR(1))))/2;
+                    coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T0(fR(1)),T0(fR(1))+tf);
+                    coeff.expiration=T0(fR(1))+tf;
                     switch(BASISTYPE)
                         case 0
                             coeffFF=coeff0;
@@ -120,25 +120,30 @@ for E_LEVEL=1:length(errorlevels)
                             coeffFF=coeff;
                             coeffFB=coeff;
                     end
-                    [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 1.5],X_(fR(1),:));
-                    T_=[T_(1:fR); Tr];
-                    X_=[X_(1:fR,:); Xr];
+                    [Tr,Xr]=ode45(@armdynamics_curl,tsim(fR(1):end),X0(fR(1),:));
+                    T_=[T0(1:fR(1)); Tr(2:end)];
+                    X_=[X0(1:fR(1),:); Xr(2:end,:)];
+                    
+                    lTrm1=length(Tr)-1;
 
-                    basepos=zeros(size(X_,1),2);
-                    for k=1:length(T_)
+                    basepos=[basepos; zeros(lTrm1,2)];
+                    forces_in=[forces_in; zeros(lTrm1,2)]; 
+                    for k=fR+1:length(T_) %Shouldn't overwrite anything but the zeros we just catted on.
                         [trash, basepos(k,:), trash1, trash2, forces_in(k,:)]=armdynamics_curl(T_(k),X_(k,:)');
                     end
                 end
+                forces_in_time=T_; %Since T_ is now final.
 
                 purepos=basepos;
+                %Inject correlated noise, reasonable up to about .02
                 smoothed=randn(size(basepos));
                 for k=1:size(smoothed,2)
                     smoothed(:,k)=smooth(smoothed(:,k),35);
                 end
-                basepos=basepos+errorlevels(E_LEVEL)*smoothed; %Inject about a millimeter of correlated noise
-                %medium is about .02
+                basepos=basepos+errorlevels(E_LEVEL)*smoothed; %Notice that the force profile is now off unless the handle is massless.
 
                 data{TRIAL_K}.pos=basepos;
+                data{TRIAL_K}.purepos=purepos;
                 data{TRIAL_K}.t=T_;
                 data{TRIAL_K}.realReset=realreset;
 
@@ -152,15 +157,15 @@ for E_LEVEL=1:length(errorlevels)
                         tReset=resetT(tR);
                         progressbar([],[],[],((reset-1)*length(resetT)+tR-1)/(2*(length(resetT)-1)));
 
-                        fR=find(T_>=tReset);
+                        fR=find(T0>=tReset);
 
                         %simulate out REMAINING path of the resetted movement only
 
-                        pI=basepos(fR(1),:);
-                        vI=((basepos(fR(1),:)-basepos(fR(1)-1,:))/(T_(fR(1))-T_(fR(1)-1))+(basepos(fR(1)+1,:)-basepos(fR(1),:))/(T_(fR(1)+1)-T_(fR(1))))/2;
+                        pI=basepos0(fR(1),:);
+                        vI=((basepos0(fR(1),:)-basepos0(fR(1)-1,:))/(T0(fR(1))-T0(fR(1)-1))+(basepos0(fR(1)+1,:)-basepos0(fR(1),:))/(T0(fR(1)+1)-T0(fR(1))))/2;
 
-                        coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T_(fR(1)),T_(fR(1))+tf);
-                        coeff.expiration=T_(fR(1))+tf;
+                        coeff.vals=calcminjerk(pI,pf,vI,[0 0],[0 0],[0 0],T0(fR(1)),T0(fR(1))+tf);
+                        coeff.expiration=T0(fR(1))+tf;
 
                         switch(reset)
                             case 0
@@ -174,16 +179,16 @@ for E_LEVEL=1:length(errorlevels)
                                 coeffFB=coeff;
                         end
                         absTime=toc;
-                        [Tr,Xr]=ode45(@armdynamics_timeseries,[T_(fR(1)) 2],X_(fR(1),:));
+                        [Tr,Xr]=ode45(@armdynamics_timeseries,tsim(fR(1):end),X0(fR(1),:));
 
                         resetpos=zeros(size(Xr,1)-1,2);
                         for k=1:length(Tr)-1
                             resetpos(k,:)=fkin(Xr(k+1,1:2));
                         end
-                        resetpos=[purepos(1:fR(1),:); resetpos];
+                        resetpos=[basepos0(1:fR(1),:); resetpos];
 
                         data{TRIAL_K}.(['reset',num2str(reset)]).pos{tR}=resetpos;
-                        data{TRIAL_K}.(['reset',num2str(reset)]).t{tR}=[T_(1:fR); Tr(2:end)];
+                        data{TRIAL_K}.(['reset',num2str(reset)]).t{tR}=[T0(1:fR); Tr(2:end)];
                     end
                 end
                 tocs(end+1)=toc;

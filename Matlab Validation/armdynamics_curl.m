@@ -1,6 +1,6 @@
 function [dx, p_real, v_real, a_real,F]=armdynamics_timeseries(t,x)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB pf getAccel forces_in forces_in_time fJ getAlpha
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB getAccel fJ getAlpha
 
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
@@ -68,8 +68,10 @@ else
 end
 
 %Add torque due to outside forces
-F=5*[0 1;-1 0]*fJ(x(1:2))*x(3:4)*(t<.2)... %curl that turn soff at .2
+F=5*[0 1;-1 0]*fJ(x(1:2))*x(3:4)*(t<.2)... %curl that turns off at .2
   +10*utT*((t>.3) && (t<.33)); %kick
+%Mass-less handle for sim purposes.  Maybe not the best validation, but
+%easier than a non-lin model of the real device.
 
 torque_outside=fJxt*F;
 
