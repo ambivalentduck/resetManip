@@ -71,7 +71,7 @@ for E_LEVEL=1:length(errorlevels)
                 TRIAL=trialKey(TRIALK);
                 TRIAL_K=TRIAL_K+1;
                 progressbar([],[],(TRIALK-1)/3,0);
-                
+
                 data(TRIAL_K).errorlevel=errorlevels(E_LEVEL);
                 data(TRIAL_K).direction=TRIALK;
                 data(TRIAL_K).target=trials{TRIAL}.target; %#ok<USENS>
@@ -98,7 +98,7 @@ for E_LEVEL=1:length(errorlevels)
                     [trash, basepos(k,:), trash1, trash2, forces_in(k,:)]=armdynamics_curl(T0(k),X0(k,:)');
                 end
                 basepos0=basepos;
-                
+
                 data(TRIAL_K).resetT=resetT;
                 data(TRIAL_K).reset0.pos=basepos;
                 data(TRIAL_K).reset0.t=T0;
@@ -123,14 +123,16 @@ for E_LEVEL=1:length(errorlevels)
                     [Tr,Xr]=ode45(@armdynamics_curl,tsim(fR(1):end),X0(fR(1),:));
                     T_=[T0(1:fR(1)); Tr(2:end)];
                     X_=[X0(1:fR(1),:); Xr(2:end,:)];
-                    
+
                     lTrm1=length(Tr)-1;
 
-                    basepos=[basepos; zeros(lTrm1,2)];
-                    forces_in=[forces_in; zeros(lTrm1,2)]; 
+                    basepos=[basepos(1:fR(1),:); zeros(lTrm1,2)];
+                    forces_in=[forces_in(1:fR(1),:); zeros(lTrm1,2)];
                     for k=fR+1:length(T_) %Shouldn't overwrite anything but the zeros we just catted on.
                         [trash, basepos(k,:), trash1, trash2, forces_in(k,:)]=armdynamics_curl(T_(k),X_(k,:)');
                     end
+                else
+                    T_=T0;
                 end
                 forces_in_time=T_; %Since T_ is now final.
 
@@ -204,5 +206,5 @@ progressbar(1); %Close it
 figure
 plot(tocs)
 
-delete('fJ*')
+delete('fJ*') %Clean up any and all extra copies of these floating around
 delete('getAlpha*')
