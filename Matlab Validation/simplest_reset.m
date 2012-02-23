@@ -57,7 +57,7 @@ tocs=[toc];
 trialKey=[1 3 4];
 errorlevels=[0 .005];
 TRIAL_K=0;
-reps=4;
+reps=2;
 realreset=.31;
 
 progressbar('Error Level','Example','Direction','Reset');
@@ -72,9 +72,9 @@ for E_LEVEL=1:length(errorlevels)
                 TRIAL_K=TRIAL_K+1;
                 progressbar([],[],(TRIALK-1)/3,0);
                 
-                data{TRIAL_K}.errorlevel=errorlevels(E_LEVEL);
-                data{TRIAL_K}.direction=TRIALK;
-                data{TRIAL_K}.target=trials{TRIAL}.target; %#ok<USENS>
+                data(TRIAL_K).errorlevel=errorlevels(E_LEVEL);
+                data(TRIAL_K).direction=TRIALK;
+                data(TRIAL_K).target=trials{TRIAL}.target; %#ok<USENS>
 
                 [val,IndZero]=min(abs(trials{TRIAL}.time));
                 p0=trials{TRIAL}.pos(IndZero,:)';
@@ -99,9 +99,9 @@ for E_LEVEL=1:length(errorlevels)
                 end
                 basepos0=basepos;
                 
-                data{TRIAL_K}.resetT=resetT;
-                data{TRIAL_K}.reset0.pos=basepos;
-                data{TRIAL_K}.reset0.t=T0;
+                data(TRIAL_K).resetT=resetT;
+                data(TRIAL_K).reset0.pos=basepos;
+                data(TRIAL_K).reset0.t=T0;
 
                 if realreset>0
                     fR=find(T0>=realreset);
@@ -142,10 +142,10 @@ for E_LEVEL=1:length(errorlevels)
                 end
                 basepos=basepos+errorlevels(E_LEVEL)*smoothed; %Notice that the force profile is now off unless the handle is massless.
 
-                data{TRIAL_K}.pos=basepos;
-                data{TRIAL_K}.purepos=purepos;
-                data{TRIAL_K}.t=T_;
-                data{TRIAL_K}.realReset=realreset;
+                data(TRIAL_K).pos=basepos;
+                data(TRIAL_K).purepos=purepos;
+                data(TRIAL_K).t=T_;
+                data(TRIAL_K).realReset=realreset;
 
                 %Reset types:
                 %0 - No reset, reset time = infinity
@@ -187,8 +187,8 @@ for E_LEVEL=1:length(errorlevels)
                         end
                         resetpos=[basepos0(1:fR(1),:); resetpos];
 
-                        data{TRIAL_K}.(['reset',num2str(reset)]).pos{tR}=resetpos;
-                        data{TRIAL_K}.(['reset',num2str(reset)]).t{tR}=[T0(1:fR); Tr(2:end)];
+                        data(TRIAL_K).(['reset',num2str(reset)]).pos{tR}=resetpos;
+                        data(TRIAL_K).(['reset',num2str(reset)]).t{tR}=[T0(1:fR); Tr(2:end)];
                     end
                 end
                 tocs(end+1)=toc;
@@ -200,8 +200,9 @@ end
 
 save('../Data/validation_simplest.mat','data');
 
+progressbar(1); %Close it
 figure
 plot(tocs)
 
-delete([aName,'.m'])
-delete([fName,'.m'])
+delete('fJ*')
+delete('getAlpha*')

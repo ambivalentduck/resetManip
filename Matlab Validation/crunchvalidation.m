@@ -10,55 +10,61 @@ hold on
 
 load('../Data/validation_simplest.mat');
 
+%Get the coordinates need to draw a unit circle
 T=0:.01:2*pi;
 sT=.02*sin(T);
 cT=.02*cos(T);
 
+%Not sure why these are here?
 scale=2;
 legend_drawn=0;
 
-lt=length(data);
-vals=cell(lt,1);
-best=-ones(lt,1);
-
-h = waitbar(0,'Starting');
-fail=ones(lt,1);
+ld=length(data);
+lrt=length(data(1).resetT);
+pathlengthE=zeros(lrt,2,ld);
+timeE=pathlengthE;
 
 %Three passes.
 %1. Data to error metric(s)
 %2. Error metrics to representations of quality, maybe "best" maybe
-%statistica
+%statistical
 %3. Quality to wide conclusions about false-negative, positive rates.  Not
 %necessarily matlab.
 
-
-for K=1:lt
-    waitbar(K/lt,h,'Starting');
+progressbar('Example','Reset','Reset Time')
+for K=1:ld
+    progressbar(K/ld,0,0);
     pathRaw=[0; cumsum(sqrt(sum(diff(data{K}.pos).^2,2)))];
     for R=0:2
-        for k=1:length(data{K}.['reset',num2str(R)].t)
-    
-    
-    if draw
-        plot(tk.pos(:,1),tk.pos(:,2)+k/scale,'b')
-        %plot(tk.pos(f,1),tk.pos(f,2)+k/scale,'c')
-        plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
-        plot(tk.reset1.pos{resetT1}(:,1),tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
-        plot(tk.reset2.pos{resetT2}(:,1),tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
-        if (~legend_drawn)
-            legend('Noise added','No reset','Feedback only reset','FB and FF reset')
-            legend_drawn=1;
-        end
-        plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
-        plot(tk.target(1)+sT,tk.target(2)+cT+k/scale,'m-')
-        plot(tk.pos(1,1)+sT,tk.pos(1,2)+cT+k/scale,'b')
-        plot(tk.target(1),tk.target(2)+k/scale,'mx')
-        plot([tk.pos(1,1) tk.target(1)],[tk.pos(1,2) tk.target(2)]+k/scale,'m-')
-    end
-    axis equal
-end
+        progressbar(K/ld,R,0);
+        if R==0
 
-close(h)
+        else
+            for k=1:length(data{K}.['reset',num2str(R)].t)
+            end
+        end
+
+
+        if draw
+            plot(tk.pos(:,1),tk.pos(:,2)+k/scale,'b')
+            %plot(tk.pos(f,1),tk.pos(f,2)+k/scale,'c')
+            plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
+            plot(tk.reset1.pos{resetT1}(:,1),tk.reset1.pos{resetT1}(:,2)+k/scale,'g')
+            plot(tk.reset2.pos{resetT2}(:,1),tk.reset2.pos{resetT2}(:,2)+k/scale,'k')
+            if (~legend_drawn)
+                legend('Noise added','No reset','Feedback only reset','FB and FF reset')
+                legend_drawn=1;
+            end
+            plot(tk.reset0.pos(:,1),tk.reset0.pos(:,2)+k/scale,'r')
+            plot(tk.target(1)+sT,tk.target(2)+cT+k/scale,'m-')
+            plot(tk.pos(1,1)+sT,tk.pos(1,2)+cT+k/scale,'b')
+            plot(tk.target(1),tk.target(2)+k/scale,'mx')
+            plot([tk.pos(1,1) tk.target(1)],[tk.pos(1,2) tk.target(2)]+k/scale,'m-')
+        end
+        axis equal
+    end
+end
+progressbar(1); %Close it
 
 
 vmat=zeros(workinglrt,sum(fail==1),2);
