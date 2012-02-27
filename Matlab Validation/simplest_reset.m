@@ -137,12 +137,8 @@ for E_LEVEL=1:length(errorlevels)
                 forces_in_time=T_; %Since T_ is now final.
 
                 purepos=basepos;
-                %Inject correlated noise, reasonable up to about .02
-                smoothed=randn(size(basepos));
-                for k=1:size(smoothed,2)
-                    smoothed(:,k)=smooth(smoothed(:,k),35);
-                end
-                basepos=basepos+errorlevels(E_LEVEL)*smoothed; %Notice that the force profile is now off unless the handle is massless.
+                %Inject correlated noise
+                basepos=basepos+errorlevels(E_LEVEL)*zeroSumCorrelatedNoise(size(basepos,1),2); %Notice that the force profile is now off unless the handle is massless.
 
                 data(TRIAL_K).pos=basepos;
                 data(TRIAL_K).purepos=purepos;
