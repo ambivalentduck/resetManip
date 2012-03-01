@@ -73,6 +73,7 @@ for E_LEVEL=1:length(errorlevels)
                 progressbar([],[],(TRIALK-1)/3,0);
 
                 data(TRIAL_K).errorlevel=errorlevels(E_LEVEL);
+                data(TRIAL_K).realtype=BASISTYPE;
                 data(TRIAL_K).direction=TRIALK;
                 data(TRIAL_K).target=trials{TRIAL}.target; %#ok<USENS>
 

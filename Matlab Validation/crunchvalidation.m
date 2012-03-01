@@ -1,12 +1,6 @@
 function crunchvalidation
 
-subnum=1;
 draw=1;
-
-color=['rgb'];
-figure(42)
-clf
-hold on
 
 load('../Data/validation_simplest.mat');
 
@@ -15,28 +9,16 @@ T=0:.01:2*pi;
 sT=.02*sin(T);
 cT=.02*cos(T);
 
-%Not sure why these are here?
-scale=2;
-legend_drawn=0;
-
 ld=length(data);
 lrt=length(data(1).resetT);
 pathlengthE=zeros(lrt,2,ld);
 timeE=pathlengthE;
 
-%Three passes.
-%1. Data to error metric(s)
-%2. Error metrics to representations of quality, maybe "best" maybe
-%statistical
-%3. Quality to wide conclusions about false-negative, positive rates.  Not
-%necessarily matlab.
-
-progressbar('Example','Reset','Reset Time')
-for K=1:ld
-    progressbar(K/ld,0,0);
+progressbar('Example')
+for K=1:ld %Calculate time and pathlength path integrals of absolute difference for error
+    progressbar(K/ld);
     pathRaw=[0; cumsum(sqrt(sum(diff(data(K).pos).^2,2)))];
     for R=0:2
-        progressbar([],R/2,0);
         if R==0
             timee=areaBetweenTime(data(K).t, data(K).pos, data(K).reset0.t, data(K).reset0.pos);
             pathe=areaBetweenPath(data(K).pos, data(K).reset0.pos, pathRaw);
@@ -46,26 +28,35 @@ for K=1:ld
             tempdat=data(K).(['reset',num2str(R)]); %string cat lookups can't be fast, cache
             ltd=length(tempdat.t);
             for k=1:ltd
-                progressbar([],[],(k-1)/ltd);
                 timeE(k,R,K)=areaBetweenTime(data(K).t, data(K).pos, tempdat.t{k}, tempdat.pos{k});
                 pathlengthE(k,R,K)=areaBetweenPath(data(K).pos, tempdat.pos{k}, pathRaw);
             end
         end
     end
+end
+progressbar(1); %Close it
 
-    solid=-ones(lrt-1,2);
-    [trash,p1]=min(pathlengthE(1:end-1,1,K))
-    [trash,p2]=min(pathlengthE(1:end-1,2,K))
-    solid(p1,1)=1;
-    solid(p2,2)=1;
-    [trash,t1]=min(timeE(1:end-1,1,K))
-    [trash,t2]=min(timeE(1:end-1,2,K))
-    solid(t1,1)=2;
-    solid(t2,2)=2;
-    [p1,t1]
-    
-    if draw
-        figure(42)
+%Use error measures to find minima.
+[pathMin,pathMinI]=min(pathlengthE(1:end-1,:,:));
+pathMin=squeeze(pathMin)';
+pathMinI=squeeze(pathMinI)';
+pathMin=[pathMin squeeze(pathlengthE(end,1,:))];
+
+[timeMin,timeMinI]=min(timeE(1:end-1,:,:));
+timeMin=squeeze(timeMin)';
+timeMinI=squeeze(timeMinI)';
+timeMin=[timeMin squeeze(timeE(end,1,:))];
+
+if draw %Make pretty drawings of the resets
+    figure(8)
+    clf
+    hold on
+    for K=1:ld
+        solid=-ones(lrt-1,2);
+        solid(pathMinI(K,1),1)=1;
+        solid(pathMinI(K,2),2)=1;
+        solid(timeMinI(K,1),1)=2;
+        solid(timeMinI(K,2),2)=2;
         force=zeros(size(data(K).pos));
         doPlot(data(K).target,data(K).pos,force,data(K).reset0.pos,data(K).reset1,data(K).reset2,solid,K,sT,cT)
         %doPlot(data(K).target,data(K).pos,data(K).force,data(K).reset0.pos,data(K).reset1,data(K).reset2,solid,K,sT,cT)
@@ -73,57 +64,64 @@ for K=1:ld
     end
     axis equal
 end
-progressbar(1); %Close it
 
-% 
-% vmat=zeros(workinglrt,sum(fail==1),2);
-% c=0;
-% for k=1:lt
-%     if fail(k)==1
-%         c=c+1;
-%         vmat(:,c,1)=vals{k}(:,2);
-%         vmat(:,c,2)=vals{k}(:,3);
-%         vmat(end,c,1)=vals{k}(end,1);
-%         vmat(end,c,2)=vals{k}(end,1);
-%     end
-% end
-% %vmat is (reset times) x (trials) x (reset type 1 or 2)
-% 
-% 
-% [ue,b,levels]=unique([d.errorlevel]);
-% [ud,b,directions]=unique([d.direction]);
-% 
-% figure(41)
-% clf
-% tX=[data{1}.resetT(1:end-1) 2*data{1}.resetT(end-1)-data{1}.resetT(end-2)];
-% ave=zeros(lrt,2);
-% sd=ave;
-% for k=1:length(ud)
-%     for kk=1:length(ue)
-%         subplot(3,3,(k-1)*3+kk)
-%         hold on
-%         temp=vmat(:,(directions==k)&(levels==kk),:);
-%         stemp=size(temp);
-%         for c=1:stemp(1)
-%             for cc=1:stemp(3)
-%                 ave(c,cc)=mean(temp(c,~isnan(temp(c,:,cc)),cc));
-%                 sd(c,cc)=std(temp(c,~isnan(temp(c,:,cc)),cc));
-%             end
-%         end
-%         errorbar(tX(1:end-1),ave(1:end-1,1),sd(1:end-1,1),'g')
-%         errorbar(tX(1:end-1),ave(1:end-1,2),sd(1:end-1,2),'k')
-%         errorbar([tX(1) tX(end)],[ave(end,1) ave(end,1)],[sd(end,1) sd(end,1)],'r')
-% 
-% 
-%         if k==2
-%             ylabel('Modeling Error, cm')
-%             legend('FB Only','FF+FB')
-%         end
-%         if k==3
-%             xlabel('Reset Time, sec')
-%         end
-%     end
-% end
+basis=[data(:).realtype]';
+direction=[data(:).direction]';
+noise=[data(:).errorlevel]';
+uBasis=unique(basis);
+uDirection=unique(direction);
+uNoise=unique(noise);
+luD=length(uDirection);
+luN=length(uNoise);
+
+resetT=[data(1).resetT(1:end-1)]';
+realRI=min(find(resetT>data(1).realReset));
+color='bgr';
+
+for B=1:length(uBasis)
+    figure(B)
+    clf
+    for D=1:luD
+        for N=1:luN
+            subplot(luD,luN,N+(D-1)*luN)
+            hold on
+            f=find((basis==uBasis(B))&(noise==uNoise(N))&(direction==uDirection(D)));
+            for k=1:length(f)
+                plot(resetT, pathlengthE(1:end-1,1,f(k)),'g.',resetT, pathlengthE(1:end-1,2,f(k)),'r.', 0, pathlengthE(end,1,f(k)),'b.')
+                plot(resetT(realRI), pathlengthE(realRI,uBasis(B),f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
+            end
+            if D==luD
+                xlabel(['Added noise level=',num2str(uNoise(N))])
+            end
+        end
+    end
+    suplabel('Modeling Error integrated along Pathlength','y')
+    suplabel('Reset Time','x')
+    suplabel(['Reset Type ',num2str(uBasis(B))],'t')
+end
+
+for B=1:length(uBasis)
+    figure(5+B)
+    clf
+    for D=1:luD
+        for N=1:luN
+            subplot(luD,luN,N+(D-1)*luN)
+            hold on
+            f=find((basis==uBasis(B))&(noise==uNoise(N))&(direction==uDirection(D)));
+            for k=1:length(f)
+                plot(resetT, timeE(1:end-1,1,f(k)),'g.',resetT, timeE(1:end-1,2,f(k)),'r.', 0, timeE(end,1,f(k)),'b.')
+                plot(resetT(realRI), timeE(realRI,uBasis(B),f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
+            end
+            if D==luD
+                xlabel(['Added noise level=',num2str(uNoise(N))])
+            end
+        end
+    end
+    suplabel('Modeling Error integrated along Time','y')
+    suplabel('Reset Time','x')
+    suplabel(['Reset Type ',num2str(uBasis(B))],'t')
+end
+           
 
 function e=areaBetweenTime(t1, pos1, t0, pos0)
 u=union(t0,t1);
