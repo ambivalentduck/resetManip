@@ -1,8 +1,11 @@
-function crunchvalidation
+function crunchvalidation(name)
+if nargin>0
+    load(name);
+else
+    load('../Data/validation_simplest.mat');
+end
 
 draw=1;
-
-load('../Data/validation_simplest.mat');
 
 %Get the coordinates need to draw a unit circle
 T=0:.01:2*pi;
@@ -40,15 +43,15 @@ progressbar(1); %Close it
 [pathMin,pathMinI]=min(pathlengthE(1:end-1,:,:));
 pathMin=squeeze(pathMin)';
 pathMinI=squeeze(pathMinI)';
-pathMin=[pathMin squeeze(pathlengthE(end,1,:))];
+pathMin=[pathMin squeeze(pathlengthE(end,1,:))]; %#ok<NASGU>
 
 [timeMin,timeMinI]=min(timeE(1:end-1,:,:));
 timeMin=squeeze(timeMin)';
 timeMinI=squeeze(timeMinI)';
-timeMin=[timeMin squeeze(timeE(end,1,:))];
+timeMin=[timeMin squeeze(timeE(end,1,:))]; %#ok<NASGU>
 
 if draw %Make pretty drawings of the resets
-    figure(8)
+    figure(666)
     clf
     hold on
     for K=1:ld
@@ -65,21 +68,28 @@ if draw %Make pretty drawings of the resets
     axis equal
 end
 
-basis=[data(:).realtype]';
-direction=[data(:).direction]';
-noise=[data(:).errorlevel]';
+basis=[data(:).realtype]'; %#ok<COLND>
+direction=[data(:).direction]'; %#ok<COLND>
+noise=[data(:).errorlevel]'; %#ok<COLND>
+
+resetT=[data(1).resetT(1:end-1)]';
+realRI=find(resetT==data(1).realReset);
+
+summaryPlot(basis,noise,direction,0,resetT,realRI,pathlengthE,'Modeling Error integrated along Path Length')
+summaryPlot(basis,noise,direction,5,resetT,realRI,timeE,'Modeling Error integrated along Time')
+
+function summaryPlot(basis,noise,direction,figstart,resetT,realRI,error,yLabel)
 uBasis=unique(basis);
 uDirection=unique(direction);
 uNoise=unique(noise);
+
 luD=length(uDirection);
 luN=length(uNoise);
 
-resetT=[data(1).resetT(1:end-1)]';
-realRI=min(find(resetT>data(1).realReset));
 color='bgr';
 
 for B=1:length(uBasis)
-    figure(B)
+    figure(figstart+B)
     clf
     for D=1:luD
         for N=1:luN
@@ -87,41 +97,22 @@ for B=1:length(uBasis)
             hold on
             f=find((basis==uBasis(B))&(noise==uNoise(N))&(direction==uDirection(D)));
             for k=1:length(f)
-                plot(resetT, pathlengthE(1:end-1,1,f(k)),'g.',resetT, pathlengthE(1:end-1,2,f(k)),'r.', 0, pathlengthE(end,1,f(k)),'b.')
-                plot(resetT(realRI), pathlengthE(realRI,uBasis(B),f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
+                plot(resetT, error(1:end-1,1,f(k)),'g.',resetT, error(1:end-1,2,f(k)),'r.', 0, error(end,1,f(k)),'b.')
+                if uBasis(B)==0
+                    plot(resetT(realRI), error(end,1,f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
+                else
+                    plot(resetT(realRI), error(realRI,uBasis(B),f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
+                end
             end
             if D==luD
                 xlabel(['Added noise level=',num2str(uNoise(N))])
             end
         end
     end
-    suplabel('Modeling Error integrated along Pathlength','y')
-    suplabel('Reset Time','x')
-    suplabel(['Reset Type ',num2str(uBasis(B))],'t')
+    suplabel(yLabel,'y');
+    suplabel('Reset Time','x');
+    suplabel(['Reset Type ',num2str(uBasis(B))],'t');
 end
-
-for B=1:length(uBasis)
-    figure(5+B)
-    clf
-    for D=1:luD
-        for N=1:luN
-            subplot(luD,luN,N+(D-1)*luN)
-            hold on
-            f=find((basis==uBasis(B))&(noise==uNoise(N))&(direction==uDirection(D)));
-            for k=1:length(f)
-                plot(resetT, timeE(1:end-1,1,f(k)),'g.',resetT, timeE(1:end-1,2,f(k)),'r.', 0, timeE(end,1,f(k)),'b.')
-                plot(resetT(realRI), timeE(realRI,uBasis(B),f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
-            end
-            if D==luD
-                xlabel(['Added noise level=',num2str(uNoise(N))])
-            end
-        end
-    end
-    suplabel('Modeling Error integrated along Time','y')
-    suplabel('Reset Time','x')
-    suplabel(['Reset Type ',num2str(uBasis(B))],'t')
-end
-           
 
 function e=areaBetweenTime(t1, pos1, t0, pos0)
 u=union(t0,t1);
@@ -183,7 +174,6 @@ for K=1:size(solid,1)
             dashed='x:';
         else
             dashed='<';
-            a=5
         end
         plot(reset2.pos{k}(:,1),reset2.pos{k}(:,2)+o,['r',dashed])
     elseif solid(k,1)<0

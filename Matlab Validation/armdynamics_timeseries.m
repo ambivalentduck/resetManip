@@ -5,10 +5,10 @@ global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB pf getAccel forces_in forces
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
 
-if (toc-absTime)>1
-    dx=[0;0;0;0];
-    return
-end
+% if (toc-absTime)>1
+%     dx=[0;0;0;0];
+%     return
+% end
 
 %Add feedback forces
 if(coeffFB.expiration>=t)
