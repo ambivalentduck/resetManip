@@ -5,7 +5,8 @@ else
     load('../Data/validation_simplest.mat');
 end
 
-draw=1;
+%draw=1;
+draw=0;
 
 %Get the coordinates need to draw a unit circle
 T=0:.01:2*pi;
@@ -60,8 +61,7 @@ if draw %Make pretty drawings of the resets
         solid(pathMinI(K,2),2)=1;
         solid(timeMinI(K,1),1)=2;
         solid(timeMinI(K,2),2)=2;
-        force=zeros(size(data(K).pos));
-        doPlot(data(K).target,data(K).pos,force,data(K).reset0.pos,data(K).reset1,data(K).reset2,solid,K,sT,cT)
+        doPlot(data(K).target,data(K).pos,data(K).force,data(K).reset0.pos,data(K).reset1,data(K).reset2,solid,K,sT,cT)
         %doPlot(data(K).target,data(K).pos,data(K).force,data(K).reset0.pos,data(K).reset1,data(K).reset2,solid,K,sT,cT)
         drawnow
     end
@@ -72,14 +72,67 @@ basis=[data(:).realtype]'; %#ok<COLND>
 direction=[data(:).direction]'; %#ok<COLND>
 noise=[data(:).errorlevel]'; %#ok<COLND>
 
-resetT=[data(1).resetT(1:end-1)]';
-realRI=find(resetT==data(1).realReset);
+resetT=[data(1).resetT(1:end-1)]'; %#ok<NBRAK>
+realRI=zeros(length(data),1);
 
-summaryPlot(basis,noise,direction,0,resetT,realRI,pathlengthE,'Modeling Error integrated along Path Length')
-summaryPlot(basis,noise,direction,5,resetT,realRI,timeE,'Modeling Error integrated along Time')
+for k=1:length(realRI)
+    if data(k).realReset==0
+        realRI(k)=0;
+        basis(k)=0; %Cheap hack that needs to be removed ASAP
+    else
+        [trash,realRI(k)]=min((resetT-data(k).realReset).^2);
+    end
+end
+
+%summaryPlot(basis,noise,direction,10,resetT,realRI,pathlengthE,'Modeling Error integrated along Path Length')
+%summaryPlot(basis,noise,direction,30,resetT,realRI,timeE,'Modeling Error integrated along Time')
+
+Y_Plot(basis,noise,direction,50,resetT,realRI,pathlengthE,'Modeling Error integrated along Path Length')
+Y_Plot(basis,noise,direction,51,resetT,realRI,timeE,'Modeling Error integrated along Time')
+
 
 function summaryPlot(basis,noise,direction,figstart,resetT,realRI,error,yLabel)
 uBasis=unique(basis);
+uDirection=unique(direction);
+uNoise=unique(noise);
+uRI=unique(realRI);
+
+luD=length(uDirection);
+luN=length(uNoise);
+luB=length(uBasis);
+luRI=length(uRI);
+
+color='bgr';
+
+for R=1:luRI
+    for B=1:luB
+        figure(figstart+B+(R-1)*luB)
+        clf
+        for D=1:luD
+            for N=1:luN
+                subplot(luD,luN,N+(D-1)*luN)
+                hold on
+                f=find((basis==uBasis(B))&(noise==uNoise(N))&(direction==uDirection(D))&(realRI==uRI(R)));
+                for k=1:length(f)
+                    plot(resetT, error(1:end-1,1,f(k)),'g.',resetT, error(1:end-1,2,f(k)),'r.', 0, error(end,1,f(k)),'b.')
+                    if uBasis(B)==0
+                        plot([0 resetT(end)], error(end,1,f(k))*[1 1],[color(uBasis(B)+1),'-.'])
+                    else
+                        plot(resetT(uRI(R)), error(uRI(R),uBasis(B),f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
+                    end
+                end
+                if D==luD
+                    xlabel(['Added noise level=',num2str(uNoise(N))])
+                end
+            end
+        end
+        suplabel(yLabel,'y');
+        suplabel('Reset Time','x');
+        suplabel(['Reset Type ',num2str(uBasis(B))],'t');
+    end
+end
+
+function Y_Plot(basis,noise,direction,fignum,resetT,realRI,error,yLabel)
 uDirection=unique(direction);
 uNoise=unique(noise);
 
@@ -87,32 +140,46 @@ luD=length(uDirection);
 luN=length(uNoise);
 
 color='bgr';
+marker='^xv';
 
-for B=1:length(uBasis)
-    figure(figstart+B)
-    clf
-    for D=1:luD
-        for N=1:luN
-            subplot(luD,luN,N+(D-1)*luN)
-            hold on
-            f=find((basis==uBasis(B))&(noise==uNoise(N))&(direction==uDirection(D)));
-            for k=1:length(f)
-                plot(resetT, error(1:end-1,1,f(k)),'g.',resetT, error(1:end-1,2,f(k)),'r.', 0, error(end,1,f(k)),'b.')
-                if uBasis(B)==0
-                    plot(resetT(realRI), error(end,1,f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
-                else
-                    plot(resetT(realRI), error(realRI,uBasis(B),f(k)),[color(uBasis(B)+1),'x'],'markersize',10)
-                end
+V=zeros(3); %3x3
+
+figure(fignum)
+clf
+for D=1:luD
+    for N=1:luN
+        subplot(luD,luN,N+(D-1)*luN)
+        hold on
+        f=find((noise==uNoise(N))&(direction==uDirection(D)));
+        for k=1:length(f) %Trials that share a noise level, and direction
+            V(3,:)=0:2;
+            V(1,1)=error(end,1,f(k));
+            V(2,1)=0;
+            [V(1,2),ind]=min(error(1:end-1,1,f(k)));
+            V(2,2)=resetT(ind);
+            [V(1,3),ind]=min(error(1:end-1,2,f(k)));
+            V(2,3)=resetT(ind);
+            if basis(f(k))==0
+                realT=0;
+                realE=error(end,1,f(k));
+            else
+                realT=resetT(realRI(f(k)));
+                realE=error(realRI(f(k)),basis(f(k)),f(k));
             end
-            if D==luD
-                xlabel(['Added noise level=',num2str(uNoise(N))])
+            for kk=1:3
+                semilogy([realT V(2,kk)],[realE V(1,kk)],'k-')
+                semilogy(V(2,kk),V(1,kk),[color(kk),'o'],'markersize',10)
             end
+            semilogy(realT,realE,[color(basis(f(k))+1),marker(basis(f(k))+1)],'markersize',10)
+        end
+        if D==luD
+            xlabel(['Added noise level=',num2str(uNoise(N))])
         end
     end
-    suplabel(yLabel,'y');
-    suplabel('Reset Time','x');
-    suplabel(['Reset Type ',num2str(uBasis(B))],'t');
 end
+suplabel(yLabel,'y');
+suplabel('Reset Time','x');
+suplabel('Summary Y-Plot','t');
 
 function e=areaBetweenTime(t1, pos1, t0, pos0)
 u=union(t0,t1);
@@ -147,7 +214,7 @@ else
     cT=varargin{2};
 end
 
-qscale=500;
+qscale=50;
 w=.8;
 o=offset/3;
 
