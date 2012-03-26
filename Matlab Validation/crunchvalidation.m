@@ -1,4 +1,5 @@
 function crunchvalidation(name)
+tic
 if nargin>0
     load(name);
 else
@@ -90,6 +91,19 @@ end
 Y_Plot(basis,noise,direction,50,resetT,realRI,pathlengthE,'Modeling Error integrated along Path Length')
 Y_Plot(basis,noise,direction,51,resetT,realRI,timeE,'Modeling Error integrated along Time')
 
+toc
+
+function falsePlot(basis,noise,direction,figstart,resetT,realRI,error,eLabel)
+K=0;
+for k=1:length(realRI) %for each point, compare min index and realRI
+    [minVals, minInds]=min(error(:,1:end-1));
+    minVals=[error(1,end) minVals];
+    [trash, typePlus1]=min(minVals);
+    if typePlus1~=(basis(k)+1) %
+    
+    
+    end
+end
 
 function summaryPlot(basis,noise,direction,figstart,resetT,realRI,error,yLabel)
 uBasis=unique(basis);
