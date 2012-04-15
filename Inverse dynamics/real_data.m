@@ -1,6 +1,6 @@
 clc
 clear all
-number=4;
+number=7;
 
 warning off all
 
@@ -48,48 +48,56 @@ feval(fName,[5 6])
 getAlpha=str2func(aName);
 feval(aName,[1 2]',[3 4]',[5 6]')
 
-trialswanted=[54 86 88 96 107 109 112 115 121];
+trialswanted=[52 54 86 88 96 107 109 112 115 121];
 
-figure(1)
-clf
-hold on
-for TRIAL=trialswanted
+QSCALE=200;
+
+for TRIAL=1:length(trialswanted) %trialswanted
+    trial=trialswanted(TRIAL);
     %Do stuff that's unique to testing this out
-    pf=trials{TRIAL}.target;
+    pf=trials{trial}.target;
     [val,tzero]=min(abs(trials{TRIAL}.time));
-    p0=trials{TRIAL}.pos(tzero,:)';
+    p0=trials{trial}.pos(tzero,:)';
+    v0=trials{trial}.vel(tzero,:)';
 
     coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],0,.8);
     coeff0.expiration=tf;
     coeffFF=coeff0;
     coeffFB=coeff0;
 
-    kinematicsNForce=[trials{TRIAL}.pos trials{TRIAL}.vel trials{TRIAL}.accel trials{TRIAL}.force];
+    q0=ikin(p0);
+    kinematicsNForce=[trials{trial}.pos trials{trial}.vel trials{trial}.accel trials{trial}.force];
     pvaf=kinematicsNForce';
-    kNfTime=trials{TRIAL}.time;
-    [T_,D]=ode45(@armdynamics_inverted,0:.01:1.5,[ikin(p0);0;0]);
+    kNfTime=trials{trial}.time;
+    [T_,D]=ode45(@armdynamics_inverted,0:.01:1.5,[q0;0;0]);
     desired=zeros(2,length(T_));
     for k=1:length(T_)
         desired(1:2,k)=fkin(D(k,1:2)');
+    end
+    
+    [T_,Dv]=ode45(@armdynamics_inverted,0:.01:1.5,[q0;fJ(q0)\v0]);
+    desired_v=zeros(2,length(T_));
+    for k=1:length(T_)
+        desired_v(1:2,k)=fkin(Dv(k,1:2)');
     end
 
     T_fixed=T_;
     T_fixed(T_>.8)=.8;
     [p,v,a]=minjerk(coeff0.vals,T_fixed);
-    %
-    % figure(1)
-    % clf
-    % plot(pvaf(1,:),pvaf(2,:),'b-',pvaf(1,:),pvaf(2,:),'r.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
-    %
-    % figure(2)
-    % clf
-    % plot(p(1,:),p(2,:),'b-',desired(1,:),desired(2,:),'r.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
-    % title('Comparison of desired and extracted desired')
-    % legend('Desired','Extracted Desired')
-
-    figure(TRIAL)
+    
+    figure(trial)
     clf
-    plot(pvaf(1,:),pvaf(2,:),'b-',desired(1,:),desired(2,:),'r.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
+    hold on
+    quiver(pvaf(1,:),pvaf(2,:),pvaf(7,:)/QSCALE,pvaf(8,:)/QSCALE,0,'Color',[.5 .5 .5])
+    
+    [time,timeind]=unique(trials{trial}.time);
+    
+    yi=interp1(time,kinematicsNForce(timeind,:),T_);
+    for k=1:length(T_)
+        plot([yi(k,1) desired(1,k)],[yi(k,2),desired(2,k)],'g-')
+    end
+    plot([p0(1) pf(1)],[p0(2) pf(2)],'m--')
+    plot(pvaf(1,:),pvaf(2,:),'b-',desired(1,:),desired(2,:),'r.',desired_v(1,:),desired_v(2,:),'m.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
     axis equal
     axis off
 end

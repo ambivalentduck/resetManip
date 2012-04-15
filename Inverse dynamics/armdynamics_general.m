@@ -1,29 +1,27 @@
-function [dx, p_real, v_real, a_real,f_handle]=armdynamics_timeseries(t,x)
+function dx=armdynamics_general(t,x)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB getAccel forces_in forces_in_time fJ getAlpha
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 fJ getAlpha pvpvaf pvpvafTime
 
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
 
+kNf=twoNearestNeighbor(pvpvaf,pvpvafTime,t);
+pfb=kNf(1:2)';
+vfb=kNf(3:4)';
+pff=kNf(5:6)';
+vff=kNf(7:8)';
+aff=kNf(9:10)';
+f=kNf(11:12)';
+
 %Add feedback forces
-if(coeffFB.expiration>=t)
-    [p,v,a]=minjerk(coeffFB.vals,t);
-else
-    [p,v,a]=minjerk(coeffFB.vals,coeffFB.expiration); %Final values stand forever
-end
-theta_desired=ikin(p);
-omega_desired=fJ(theta_desired)\v;
+theta_desired=ikin(pfb);
+omega_desired=fJ(theta_desired)\vfb;
 torque_fb=kd*(omega_desired-x(3:4))+kp*(theta_desired-x(1:2));
 
 %Add feedforward forces
-if(coeffFF.expiration>=t)
-    [p,v,a]=minjerk(coeffFF.vals,t);
-else
-    [p,v,a]=minjerk(coeffFF.vals,coeffFF.expiration); %Final values stand forever
-end
-theta_desired=ikin(p);
-omega_desired=fJ(theta_desired)\v;
-alpha=getAlpha(theta_desired,omega_desired,a);  %Alpha is an angular acceleration, q double dot
+theta_desired=ikin(pff);
+omega_desired=fJ(theta_desired)\vff;
+alpha=getAlpha(theta_desired,omega_desired,aff);  %Alpha is an angular acceleration, q double dot
 
 %Compute alpha to torque relationship, eq. 7.87 in Spong's Robot Control and Modeling: pg 262
 s12=sin(x(1)+x(2));
@@ -59,8 +57,7 @@ torque_ff=D_expected*alpha+C_expected;
 fJxt=fJ(x(1:2))';
 
 %Add torque due to outside forces
-F=interp1(forces_in_time,forces_in,t)';
-torque_outside=fJxt*F;
+torque_outside=fJxt*f;
 
 dx=[x(3);
     x(4);

@@ -7,7 +7,7 @@ out=zeros(length(t0),size(x,2));
 
 for k=1:length(t0);
     time=t-t0(k);
-    found=find(time>0);
+    found=find(time>0,2,'first');
     if numel(found)==0
         out(k,:)=x(end,:);
         continue
