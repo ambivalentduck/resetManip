@@ -1,13 +1,13 @@
 function [di, pd, vd, ad]=armdynamics_inverted(t,i)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 getAccel fJ getAlpha kinematicsNForce kNfTime
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 getAccel fJ getAlpha pvaf pvafTime
 
 %notice that i is desired, NOT real
 %i(1-2) are joint angle, q
 %i(3-4) are velocity, q dot
 
 %kNf=interp1(kNfTime, kinematicsNForce,t);
-kNf=twoNearestNeighbor(kinematicsNForce,kNfTime,t);
+kNf=twoNearestNeighbor(pvaf,pvafTime,t);
 p=kNf(1:2)';
 v=kNf(3:4)';
 a=kNf(5:6)';
@@ -62,7 +62,7 @@ di=[i(3);
     D_expected\(D_real*alpha_real-torque_fb-torque_outside+C_real-C_expected);];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
 
 if nargout>1
-    pd=fkin(theta_desired);
+    pd=fkin(i(1:2));
     vd=fJ(i(1:2))*i(3:4);
     ad=getAccel(i(1:2),i(3:4),di(3:4));
 end

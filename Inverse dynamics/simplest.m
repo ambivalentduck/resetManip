@@ -6,7 +6,7 @@ warning off all
 
 nums=num2str(number);
 
-global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha coeffFF coeffFB kinematicsNForce kNfTime forces_in forces_in_time pvpvaf pvpvafTime
+global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha forcefcn pvpva pvaf pvpvaTime pvafTime coeffFB
 
 load(['../Data/',nums,'.mat']);
 
@@ -55,102 +55,101 @@ pf=trials{TRIAL}.target;
 [val,tzero]=min(abs(trials{TRIAL}.time));
 p0=trials{TRIAL}.pos(tzero,:)';
 
-coeff0.vals=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],0,.8);
-coeff0.expiration=tf;
-coeffFF=coeff0;
-coeffFB=coeff0;
-
-forces_in_time=0:.01:1.6;
-forces_in=0*[10*sin(5*2*pi*forces_in_time/.8);
-    0*forces_in_time]';
+%First solve an ideal-ish reach
+times=0:.01:1.5;
+reachDuration=.8;
+coeffs=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],0,reachDuration);
+T_fixed=times;
+T_fixed(times>reachDuration)=reachDuration;
+[p,v,a]=minjerk(coeffs,T_fixed);
+pvpva=[p; v; p; v; a]';
+pvpvaTime=times;
+forcefcn0=@(t,p,v) 0*p;%requires zero forces to begin with
+forcefcn=forcefcn0;
 
 s0=ikin(p0);
 inicond=[s0;0;0];
-times=0:.01:1.5;
+[T,X]=ode45(@armdynamics_general,times,inicond);
 
-[T,X]=ode45(@armdynamics_timeseries,times,inicond);
-
-T_fixed=T;
-T_fixed(T>.8)=.8;
-[p,v,a]=minjerk(coeff0.vals,T_fixed);
-
+%A fixed force trajectory is fine because the time and position trajectory
+%is already fixed.
 pvaf=zeros(8,length(T));
 for k=1:length(T)
-    [trash, pvaf(1:2,k), pvaf(3:4,k), pvaf(5:6,k), pvaf(7:8,k)]=armdynamics_timeseries(T(k),X(k,:)');
+    [trash, pvaf(1:2,k), pvaf(3:4,k), pvaf(5:6,k),pvaf(7:8,k)]=armdynamics_general(T(k),X(k,:)');
 end
 
 %Change endpoint forces if so desired.
+%Notice that all state information is set in stone, so no reason not to
+%save a time series. Need a matching force function for forward
+%confirmation
 pvaf(7:8,:)=10*orthogonalSinWave(pvaf(1:2,:),p0,pf');
+forcefcn1=@(t,p,v) 10*orthogonalSinWave(p,p0,pf');
+forcefcnNeg=@(t,p,v) -forcefcn1(t,p,v);
 
-%Solve and verify intended FF trajectory, FB straight line
-kinematicsNForce=pvaf';
-kNfTime=T;
-[T_,D]=ode45(@armdynamics_inverted,times,[s0;0;0]);
-desired=zeros(2,length(T));
-vi=zeros(2,length(T));
-ai=zeros(2,length(T));
-for k=1:length(T)
-    [trash desired(1:2,k) vi(1:2,k) ai(1:2,k)]=armdynamics_inverted(T_(k),D(k,:)');
-end
-
-pvpvaf=[desired; vi; desired; vi; ai; pvaf(7:8,:)]';
-pvpvafTime=T_;
-[T_,X1]=ode45(@armdynamics_general,times,[s0;0;0]);
-desiredF=zeros(2,length(T));
-for k=1:length(T)
-    desiredF(1:2,k)=fkin(X1(k,1:2)');
-end
-
-pvpvaf=[desired; vi; desired; vi; ai; 0*pvaf(7:8,:)]';
-[T_,X1]=ode45(@armdynamics_general,times,[s0;0;0]);
-aftereffect1=zeros(2,length(T));
-for k=1:length(T)
-    aftereffect1(1:2,k)=fkin(X1(k,1:2)');
-end
-
-%Solve and verify intended FF trajectory, FB straight line
-[T_,D2]=ode45(@armdynamics_inverted_2desired,times,[s0;0;0]);
-d2desired=zeros(2,length(T));
-vi=zeros(2,length(T));
-ai=zeros(2,length(T));
-for k=1:length(T)
-    [trash d2desired(1:2,k) vi(1:2,k) ai(1:2,k)]=armdynamics_inverted_2desired(T_(k),D2(k,:)');
-end
-
-pvpvaf=[p; v; d2desired; vi; ai; pvaf(7:8,:)]';
-[T_,X1]=ode45(@armdynamics_general,times,[s0;0;0]);
-desiredF2=zeros(2,length(T));
-for k=1:length(T)
-    desiredF2(1:2,k)=fkin(X1(k,1:2)');
-end
-
-pvpvaf=[p; v; d2desired; vi; ai; 0*pvaf(7:8,:)]';
-[T_,X1]=ode45(@armdynamics_general,times,[s0;0;0]);
-aftereffect2=zeros(2,length(T));
-for k=1:length(T)
-    aftereffect2(1:2,k)=fkin(X1(k,1:2)');
-end
-
-
-% figure(1)
-% clf
-% plot(pvaf(1,:),pvaf(2,:),'b-',pvaf(1,:),pvaf(2,:),'r.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
+pvaf=pvaf';
+pvafTime=times;
 
 figure(2)
 clf
 hold on
-plot(desired(1,:),desired(2,:),'r.',desiredF(1,:),desiredF(2,:),'rv',aftereffect1(1,:),aftereffect1(2,:),'ro')
-plot(d2desired(1,:),d2desired(2,:),'k.',desiredF2(1,:),desiredF2(2,:),'k^',aftereffect2(1,:),aftereffect2(2,:),'ks')
-plot(p(1,:),p(2,:),'b-',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
-qpoints=orthogonalSinWave(p,p0,pf');
-quiver(p(1,:),p(2,:),qpoints(1,:),qpoints(2,:))
-title('Comparison of desired and extracted desired')
-legend('Desired','Validation via FF','After-Effect','Desired FB=Rhumb','Validation via FF FB=Rhumb','After-Effect FB=Rhumb')
-axis equal
+inversions={@armdynamics_inverted, @armdynamics_inverted_2desired};
+colors='rk';
+symbs={'.v<','.^>'};
+coeffFB.vals=coeffs;
+coeffFB.expiration=reachDuration;
 
-% figure(3)
-% clf
-% plot(pvaf(1,:),pvaf(2,:),'b-',desired(1,:),desired(2,:),'r.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
+for K=1:length(inversions)
+    %Solve for intended FF trajectory
+    [T_,D]=ode45(inversions{K},times,inicond);
+    desired=zeros(2,length(T));
+    vi=zeros(2,length(T));
+    ai=zeros(2,length(T));
+    for k=1:length(T)
+        [trash desired(1:2,k) vi(1:2,k) ai(1:2,k)]=inversions{K}(T_(k),D(k,:)');
+    end
+
+    %Verify that this extracted trajectory actually works
+    pvpvaTime=T_;
+    switch(K)
+        case 1
+            pvpva=[desired; vi; desired; vi; ai]';
+        case 2
+            %This will break horribly if the variables names from above are reused
+            pvpva=[p; v; desired; vi; ai]';
+    end
+    forcefcn=forcefcn1;
+    [T_,X]=ode45(@armdynamics_general,times,inicond);
+    desiredF=zeros(2,length(T));
+    for k=1:length(T)
+        desiredF(1:2,k)=fkin(X(k,1:2)');
+    end
+
+    %Find aftereffects by using extracted desired, but make forces 0
+    forcefcn=forcefcn0;
+    [T_,X]=ode45(@armdynamics_general,times,inicond);
+    aftereffect=zeros(2,length(T));
+    for k=1:length(T)
+        aftereffect(1:2,k)=fkin(X(k,1:2)');
+    end
+
+    plot(desired(1,:),desired(2,:),[colors(K),symbs{K}(1)],desiredF(1,:),desiredF(2,:),[colors(K),symbs{K}(2)],aftereffect(1,:),aftereffect(2,:),[colors(K),symbs{K}(3)])
+end
+%One last after-effect: negating forces is equivalent to a forces-learned
+%model, where it's not a trajectory but a force trajectory that's learned.
+%You'd see a negative of the forces prior to any reset.
+forcefcn=forcefcnNeg;
+[T_,X]=ode45(@armdynamics_general,times,[s0;0;0]);
+aftereffect=zeros(2,length(T));
+for k=1:length(T)
+    aftereffect(1:2,k)=fkin(X(k,1:2)');
+end
+plot(aftereffect(1,:),aftereffect(2,:),'c-.')
+plot(p(1,:),p(2,:),'b-',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
+qpoints=orthogonalSinWave(pvaf(:,1:2)',p0,pf')';
+quiver(pvaf(:,1),pvaf(:,2),qpoints(:,1),qpoints(:,2))
+title('Comparison of desired and extracted desired')
+legend('Desired','Validation via FF','After-Effect','Desired FB=Rhumb','Validation via FF FB=Rhumb','After-Effect FB=Rhumb','After-Effect Force Learning')
+axis equal
 
 delete('fJ*') %Clean up any and all extra copies of these floating around
 delete('getAlpha*')

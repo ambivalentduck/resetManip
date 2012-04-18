@@ -1,17 +1,16 @@
-function dx=armdynamics_general(t,x)
+function [dx, p_real, v_real, a_real,f_handle]=armdynamics_general(t,x)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 fJ getAlpha pvpvaf pvpvafTime
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 fJ getAlpha getAccel pvpva pvpvaTime forcefcn
 
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
 
-kNf=twoNearestNeighbor(pvpvaf,pvpvafTime,t);
+kNf=twoNearestNeighbor(pvpva,pvpvaTime,t);
 pfb=kNf(1:2)';
 vfb=kNf(3:4)';
 pff=kNf(5:6)';
 vff=kNf(7:8)';
 aff=kNf(9:10)';
-f=kNf(11:12)';
 
 %Add feedback forces
 theta_desired=ikin(pfb);
@@ -57,19 +56,20 @@ torque_ff=D_expected*alpha+C_expected;
 fJxt=fJ(x(1:2))';
 
 %Add torque due to outside forces
+p_real=fkin(x(1:2));
+v_real=fJ(x(1:2))*x(3:4);
+f=forcefcn(t,p_real,v_real); %Evaluate the function handle
 torque_outside=fJxt*f;
 
 dx=[x(3);
     x(4);
     D_real\(torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
 
-if nargout>1
-    f_handle=F;
-    p_real=fkin(x(1:2));
-    v_real=fJ(x(1:2))*x(3:4);
+if nargout>3
+    f_handle=f;
     a_real=getAccel(x(1:2),x(3:4),dx(3:4));
 end
 
 if(~isreal(dx))
-    dx=[0;0;0;0];
+    dx=[0;0;0;0]; %notice that the sim will suddenly grind to a halt.
 end
