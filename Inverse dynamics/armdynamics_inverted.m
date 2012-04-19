@@ -6,7 +6,6 @@ global kd kp l1 lc1 lc2 m1 m2 I1 I2 getAccel fJ getAlpha pvaf pvafTime
 %i(1-2) are joint angle, q
 %i(3-4) are velocity, q dot
 
-%kNf=interp1(kNfTime, kinematicsNForce,t);
 kNf=twoNearestNeighbor(pvaf,pvafTime,t);
 p=kNf(1:2)';
 v=kNf(3:4)';

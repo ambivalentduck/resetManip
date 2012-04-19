@@ -6,7 +6,7 @@ warning off all
 
 nums=num2str(number);
 
-global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha coeffFF coeffFB kinematicsNForce kNfTime forces_in forces_in_time kdE kpE
+global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha coeffFF coeffFB pvaf pvafTime forces_in forces_in_time kdE kpE
 
 load(['../Data/',nums,'.mat']);
 
@@ -74,8 +74,8 @@ for k=1:length(T)
     [trash, pvaf(1:2,k), pvaf(3:4,k), pvaf(5:6,k), pvaf(7:8,k)]=armdynamics_timeseries(T(k),X(k,:)');
 end
 
-kinematicsNForce=pvaf';
-kNfTime=T;
+pvaf=pvaf';
+pvafTime=T;
 [T_,D]=ode45(@armdynamics_inverted,0:.01:1.5,[s0;0;0]);
 desired=zeros(2,length(T));
 for k=1:length(T)
@@ -86,15 +86,13 @@ figure(1)
 clf
 hold on
 
-N=20;
-dM=zeros(N,1);
-pM=dM;
-error=dM;
+pM=logspace(-1,log10(3),20)-1;
+error=zeros(size(pM));
 
-for k=1:N
+for k=1:length(pM)
     k
-    kpE=10*rand.*kp;
-    pM(k)=norm(kpE,'fro');
+    %pM(k)=1.8*rand-.9;
+    kpE=pM(k)*kp;
     kdE=0; %rand(2,2)*kd-kd/2;
     dM(k)=norm(kdE,'fro');
 
@@ -118,8 +116,9 @@ title('Comparison of desired and extracted desired')
 
 figure(2)
 clf
-plot(pM,error,'k.')
-
+plot((pM+1)*100,error,'k.')
+xlabel('Percent of K_P')
+ylabel('Error, cm^2')
 
 delete('fJ*') %Clean up any and all extra copies of these floating around
 delete('getAlpha*')

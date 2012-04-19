@@ -6,7 +6,7 @@ warning off all
 
 nums=num2str(number);
 
-global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha coeffFF coeffFB kinematicsNForce kNfTime forces_in forces_in_time
+global kd kp l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha coeffFF coeffFB pvaf pvafTime
 
 load(['../Data/',nums,'.mat']);
 
@@ -66,9 +66,8 @@ for TRIAL=1:length(trialswanted) %trialswanted
     coeffFB=coeff0;
 
     q0=ikin(p0);
-    kinematicsNForce=[trials{trial}.pos trials{trial}.vel trials{trial}.accel trials{trial}.force];
-    pvaf=kinematicsNForce';
-    kNfTime=trials{trial}.time;
+    pvaf=[trials{trial}.pos trials{trial}.vel trials{trial}.accel trials{trial}.force];
+    pvafTime=trials{trial}.time;
     [T_,D]=ode45(@armdynamics_inverted,0:.01:1.5,[q0;0;0]);
     desired=zeros(2,length(T_));
     for k=1:length(T_)
@@ -88,16 +87,14 @@ for TRIAL=1:length(trialswanted) %trialswanted
     figure(trial)
     clf
     hold on
-    quiver(pvaf(1,:),pvaf(2,:),pvaf(7,:)/QSCALE,pvaf(8,:)/QSCALE,0,'Color',[.5 .5 .5])
+    quiver(pvaf(:,1),pvaf(:,2),pvaf(:,7)/QSCALE,pvaf(:,8)/QSCALE,0,'Color',[.5 .5 .5])
     
-    [time,timeind]=unique(trials{trial}.time);
-    
-    yi=interp1(time,kinematicsNForce(timeind,:),T_);
+    yi=twoNearestNeighbor(pvaf,pvafTime,T_);
     for k=1:length(T_)
         plot([yi(k,1) desired(1,k)],[yi(k,2),desired(2,k)],'g-')
     end
     plot([p0(1) pf(1)],[p0(2) pf(2)],'m--')
-    plot(pvaf(1,:),pvaf(2,:),'b-',desired(1,:),desired(2,:),'r.',desired_v(1,:),desired_v(2,:),'m.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
+    plot(pvaf(:,1),pvaf(:,2),'b-',desired(1,:),desired(2,:),'r.',desired_v(1,:),desired_v(2,:),'m.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
     axis equal
     axis off
 end

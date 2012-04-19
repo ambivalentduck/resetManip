@@ -15,7 +15,7 @@ for k=1:length(t0);
     if found(1)==1
         out(k,:)=x(1,:);
         continue
-    elseif found(1)==size(x,1)
+    elseif found(1)==length(t)
         out(k,:)=x(end,:);
         continue
     end

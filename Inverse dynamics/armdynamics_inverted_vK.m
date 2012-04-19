@@ -1,13 +1,13 @@
 function [di, pd, vd, ad]=armdynamics_inverted_vK(t,i)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 getAccel fJ getAlpha kinematicsNForce kNfTime kdE kpE
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 getAccel fJ getAlpha pvaf pvafTime kdE kpE
 
 %notice that i is desired, NOT real
 %i(1-2) are joint angle, q
 %i(3-4) are velocity, q dot
 
 %kNf=interp1(kNfTime, kinematicsNForce,t);
-kNf=twoNearestNeighbor(kinematicsNForce,kNfTime,t);
+kNf=twoNearestNeighbor(pvaf,pvafTime,t);
 p=kNf(1:2)';
 v=kNf(3:4)';
 a=kNf(5:6)';
