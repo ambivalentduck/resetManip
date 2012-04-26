@@ -86,7 +86,7 @@ figure(1)
 clf
 hold on
 
-N=100;
+N=20;
 pM=zeros(N,1);
 vM=pM;
 error=pM;

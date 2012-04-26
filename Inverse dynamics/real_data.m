@@ -48,7 +48,7 @@ feval(fName,[5 6])
 getAlpha=str2func(aName);
 feval(aName,[1 2]',[3 4]',[5 6]')
 
-trialswanted=[52 54 86 88 96 107 109 112 115 121];
+trialswanted=[52 54 86 88] % 96 107 109 112 115 121];
 
 QSCALE=200;
 

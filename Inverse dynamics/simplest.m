@@ -44,7 +44,7 @@ fName=['fJ',hash];
 pause(.1)
 disp('Jacobians complete.')
 fJ=str2func(fName);
-feval(fName,[5 6])
+feval(fName,[5 6]) %The fevals appear to force compilation
 getAlpha=str2func(aName);
 feval(aName,[1 2]',[3 4]',[5 6]')
 
@@ -54,12 +54,28 @@ pf=trials{TRIAL}.target';
 [val,tzero]=min(abs(trials{TRIAL}.time));
 p0=trials{TRIAL}.pos(tzero,:)';
 
-orthosin=@(t,p,v) 20*orthogonalSinWave(p,p0,pf);
-plotInversions(orthosin,1,'Orthogonal Sin Wave');
+% orthosin=@(t,p,v) 20*orthogonalSinWave(p,p0,pf);
+% probe=@(t,p,v) 2*orthosin(t,p,v);
+% plotInversions(orthosin,1,'Orthogonal Sin Wave',probe);
+% 
+% negrhumb=(p0-pf)/norm(p0-pf);
+% negrhumbfcn=@(t,p,v) (ones(length(t),1)*(1*negrhumb'))';
+% probe=@(t,p,v) (ones(length(t),1)*(10*[negrhumb(2) -negrhumb(1)]))';
+% plotInversions(negrhumbfcn,2,'Negative Along Rhumb',probe);
+% 
+% curl=@(t,p,v) 15*[0 1;-1 0]*v;
+% probe=@(t,p,v) -15*[0 1;-1 0]*v;
+% plotInversions(curl,3,'Curl',probe);
+% 
+% rate=2*2*pi/.8;
+% spin=@(t,p,v) 15*[cos(rate*t); sin(rate*t)];
+% probe=@(t,p,v) -15*[cos(rate*t); sin(rate*t)];
+% plotInversions(spin,4,'Spin',probe);
 
-negrhumb=(p0-pf)/norm(p0-pf);
-negrhumbfcn=@(t,p,v) (ones(length(t),1)*(1*negrhumb'))';
-plotInversions(negrhumbfcn,2,'Negative Along Rhumb');
+offset=1;
+train=@(t,p,v) 10*distfromRhumb(p0+offset,pf+offset,p);
+probe=@(t,p,v) -10*distfromRhumb(p0+offset,pf+offset,p);
+plotInversions(train,5,'Limit Push',probe);
 
 delete('fJ*') %Clean up any and all extra copies of these floating around
 delete('getAlpha*')

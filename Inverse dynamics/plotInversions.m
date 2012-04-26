@@ -1,4 +1,4 @@
-function plotInversions(forcefcn1,fignum,fig_title)
+function plotInversions(forcefcn1,fignum,fig_title,probefcn)
 
 global p0 pf forcefcn pvpva pvaf pvpvaTime pvafTime coeffFB
 
@@ -42,9 +42,11 @@ catch
 end
 clf
 hold on
-inversions={@armdynamics_inverted, @armdynamics_inverted_2desired};
+inversions={@armdynamics_inverted}; %, @armdynamics_inverted_2desired};
 colors='rk';
-symbs={'.o<','.s>'};
+symbs={'.o<*','.s>'};
+legendsuffixes={'',' FB=Rhumb'};
+legends={};
 coeffFB.vals=coeffs;
 coeffFB.expiration=reachDuration;
 
@@ -85,17 +87,45 @@ for K=1:length(inversions)
     plot(desired(1,:),desired(2,:),[colors(K),symbs{K}(1)])
     plot(desiredF(1,:),desiredF(2,:),[colors(K),symbs{K}(2)],'MarkerSize',10)
     plot(aftereffect(1,:),aftereffect(2,:),[colors(K),symbs{K}(3)])
+    legends{end+1}=['Desired',legendsuffixes{K}];
+    legends{end+1}=['Validation via FF',legendsuffixes{K}];
+    legends{end+1}=['After-Effect',legendsuffixes{K}];
+
+    if nargin>3
+        forcefcn=probefcn;
+        [T_,X]=ode45(@armdynamics_general,times,inicond);
+        probe=zeros(2,length(T));
+        for k=1:length(T)
+            probe(1:2,k)=fkin(X(k,1:2)');
+        end
+        plot(probe(1,:),probe(2,:),[colors(K),symbs{K}(4)])
+        legends{end+1}=['Probe Force Outcome',legendsuffixes{K}];
+    end
 end
 %One last after-effect: negating forces is equivalent to a forces-learned
 %model, where it's not a trajectory but a force trajectory that's learned.
 %You'd see a negative of the forces prior to any reset.
 forcefcn=forcefcnNeg;
+pvpva=[p; v; p; v; a]';
 [T_,X]=ode45(@armdynamics_general,times,[s0;0;0]);
 aftereffect=zeros(2,length(T));
 for k=1:length(T)
     aftereffect(1:2,k)=fkin(X(k,1:2)');
 end
 plot(aftereffect(1,:),aftereffect(2,:),'c-.')
+legends{end+1}='After-Effect Force Learning';
+
+if nargin>3
+    forcefcn=@(t,p,v) probefcn(t,p,v)-forcefcn1(t,p,v);
+    [T_,X]=ode45(@armdynamics_general,times,inicond);
+    probe=zeros(2,length(T));
+    for k=1:length(T)
+        probe(1:2,k)=fkin(X(k,1:2)');
+    end
+    plot(probe(1,:),probe(2,:),'c-*')
+    legends{end+1}=['Force Learning Probe Force Outcome'];
+end
+
 plot(p(1,:),p(2,:),'b-',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
 qpoints=forcefcn1(times,pvaf(:,1:2)',pvaf(:,3:4)')';
 quiver(pvaf(:,1),pvaf(:,2),qpoints(:,1),qpoints(:,2))
@@ -104,6 +134,7 @@ try
 catch
     title('Comparison of desired and extracted desired')
 end
-legend('Desired','Validation via FF','After-Effect','Desired FB=Rhumb','Validation via FF FB=Rhumb','After-Effect FB=Rhumb','After-Effect Force Learning')
+
+legend(legends)
 axis equal
 axis off
