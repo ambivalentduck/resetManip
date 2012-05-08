@@ -63,7 +63,7 @@ p0=trials{TRIAL}.pos(tzero,:)';
 % probe=@(t,p,v) (ones(length(t),1)*(10*[negrhumb(2) -negrhumb(1)]))';
 % plotInversions(negrhumbfcn,2,'Negative Along Rhumb',probe);
 % 
-% curl=@(t,p,v) 15*[0 1;-1 0]*v;
+ curl=@(t,p,v) 15*[0 1;-1 0]*v;
 % probe=@(t,p,v) -15*[0 1;-1 0]*v;
 % plotInversions(curl,3,'Curl',probe);
 % 
@@ -72,10 +72,16 @@ p0=trials{TRIAL}.pos(tzero,:)';
 % probe=@(t,p,v) -15*[cos(rate*t); sin(rate*t)];
 % plotInversions(spin,4,'Spin',probe);
 
-offset=1;
-train=@(t,p,v) 10*distfromRhumb(p0+offset,pf+offset,p);
-probe=@(t,p,v) -10*distfromRhumb(p0+offset,pf+offset,p);
-plotInversions(train,5,'Limit Push',probe);
+% offset=1;
+% train=@(t,p,v) 10*distfromRhumb(p0+offset,pf+offset,p);
+% probe=@(t,p,v) -10*distfromRhumb(p0+offset,pf+offset,p);
+% plotInversions(train,5,'Limit Push',probe);
+
+train=@(t,p,v) 2*getDynamics(t,p,v);
+probe=@(t,p,v) -getDynamics(t,p,v);
+kp=[15 6; 6 16]/1;
+kd=[2.3 .09; .09 2.4]/1;
+plotInversions(train,6,'Lazy',curl);
 
 delete('fJ*') %Clean up any and all extra copies of these floating around
 delete('getAlpha*')

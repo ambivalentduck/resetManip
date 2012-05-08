@@ -23,8 +23,6 @@ omega_desired=fJ(theta_desired)\vff;
 alpha=getAlpha(theta_desired,omega_desired,aff);  %Alpha is an angular acceleration, q double dot
 
 %Compute alpha to torque relationship, eq. 7.87 in Spong's Robot Control and Modeling: pg 262
-s12=sin(x(1)+x(2));
-c12=cos(x(1)+x(2));
 c2=cos(x(2));
 d11=m1*lc1^2+m2*(l1^2+lc2^2+2*l1*lc2*c2)+I1+I2;
 d12=m2*(lc2^2+l1*lc2*c2)+I2;
@@ -37,8 +35,6 @@ C_real=[2*h*x(3)*x(4)+h*x(4)^2;
 D_real=[d11, d12;
     d21, d22];
 
-s12=sin(theta_desired(1)+theta_desired(2));
-c12=cos(theta_desired(1)+theta_desired(2));
 c2=cos(theta_desired(2));
 d11=m1*lc1^2+m2*(l1^2+lc2^2+2*l1*lc2*c2)+I1+I2;
 d12=m2*(lc2^2+l1*lc2*c2)+I2;

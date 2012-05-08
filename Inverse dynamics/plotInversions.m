@@ -6,6 +6,8 @@ global p0 pf forcefcn pvpva pvaf pvpvaTime pvafTime coeffFB
 times=0:.01:1.5;
 reachDuration=.8;
 coeffs=calcminjerk(p0,pf,[0 0],[0 0],[0 0],[0 0],0,reachDuration);
+coeffFB.vals=coeffs;
+coeffFB.expiration=reachDuration;
 T_fixed=times;
 T_fixed(times>reachDuration)=reachDuration;
 [p,v,a]=minjerk(coeffs,T_fixed);
@@ -47,8 +49,6 @@ colors='rk';
 symbs={'.o<*','.s>'};
 legendsuffixes={'',' FB=Rhumb'};
 legends={};
-coeffFB.vals=coeffs;
-coeffFB.expiration=reachDuration;
 
 for K=1:length(inversions)
     %Solve for intended FF trajectory
@@ -134,6 +134,16 @@ try
 catch
     title('Comparison of desired and extracted desired')
 end
+
+forcefcn=forcefcn1;
+pvpva=[p; v; p; 0*v; 0*a]';
+[T_,X]=ode45(@armdynamics_general,times,[s0;0;0]);
+aftereffect=zeros(2,length(T));
+for k=1:length(T)
+    aftereffect(1:2,k)=fkin(X(k,1:2)');
+end
+plot(aftereffect(1,:),aftereffect(2,:),'g-x')
+
 
 legend(legends)
 axis equal

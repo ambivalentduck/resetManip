@@ -68,11 +68,11 @@ for TRIAL=1:length(trialswanted) %trialswanted
     q0=ikin(p0);
     pvaf=[trials{trial}.pos trials{trial}.vel trials{trial}.accel trials{trial}.force];
     pvafTime=trials{trial}.time;
-    [T_,D]=ode45(@armdynamics_inverted,0:.01:1.5,[q0;0;0]);
-    desired=zeros(2,length(T_));
-    for k=1:length(T_)
-        desired(1:2,k)=fkin(D(k,1:2)');
-    end
+%     [T_,D]=ode45(@armdynamics_inverted,0:.01:1.5,[q0;0;0]);
+%     desired=zeros(2,length(T_));
+%     for k=1:length(T_)
+%         desired(1:2,k)=fkin(D(k,1:2)');
+%     end
     
     [T_,Dv]=ode45(@armdynamics_inverted,0:.01:1.5,[q0;fJ(q0)\v0]);
     desired_v=zeros(2,length(T_));
@@ -86,17 +86,24 @@ for TRIAL=1:length(trialswanted) %trialswanted
     
     figure(trial)
     clf
+    subplot(3,1,1:2)
     hold on
+    plot(pvaf(:,1),pvaf(:,2),'b-')
     quiver(pvaf(:,1),pvaf(:,2),pvaf(:,7)/QSCALE,pvaf(:,8)/QSCALE,0,'Color',[.5 .5 .5])
-    
-    yi=twoNearestNeighbor(pvaf,pvafTime,T_);
+    plot(desired_v(1,:),desired_v(2,:),'m.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
+        yi=twoNearestNeighbor(pvaf,pvafTime,T_);
     for k=1:length(T_)
-        plot([yi(k,1) desired(1,k)],[yi(k,2),desired(2,k)],'g-')
+        plot([yi(k,1) desired_v(1,k)],[yi(k,2),desired_v(2,k)],'g-')
     end
-    plot([p0(1) pf(1)],[p0(2) pf(2)],'m--')
-    plot(pvaf(:,1),pvaf(:,2),'b-',desired(1,:),desired(2,:),'r.',desired_v(1,:),desired_v(2,:),'m.',p0(1),p0(2),'rx',pf(1),pf(2),'gx')
+
     axis equal
     axis off
+    legend('Recorded Reach','Recorded Handle Force','Extracted Desired Trajectory')
+    subplot(3,1,3)
+    plot(T_,gradient(desired_v(1,:)),T_,gradient(desired_v(2,:)))
+    ylabel('Velocity')
+    xlabel('Time')
+    legend('X','Y')
 end
 
 delete('fJ*') %Clean up any and all extra copies of these floating around
