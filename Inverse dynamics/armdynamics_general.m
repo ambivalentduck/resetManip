@@ -1,38 +1,28 @@
-function [dx, p_real, v_real, a_real,f_handle]=armdynamics_timeseries(t,x)
+function [dx, p_real, v_real, a_real,f_handle]=armdynamics_general(t,x)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB pf getAccel forces_in forces_in_time fJ getAlpha absTime
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 fJ getAlpha getAccel pvpva pvpvaTime forcefcn
 
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
 
-% if (toc-absTime)>1
-%     dx=[0;0;0;0];
-%     return
-% end
+kNf=twoNearestNeighbor(pvpva,pvpvaTime,t);
+pfb=kNf(1:2)';
+vfb=kNf(3:4)';
+pff=kNf(5:6)';
+vff=kNf(7:8)';
+aff=kNf(9:10)';
 
 %Add feedback forces
-if(coeffFB.expiration>=t)
-    [p,v,a]=minjerk(coeffFB.vals,t);
-else
-    [p,v,a]=minjerk(coeffFB.vals,coeffFB.expiration); %Final values stand forever
-end
-theta_desired=ikin(p);
-omega_desired=fJ(theta_desired)\v;
+theta_desired=ikin(pfb);
+omega_desired=fJ(theta_desired)\vfb;
 torque_fb=kd*(omega_desired-x(3:4))+kp*(theta_desired-x(1:2));
 
 %Add feedforward forces
-if(coeffFF.expiration>=t)
-    [p,v,a]=minjerk(coeffFF.vals,t);
-else
-    [p,v,a]=minjerk(coeffFF.vals,coeffFF.expiration); %Final values stand forever
-end
-theta_desired=ikin(p);
-omega_desired=fJ(theta_desired)\v;
-alpha=getAlpha(theta_desired,omega_desired,a);  %Alpha is an angular acceleration, q double dot
+theta_desired=ikin(pff);
+omega_desired=fJ(theta_desired)\vff;
+alpha=getAlpha(theta_desired,omega_desired,aff);  %Alpha is an angular acceleration, q double dot
 
 %Compute alpha to torque relationship, eq. 7.87 in Spong's Robot Control and Modeling: pg 262
-s12=sin(x(1)+x(2));
-c12=cos(x(1)+x(2));
 c2=cos(x(2));
 d11=m1*lc1^2+m2*(l1^2+lc2^2+2*l1*lc2*c2)+I1+I2;
 d12=m2*(lc2^2+l1*lc2*c2)+I2;
@@ -45,8 +35,6 @@ C_real=[2*h*x(3)*x(4)+h*x(4)^2;
 D_real=[d11, d12;
     d21, d22];
 
-s12=sin(theta_desired(1)+theta_desired(2));
-c12=cos(theta_desired(1)+theta_desired(2));
 c2=cos(theta_desired(2));
 d11=m1*lc1^2+m2*(l1^2+lc2^2+2*l1*lc2*c2)+I1+I2;
 d12=m2*(lc2^2+l1*lc2*c2)+I2;
@@ -64,23 +52,20 @@ torque_ff=D_expected*alpha+C_expected;
 fJxt=fJ(x(1:2))';
 
 %Add torque due to outside forces
-F=twoNearestNeighbor(forces_in,forces_in_time,t)';
-
-torque_outside=fJxt*F;
+p_real=fkin(x(1:2));
+v_real=fJ(x(1:2))*x(3:4);
+f=forcefcn(t,p_real,v_real); %Evaluate the function handle
+torque_outside=fJxt*f;
 
 dx=[x(3);
     x(4);
     D_real\(torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
 
-if nargout>2
-    f_handle=fJxt\(torque_ff+torque_fb);
-    p_real=fkin(x(1:2));
-    v_real=fJ(x(1:2))*x(3:4);
+if nargout>3
+    f_handle=f;
     a_real=getAccel(x(1:2),x(3:4),dx(3:4));
 end
 
 if(~isreal(dx))
-    dx=[0;0;0;0];
-end
-
+    dx=[0;0;0;0]; %notice that the sim will suddenly grind to a halt.
 end

@@ -1,6 +1,6 @@
-function [dx, p_real, v_real, a_real,F]=armdynamics_curl(t,x)
+function [dx, p_real, v_real, a_real,f_handle]=armdynamics_timeseries(t,x)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB getAccel fJ getAlpha torque_error torque_error_t
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB getAccel forces_in forces_in_time fJ getAlpha
 
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
@@ -58,32 +58,16 @@ torque_ff=D_expected*alpha+C_expected;
 
 fJxt=fJ(x(1:2))';
 
-Pf=minjerk(coeffFB.vals,coeffFB.expiration);
-tT=Pf-fkin(x(1:2));
-ntT=norm(tT);
-if ntT>0
-    utT=tT/norm(tT);
-else
-    utT=0;
-end
-
 %Add torque due to outside forces
-% F=5*[0 1;-1 0]*fJ(x(1:2))*x(3:4)*(t<.2)... %curl that turns off at .2
-%   +10*utT*((t>.3) && (t<.33)); %kick
-F=[0; round(sin(5*(2*pi/.55)*t))]; % oscillate 5 times per reach
-%Mass-less handle for sim purposes.  Maybe not the best validation, but
-%easier than a non-lin model of the real device.
-
+F=interp1(forces_in_time,forces_in,t)';
 torque_outside=fJxt*F;
-
-tnoise=norm(torque_ff+torque_fb)*twoNearestNeighbor(torque_error,torque_error_t,t)'; %signal dependent noise
 
 dx=[x(3);
     x(4);
-    D_real\(tnoise+torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
+    D_real\(torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
 
-if nargout>2
-    f_handle=fJxt\(torque_ff+torque_fb);
+if nargout>1
+    f_handle=F;
     p_real=fkin(x(1:2));
     v_real=fJ(x(1:2))*x(3:4);
     a_real=getAccel(x(1:2),x(3:4),dx(3:4));
@@ -91,6 +75,4 @@ end
 
 if(~isreal(dx))
     dx=[0;0;0;0];
-end
-
 end
