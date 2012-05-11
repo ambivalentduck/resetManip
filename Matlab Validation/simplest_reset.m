@@ -60,15 +60,17 @@ progressbar('Error Level','Example','Direction','Reset');
 
 tocs=[toc];
 trialKey=[1 3 4];
-errorlevels=[.08 .02 .005];
+errorlevels=[0 .005 .02];
 TRIAL_K=0;
-reps=4;
+reps=[1 1 1];
 realreset=.31;
+data={};
 
-for E_LEVEL=1:3
+
+for E_LEVEL=1:length(errorlevels)
     progressbar((E_LEVEL-1)/3);
-    for EXAMPLE=1:reps
-        progressbar([],(EXAMPLE-1)/reps);
+    for EXAMPLE=1:reps(E_LEVEL)
+        progressbar([],(EXAMPLE-1)/reps(E_LEVEL));
         for TRIALK=1:3 %one of each DIRECTION
             for BASISTYPE=[1 2]
                 TRIAL=trialKey(TRIALK);

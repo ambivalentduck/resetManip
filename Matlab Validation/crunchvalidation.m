@@ -115,7 +115,7 @@ clf
 tX=[data{1}.resetT(1:end-1) 2*data{1}.resetT(end-1)-data{1}.resetT(end-2)];
 ave=zeros(lrt,2);
 sd=ave;
-for k=1:3
+for k=1:length(ud)
     for kk=1:length(ue)
         subplot(3,3,(k-1)*3+kk)
         hold on
@@ -141,4 +141,12 @@ for k=1:3
         end
     end
 end
+
+function e=areaBetweenTime(t1, pos1, t0, pos0)
+%Integrated over time (NOT a straight sum!), you want area between the
+%curves.
+posp=twoNearestNeighbor(pos1,t1,t0);
+sqrt(sum(abs(pos1-posp).^2,2).*
+
+
 
