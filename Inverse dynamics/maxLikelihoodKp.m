@@ -45,9 +45,9 @@ for k=1:811
         pvaf=[trials(k).pos' trials(k).vel' trials(k).accel' trials(k).force'];
         pvafTime=trials(k).time';
         paragon=reachDirection(trials(k).targetCat);
+        q0=ikin(trials(k).pos(:,1));
+        v0=trials(k).vel(:,1)';
         f=find(trials(k).completion>.05,1,'first');
-        q0=ikin(trials(k).pos(:,f));
-        v0=trials(k).vel(:,f)';
         starttime=trials(k).time(f);
         endtime=trials(k).time(find(trials(k).completion>.2,1,'first'));
         outcome=fminunc(@cost,.99)
@@ -60,16 +60,17 @@ function out=cost(gain)
 global paragon kp0 kp fJ starttime endtime q0 v0
 
 kp=kp0*gain;
-[T,X]=ode45(@armdynamics_inverted,starttime:.01:endtime,[q0;fJ(q0)\v0']);
+[T,X]=ode45(@armdynamics_inverted,0:.01:endtime,[q0;fJ(q0)\v0']);
 
 M=paragon.target-paragon.origin;
 unitparallel=M/norm(M);
 MdM=dot(M,M);
 
-P=zeros(2,length(T));
-comp=zeros(1,length(T));
+fS=find(T>starttime,1,'first');
+P=zeros(2,length(T)-fS+1);
+comp=zeros(1,length(T)-fS+1);
 perpDist=comp;
-for k=1:length(T)
+for k=1:length(T)-fS+1
     P(:,k)=fkin(X(k,1:2)')';
     comp(k)=dot(M,(P(:,k)-paragon.origin))/MdM;
     perp=P(:,k)-(paragon.origin+M*comp(k));
