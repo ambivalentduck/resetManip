@@ -1,4 +1,4 @@
-function Kpgain=countHumps(name)
+function results=countHumps(name)
 
 load(['./Data/',name,'.mat']);
 load(['./Data/',name,'reaches.mat']);
@@ -38,26 +38,31 @@ getAlpha=str2func(aName);
 feval(aName,[1 2]',[3 4]',[5 6]')
 
 %Actually do the optimization
+gains=[.8 1 2 4 8 16];
 humps=-1*ones(length(trials),1);
 for k=1:811
     if trials(k).curlMag~=0
-        k
+        k %#ok<NOPRT>
         pvaf=[trials(k).pos' trials(k).vel' trials(k).accel' trials(k).force'];
         pvafTime=trials(k).time'-trials(k).time(1);
         paragon=reachDirection(trials(k).targetCat);
-        outcome=doCount(k)
-        humps(k)=outcome;
+        results(k).forces=1;
+        results(k).metrics=doCount(k,gains);
+        results(k).trialnum=k;
+        results(k).gains=gains;
+    else
+        results(k).forces=0;
     end
 end
-f=find(humps>=0);
-Kpgain=[f humps(f)];
+%Tile by direction, curl mag in subplots
 
 end
 
-function out=doCount(fignum)
+function out=doCount(fignum,gains)
 global paragon kp0 kp fJ pvaf pvafTime
 figure(fignum)
 clf
+subplot(5,1,1:4)
 hold on
 
 %Get all the maxima and minima from the speed profile
@@ -77,9 +82,6 @@ end
 starti=mins(1); %mins(starti);
 plot(pvaf(starti,1),pvaf(starti,2),'ro')
 plot([paragon.target(1) pvaf(starti,1)],[paragon.target(2) pvaf(starti,2)],'m-')
-endi=maxes(find(maxes>starti,1,'first'));
-endi=ceil((endi+starti)/2);
-range=starti:endi;
 
 plot(pvaf(:,1),pvaf(:,2),'k')
 
@@ -92,40 +94,40 @@ unitparallel=M/norm(M);
 unitperp=[unitparallel(2) -unitparallel(1)];
 MdM=dot(M,M);
 
-kp=kp0;
-[T,X]=ode45(@armdynamics_inverted,pvafTime(starti):.01:pvafTime(endi),[q0;qd0]);
-P=zeros(2,length(T));
-perpDist=zeros(1,length(T));
-for k=1:length(T)
-    P(:,k)=fkin(X(k,1:2)')';
-    comp=dot(M,(P(:,k)-p0))/MdM;
-    perp=P(:,k)-(p0+M*comp);
-    perpDist(k)=sign(dot(unitperp,perp))*norm(perp);
-    if isnan(perpDist(k))
-        break
+for g=1:length(gains)
+    gain=gains(g);
+    kp=kp0*gain;
+    [T,X]=ode45(@armdynamics_inverted,pvafTime(starti):.01:pvafTime(end),[q0;qd0]);
+    P=zeros(2,length(T));
+    V=P;
+    perpDist=zeros(1,length(T));
+    for k=1:length(T)
+        [dx,P(:,k),V(:,k)]=armdynamics_inverted(T(k),X(k,:)');
     end
-end
 
-cost=mean(perpDist);
-%cost=perpDist(end);
-xn2=xn1;
-fn2=fn1;
-xn1=gain;
-fn1=cost;
-nextgain=xn1-fn1*(xn1-xn2)/(fn1-fn2);
-if nextgain<.5
-    nextgain=.5;
-elseif nextgain>20
-    nextgain=20;
-end
-
-plot(P(1,:),P(2,:),'b')
-text(P(1,end),P(2,end),[num2str(gain),'->',num2str(cost)]);
-tics(end+1)=toc;
+    %With V in hand, count humps, note sizes
+    speed2=sum(V.^2); %skipping the square root adds speed
+    [vals,mins]=findpeaks(1./speed2);
+    [vals,maxes]=findpeaks(speed2);
+    out(g).count=length(mins)-1;
+    out(g).sizes=zeros(length(mins)-1,1);
+    for k=1:length(mins)-1
+        out(g).sizes(k)=sum(speed2(mins(k):mins(k+1)))*.01; %.01 is explicit above
+    end
+    
+    plot(P(1,:),P(2,:),'b')
+    plot(P(1,maxes),P(2,maxes),'mx')
+    plot(P(1,mins),P(2,mins),'rx')
+    text(P(1,end),P(2,end),[num2str(gain),'->',num2str(out(g).count)]);
 end
 axis equal
-mean(diff(tics))
-out=gain;
+axis off
+
+subplot(5,1,5)
+semilogx(gains,[out.count])
+ylabel('Submovement Count')
+xlabel('Kp Gain')
+
 end
 
 
