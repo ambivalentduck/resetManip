@@ -52,6 +52,9 @@ for k=1:811
         results(k).gains=gains;
     else
         results(k).forces=0;
+        speed2=sum(trials(k).vel.^2); %skipping the square root adds speed
+        [vals,mins]=findpeaks(1./speed2);
+        results(k).metrics.count=length(mins)-1;
     end
 end
 %Tile by direction, curl mag in subplots
