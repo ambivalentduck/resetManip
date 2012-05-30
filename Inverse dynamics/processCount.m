@@ -5,6 +5,8 @@ name='1';
 load(['./Data/',name,'.mat']);
 data=countHumps(name);
 
+rawdata=data;
+datanull=data([data.forces]==0);
 data=data([data.forces]==1);
 
 gains=[.8 1 2 4 8 16];
