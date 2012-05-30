@@ -56,6 +56,8 @@ for k=1:811
 end
 %Tile by direction, curl mag in subplots
 
+delete('fJ*') %Clean up any and all extra copies of these floating around
+delete('getAlpha*')
 end
 
 function out=doCount(fignum,gains)
@@ -111,9 +113,16 @@ for g=1:length(gains)
     [vals,maxes]=findpeaks(speed2);
     out(g).count=length(mins)-1;
     out(g).sizes=zeros(length(mins)-1,1);
+    out(g).duration=zeros(length(mins)-1,1);
     for k=1:length(mins)-1
         out(g).sizes(k)=sum(speed2(mins(k):mins(k+1)))*.01; %.01 is explicit above
+        out(g).duration(k)=T(mins(k+1))-T(mins(k));
     end
+    out(g).real=pvaf;
+    out(g).realT=pvafTime;
+    out(g).intendedP=P;
+    out(g).intendedV=V;
+    out(g).intendedT=T;
     
     plot(P(1,:),P(2,:),'b')
     plot(P(1,maxes),P(2,maxes),'mx')
