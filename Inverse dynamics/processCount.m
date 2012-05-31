@@ -49,7 +49,7 @@ for k=1:length(a)
 
 end
 xlabel('Submovements')
-suplabel('Gain','y');
+suplabel('Kp Gain','y');
 suplabel('Histograms of Submovement Count - Force Probe Trials','t');
 
 figure(3)
@@ -61,17 +61,8 @@ for k=1:length(a)
     ylabel(num2str(exp(a(k))))
 end
 xlabel('Submovements')
-suplabel('Gain','y');
-suplabel('Histograms of Submovement Count - Comparison','t');
-
-for k=1:length(a)
-    subplot(length(a),1,k)
-    hist(counts(c==k))
-    ylabel(num2str(exp(a(k))))
-end
-xlabel('Submovements');
 suplabel('Kp Gain','y');
-suplabel('Histogram of Submovement Count','t');
+suplabel('Histograms of Submovement Count - Comparison','t');
 
 %% Spatial and temporal frequency
 
@@ -102,7 +93,7 @@ for k=1:length(a)
     plot(exp(x),h)
     ylabel(num2str(exp(a(k))))
 end
-xlabel('Spatial Frequency');
+xlabel('Temporal Frequency');
 suplabel('Kp Gain','y');
 suplabel('Histogram of Submovement Count','t');
 
@@ -148,11 +139,33 @@ for g=1:length(a)
     end
     
     subplot(length(a),1,g)
-    plot(time,rta(g,:))
+    plot(time,rtaRhumb(g,:))
     ylabel(num2str(exp(a(g))))
 end
 xlabel('Time, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Unsigned Difference: Dist from Rhumb Line, cm','t');
+
+figure(7)
+clf
+time=-10*span:10:10*span;
+rtaDist=zeros(length(a),2*span+1);
+for g=1:length(a)
+    matDist=[alignedDist(g).trial.mat];
+    subplot(length(a),1,g)
+    hold on
+    for k=1:2*span+1
+        temp=matDist(k,:);
+        f=find(temp>=0);
+        rtaDist(g,k)=mean(temp(f)); %this filters out the -1s
+        %plot(time(k)*ones(size(f)),temp(f),'b.')
+    end
+
+    plot(time,rtaDist(g,:),'r.')
+    ylabel(num2str(exp(a(g))))
+end
+xlabel('Time, ms');
+suplabel('Kp Gain','y');
+suplabel('Reset-Triggered Unsigned Difference: Euclidean Distance, cm','t');
 
 
