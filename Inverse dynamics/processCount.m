@@ -24,20 +24,45 @@ end
 %% Histograms of raw counts
 dm=[data.metrics];
 counts=[dm.count];
+mcount=max(counts);
 dlgains=[data.lgains];
 
-[a,b,c]=unique(dlgains);
 figure(1)
 clf
+dnm=[datanull.metrics];
+nullcount=[dnm.count];
+h0=hist(nullcount,1:mcount);
+h0=h0./sum(h0);
+bar(1:mcount,h0)
+xlabel('Submovements')
+ylabel('Relative Frequency')
+title('Histogram of Submovement Count - No Force Probe Trials')
 
+[a,b,c]=unique(dlgains);
+figure(2)
+clf
 for k=1:length(a)
     subplot(length(a),1,k)
-    hist(counts(c==k))
+    h=hist(counts(c==k),1:mcount);
+    bar(1:mcount,h./sum(h))
+    ylabel(num2str(exp(a(k))))
+
+end
+xlabel('Submovements')
+suplabel('Kp Gain','y');
+suplabel('Histograms of Submovement Count - Force Probe Trials','t');
+
+figure(3)
+clf
+for k=1:length(a)
+    subplot(length(a),1,k)
+    h=hist(counts(c==k),1:mcount);
+    bar(1:mcount,h./sum(h)-h0)
     ylabel(num2str(exp(a(k))))
 end
-xlabel('Submovements');
+xlabel('Submovements')
 suplabel('Kp Gain','y');
-suplabel('Histogram of Submovement Count','t');
+suplabel('Histograms of Submovement Count - Comparison','t');
 
 %% Spatial and temporal frequency
 
@@ -48,7 +73,7 @@ for k=1:length(dm)
     filt(k).gain=c(k);
 end
 
-figure(2)
+figure(4)
 clf
 for k=1:length(a)
     subplot(length(a),1,k)
@@ -60,7 +85,7 @@ xlabel('Spatial Frequency');
 suplabel('Kp Gain','y');
 suplabel('Histogram of Submovement Count','t');
 
-figure(3)
+figure(5)
 clf
 for k=1:length(a)
     subplot(length(a),1,k)
@@ -68,7 +93,7 @@ for k=1:length(a)
     plot(exp(x),h)
     ylabel(num2str(exp(a(k))))
 end
-xlabel('Spatial Frequency');
+xlabel('Temporal Frequency');
 suplabel('Kp Gain','y');
 suplabel('Histogram of Submovement Count','t');
 
@@ -102,7 +127,7 @@ for k=1:length(data)
     end
 end
 
-figure(4)
+figure(6)
 clf
 time=-10*span:10:10*span;
 rtaRhumb=zeros(length(a),2*span+1);
@@ -121,12 +146,13 @@ xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Unsigned Difference: Dist from Rhumb Line, cm','t');
 
-figure(5)
+figure(7)
 clf
 time=-10*span:10:10*span;
 rtaDist=zeros(length(a),2*span+1);
 for g=1:length(a)
     matDist=[alignedDist(g).trial.mat];
+
     for k=1:2*span+1
         temp=matDist(k,:);
         rtaDist(g,k)=mean(temp(temp>=0)); %this filters out the -1s
@@ -139,4 +165,3 @@ end
 xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Distance: Physical and Commanded, cm','t');
-
