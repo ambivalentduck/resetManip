@@ -114,10 +114,29 @@ for g=1:length(a)
     end
     
     subplot(length(a),1,g)
-    plot(time,rta(g,:))
+    plot(time,rtaRhumb(g,:))
     ylabel(num2str(exp(a(g))))
 end
-xlabel('Time, ms');
+xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Unsigned Difference: Dist from Rhumb Line, cm','t');
+
+figure(5)
+clf
+time=-10*span:10:10*span;
+rtaDist=zeros(length(a),2*span+1);
+for g=1:length(a)
+    matDist=[alignedDist(g).trial.mat];
+    for k=1:2*span+1
+        temp=matDist(k,:);
+        rtaDist(g,k)=mean(temp(temp>=0)); %this filters out the -1s
+    end
+    
+    subplot(length(a),1,g)
+    plot(time,rtaDist(g,:))
+    ylabel(num2str(exp(a(g))))
+end
+xlabel('Time since Reset, ms');
+suplabel('Kp Gain','y');
+suplabel('Reset-Triggered Distance: Physical and Commanded, cm','t');
 
