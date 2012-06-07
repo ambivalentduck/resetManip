@@ -1,11 +1,13 @@
-function processCount(name)
+clc
+clear all
+name='1';
 
 %% Load Data
 load(['./Data/',name,'.mat']);
 try
     load(['./Data/',name,'humps.mat']);
 catch
-    data=countHumps(name,0);
+    data=countHumps(name);
     save(['./Data/',name,'humps.mat'],'data')
 end
 
@@ -140,7 +142,7 @@ for g=1:length(a)
     plot(time,rtaRhumb(g,:))
     ylabel(num2str(exp(a(g))))
 end
-xlabel('Time, ms');
+xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Unsigned Difference: Dist from Rhumb Line, cm','t');
 
@@ -150,20 +152,16 @@ time=-10*span:10:10*span;
 rtaDist=zeros(length(a),2*span+1);
 for g=1:length(a)
     matDist=[alignedDist(g).trial.mat];
-    subplot(length(a),1,g)
-    hold on
+
     for k=1:2*span+1
         temp=matDist(k,:);
-        f=find(temp>=0);
-        rtaDist(g,k)=mean(temp(f)); %this filters out the -1s
-        %plot(time(k)*ones(size(f)),temp(f),'b.')
+        rtaDist(g,k)=mean(temp(temp>=0)); %this filters out the -1s
     end
-
-    plot(time,rtaDist(g,:),'b.')
+    
+    subplot(length(a),1,g)
+    plot(time,rtaDist(g,:))
     ylabel(num2str(exp(a(g))))
 end
-xlabel('Time, ms');
+xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
-suplabel('Reset-Triggered Unsigned Difference: Euclidean Distance, cm','t');
-
-save(['./Data/',name,'rsD.mat'],'matDist')
+suplabel('Reset-Triggered Distance: Physical and Commanded, cm','t');
