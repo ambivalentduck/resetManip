@@ -1,13 +1,11 @@
-clc
-clear all
-name='1';
+function processCount(name)
 
 %% Load Data
 load(['./Data/',name,'.mat']);
 try
     load(['./Data/',name,'humps.mat']);
 catch
-    data=countHumps(name);
+    data=countHumps(name,0);
     save(['./Data/',name,'humps.mat'],'data')
 end
 
@@ -161,11 +159,11 @@ for g=1:length(a)
         %plot(time(k)*ones(size(f)),temp(f),'b.')
     end
 
-    plot(time,rtaDist(g,:),'r.')
+    plot(time,rtaDist(g,:),'b.')
     ylabel(num2str(exp(a(g))))
 end
 xlabel('Time, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Unsigned Difference: Euclidean Distance, cm','t');
 
-
+save(['./Data/',name,'rsD.mat'],'matDist')
