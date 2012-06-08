@@ -104,26 +104,31 @@ suplabel('Histogram of Submovement Count','t');
 %already defined as 0.01s.
 span=20;
 f=find([rawdata.forces]==1);
+dataflaws=0;
 for k=1:length(data)
     [data(k).completion,data(k).signedError]=reachOrthoRot(data(k).metrics(1).real(:,1:2)',trials(f(k)).target);
     for g=1:length(a)
-            [data(k).metrics(g).completion,data(k).metrics(g).signedError]=reachOrthoRot(data(k).metrics(g).intendedP,trials(f(k)).target);
-            differenceRhumb=abs(twoNearestNeighbor(data(k).signedError,data(k).completion,data(k).metrics(g).completion)-data(k).metrics(g).signedError);
-            realPnn=twoNearestNeighbor(data(k).metrics(g).real(:,1:2),data(k).metrics(g).realT,data(k).metrics(g).intendedT);
-            differenceDist=sqrt(sum((realPnn-data(k).metrics(g).intendedP').^2,2));
-            
-            speed2=sum((data(k).metrics(g).intendedV).^2); %skipping the square root adds speed
-            [vals,mins]=findpeaks(1./speed2);
-            f2=find(dm((k-1)*length(a)+g).sizes>=.01); %ignore any "reset" less than 1 cm since that's noiseland
-            m=mins(f2);
-            alignedRhumb(g).trial(k).mat=-1*ones(2*span+1,length(m));
-            alignedDist(g).trial(k).mat=-1*ones(2*span+1,length(m));
-            for kk=1:length(m)
-                range=max(1,m(kk)-span):min(length(data(k).metrics(g).intendedT),m(kk)+span);
-                alignedRange=range-m(kk)+1+span;
-                alignedRhumb(g).trial(k).mat(alignedRange,kk)=differenceRhumb(range)';
+        [data(k).metrics(g).completion,data(k).metrics(g).signedError]=reachOrthoRot(data(k).metrics(g).intendedP,trials(f(k)).target);
+        differenceRhumb=abs(twoNearestNeighbor(data(k).signedError,data(k).completion,data(k).metrics(g).completion)-data(k).metrics(g).signedError);
+        realPnn=twoNearestNeighbor(data(k).metrics(g).real(:,1:2),data(k).metrics(g).realT,data(k).metrics(g).intendedT);
+        differenceDist=sqrt(sum((realPnn-data(k).metrics(g).intendedP').^2,2));
+
+        speed2=sum((data(k).metrics(g).intendedV).^2); %skipping the square root adds speed
+        [vals,mins]=findpeaks(1./speed2);
+        f2=find(dm((k-1)*length(a)+g).sizes>=.01); %ignore any "reset" less than 1 cm since that's noiseland
+        m=mins(f2);
+        alignedRhumb(g).trial(k).mat=-1*ones(2*span+1,length(m));
+        alignedDist(g).trial(k).mat=-1*ones(2*span+1,length(m));
+        for kk=1:length(m)
+            range=max(1,m(kk)-span):min(length(data(k).metrics(g).intendedT),m(kk)+span);
+            alignedRange=range-m(kk)+1+span;
+            if sum(abs(imag(differenceDist(range))))==0 %Discard nonsensical data
                 alignedDist(g).trial(k).mat(alignedRange,kk)=differenceDist(range)';
             end
+            if sum(abs(imag(differenceRhumb(range))))==0 %Discard nonsensical data
+                alignedRhumb(g).trial(k).mat(alignedRange,kk)=differenceRhumb(range)';
+            end
+        end
     end
 end
 
@@ -137,7 +142,7 @@ for g=1:length(a)
         temp=matRhumb(k,:);
         rtaRhumb(g,k)=mean(temp(temp>=0)); %this filters out the -1s
     end
-    
+
     subplot(length(a),1,g)
     plot(time,rtaRhumb(g,:))
     ylabel(num2str(exp(a(g))))
@@ -150,14 +155,18 @@ figure(7)
 clf
 time=-10*span:10:10*span;
 rtaDist=zeros(length(a),2*span+1);
+distCells=cell(length(a),2*span+1);
 for g=1:length(a)
     matDist=[alignedDist(g).trial.mat];
 
     for k=1:2*span+1
         temp=matDist(k,:);
-        rtaDist(g,k)=mean(temp(temp>=0)); %this filters out the -1s
+        vals=temp(temp>=0);
+        rtaDist(g,k)=mean(vals); %this filters out the -1s
+        distCells(g,k)=vals;
+        plot(
     end
-    
+
     subplot(length(a),1,g)
     plot(time,rtaDist(g,:))
     ylabel(num2str(exp(a(g))))
