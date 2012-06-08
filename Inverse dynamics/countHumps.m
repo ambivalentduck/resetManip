@@ -1,4 +1,8 @@
-function results=countHumps(name)
+function results=countHumps(name,doplots)
+
+if nargin<2
+    doplots=1;
+end
 
 load(['./Data/',name,'.mat']);
 load(['./Data/',name,'reaches.mat']);
@@ -47,7 +51,7 @@ for k=1:811
         pvafTime=trials(k).time'-trials(k).time(1);
         paragon=reachDirection(trials(k).targetCat);
         results(k).forces=1;
-        results(k).metrics=doCount(k,gains);
+        results(k).metrics=doCount(k,gains,doplots);
         results(k).trialnum=k;
         results(k).gains=gains;
     else
@@ -63,20 +67,24 @@ delete('fJ*') %Clean up any and all extra copies of these floating around
 delete('getAlpha*')
 end
 
-function out=doCount(fignum,gains)
+function out=doCount(fignum,gains,doplots)
 global paragon kp0 kp fJ pvaf pvafTime
-figure(fignum)
-clf
-subplot(5,1,1:4)
-hold on
+if doplots
+    figure(fignum)
+    clf
+    subplot(5,1,1:4)
+    hold on
+end
 
 %Get all the maxima and minima from the speed profile
 speed2=sum(pvaf(:,3:4).^2,2); %skipping the square root adds speed
 [vals,maxes]=findpeaks(speed2);
 [vals,mins]=findpeaks(1./speed2);
-plot(pvaf(maxes,1),pvaf(maxes,2),'mx')
-plot(pvaf(mins,1),pvaf(mins,2),'rx')
-plot(paragon.target(1),paragon.target(2),'ko')
+if doplots
+    plot(pvaf(maxes,1),pvaf(maxes,2),'mx')
+    plot(pvaf(mins,1),pvaf(mins,2),'rx')
+    plot(paragon.target(1),paragon.target(2),'ko')
+end
 
 %Find the longest "submovement," which should almost always correspond to the initial one.
 lengths=zeros(length(mins)-1,1);
@@ -85,10 +93,12 @@ for k=1:length(mins)-1
 end
 [val,starti]=max(lengths);
 starti=mins(1); %mins(starti);
-plot(pvaf(starti,1),pvaf(starti,2),'ro')
-plot([paragon.target(1) pvaf(starti,1)],[paragon.target(2) pvaf(starti,2)],'m-')
+if doplots
+    plot(pvaf(starti,1),pvaf(starti,2),'ro')
+    plot([paragon.target(1) pvaf(starti,1)],[paragon.target(2) pvaf(starti,2)],'m-')
 
-plot(pvaf(:,1),pvaf(:,2),'k')
+    plot(pvaf(:,1),pvaf(:,2),'k')
+end
 
 p0=pvaf(starti,1:2)';
 q0=ikin(p0);
@@ -126,19 +136,23 @@ for g=1:length(gains)
     out(g).intendedP=P;
     out(g).intendedV=V;
     out(g).intendedT=T;
-    
-    plot(P(1,:),P(2,:),'b')
-    plot(P(1,maxes),P(2,maxes),'mx')
-    plot(P(1,mins),P(2,mins),'rx')
-    text(P(1,end),P(2,end),[num2str(gain),'->',num2str(out(g).count)]);
-end
-axis equal
-axis off
 
-subplot(5,1,5)
-semilogx(gains,[out.count])
-ylabel('Submovement Count')
-xlabel('Kp Gain')
+    if doplots
+        plot(P(1,:),P(2,:),'b')
+        plot(P(1,maxes),P(2,maxes),'mx')
+        plot(P(1,mins),P(2,mins),'rx')
+        text(P(1,end),P(2,end),[num2str(gain),'->',num2str(out(g).count)]);
+    end
+end
+if doplots
+    axis equal
+    axis off
+
+    subplot(5,1,5)
+    semilogx(gains,[out.count])
+    ylabel('Submovement Count')
+    xlabel('Kp Gain')
+end
 
 end
 

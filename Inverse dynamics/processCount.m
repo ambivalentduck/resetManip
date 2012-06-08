@@ -1,13 +1,15 @@
-clc
-clear all
-name='1';
+function processCount(name, plotoffset)
+
+if nargin<2
+    plotoffset=0;
+end
 
 %% Load Data
 load(['./Data/',name,'.mat']);
 try
     load(['./Data/',name,'humps.mat']);
 catch
-    data=countHumps(name);
+    data=countHumps(name, 0);
     save(['./Data/',name,'humps.mat'],'data')
 end
 
@@ -27,7 +29,7 @@ counts=[dm.count];
 mcount=max(counts);
 dlgains=[data.lgains];
 
-figure(1)
+figure(1+plotoffset)
 clf
 dnm=[datanull.metrics];
 nullcount=[dnm.count];
@@ -39,7 +41,7 @@ ylabel('Relative Frequency')
 title('Histogram of Submovement Count - No Force Probe Trials')
 
 [a,b,c]=unique(dlgains);
-figure(2)
+figure(2+plotoffset)
 clf
 for k=1:length(a)
     subplot(length(a),1,k)
@@ -52,7 +54,7 @@ xlabel('Submovements')
 suplabel('Kp Gain','y');
 suplabel('Histograms of Submovement Count - Force Probe Trials','t');
 
-figure(3)
+figure(3+plotoffset)
 clf
 for k=1:length(a)
     subplot(length(a),1,k)
@@ -73,7 +75,7 @@ for k=1:length(dm)
     filt(k).gain=c(k);
 end
 
-figure(4)
+figure(4+plotoffset)
 clf
 for k=1:length(a)
     subplot(length(a),1,k)
@@ -85,7 +87,7 @@ xlabel('Spatial Frequency');
 suplabel('Kp Gain','y');
 suplabel('Histogram of Submovement Count','t');
 
-figure(5)
+figure(5+plotoffset)
 clf
 for k=1:length(a)
     subplot(length(a),1,k)
@@ -122,17 +124,17 @@ for k=1:length(data)
         for kk=1:length(m)
             range=max(1,m(kk)-span):min(length(data(k).metrics(g).intendedT),m(kk)+span);
             alignedRange=range-m(kk)+1+span;
-            if sum(abs(imag(differenceDist(range))))==0 %Discard nonsensical data
-                alignedDist(g).trial(k).mat(alignedRange,kk)=differenceDist(range)';
-            end
-            if sum(abs(imag(differenceRhumb(range))))==0 %Discard nonsensical data
+            if sum(abs(imag(differenceRhumb(range))))==0
                 alignedRhumb(g).trial(k).mat(alignedRange,kk)=differenceRhumb(range)';
+            end
+            if sum(abs(imag(differenceDist(range))))==0
+                alignedDist(g).trial(k).mat(alignedRange,kk)=differenceDist(range)';
             end
         end
     end
 end
 
-figure(6)
+figure(6+plotoffset)
 clf
 time=-10*span:10:10*span;
 rtaRhumb=zeros(length(a),2*span+1);
@@ -151,11 +153,11 @@ xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Unsigned Difference: Dist from Rhumb Line, cm','t');
 
-figure(7)
+figure(7+plotoffset)
 clf
 time=-10*span:10:10*span;
 rtaDist=zeros(length(a),2*span+1);
-distCells=cell(length(a),2*span+1);
+distCell=cell(length(a),2*span+1);
 for g=1:length(a)
     matDist=[alignedDist(g).trial.mat];
 
@@ -163,8 +165,7 @@ for g=1:length(a)
         temp=matDist(k,:);
         vals=temp(temp>=0);
         rtaDist(g,k)=mean(vals); %this filters out the -1s
-        distCells(g,k)=vals;
-        plot(
+        distCell{g,k}=vals;
     end
 
     subplot(length(a),1,g)
@@ -174,3 +175,5 @@ end
 xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Distance: Physical and Commanded, cm','t');
+
+save(['./Data/',name,'rta.mat'],'distCell')
