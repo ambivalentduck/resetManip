@@ -44,6 +44,24 @@ for g=1:length(gains)
     subplot(length(gains),1,g)
     hold on
     for k=1:length(subcells)
+        plot(time,squeeze(subaves(k,g,:)),'Color',[.5 .5 .5])
+    end
+    for k=1:length(time)
+        allMean(g,k)=mean(subaves(:,g,k));
+    end
+    plot(time,allMean(g,:),'r')
+    ylabel(num2str(gains(g)))
+end
+xlabel('Time since Reset, ms');
+suplabel('Kp Gain','y');
+suplabel('Reset-Triggered Distance Error: Across-Subject Comparison and Mean, cm','t');
+
+figure(length(subcells)+2)
+clf
+for g=1:length(gains)
+    subplot(length(gains),1,g)
+    hold on
+    for k=1:length(subcells)
         plot(time,squeeze(subaves(k,g,:))/max(subaves(k,g,:)),'Color',[.5 .5 .5])
     end
     for k=1:length(time)
@@ -54,4 +72,4 @@ for g=1:length(gains)
 end
 xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
-suplabel('Reset-Triggered Distance Error: Across-Subject Comparison and Mean, cm','t');
+suplabel('Reset-Triggered Distance Error: Normailized Across-Subject Comparison and Mean, cm','t');
