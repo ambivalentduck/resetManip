@@ -158,14 +158,17 @@ clf
 time=-10*span:10:10*span;
 rtaDist=zeros(length(a),2*span+1);
 distCell=cell(length(a),2*span+1);
+indCell=cell(length(a),2*span+1);
 for g=1:length(a)
-    matDist=[alignedDist(g).trial.mat];
+    matDist{g}=[alignedDist(g).trial.mat];
 
     for k=1:2*span+1
-        temp=matDist(k,:);
-        vals=temp(temp>=0);
+        temp=matDist{g}(k,:);
+        f=find(temp>=0);
+        vals=temp(f);
         rtaDist(g,k)=mean(vals); %this filters out the -1s
         distCell{g,k}=vals;
+        indCell{g,k}=f;
     end
 
     subplot(length(a),1,g)
@@ -176,4 +179,4 @@ xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Distance: Physical and Commanded, cm','t');
 
-save(['./Data/',name,'rta.mat'],'distCell')
+save(['./Data/',name,'rta.mat'],'distCell','matDist')
