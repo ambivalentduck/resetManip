@@ -24,9 +24,9 @@ if test
         else
             tf=t0+t(end)*rand;
         end
-        vec=randn(2,1);
-        p0=randn(2,1);
-        Xr(1+6*(k-1):6*k)=[t0;tf;p0;vec];
+        vM=randn(2,1);
+        pM=vM; %otherwise, guaranteed to have discontinuities
+        Xr(1+6*(k-1):6*k)=[t0;tf;pM;vM];
     end
     [p,v]=SBsinX(t,Xr);
 end
@@ -47,21 +47,42 @@ if isempty(mins) %Instead grab the first and last significantly non-zero point a
 end
 
 X=extractHumps(t,p,v,mins,maxes,length(maxes));
-[X Xr]
+try
+    [X Xr]
+catch
+    X
+    Xr
+end
 % Step 3?: Refine with fminunc
-% options = optimset('GradObj','on');
-% hackyhandle=@(x) SBsinOpt(x,t',p);
-% Xopt=fminunc(hackyhandle,X,options);
+options = optimset('GradObj','on');
+hackyhandle=@(x) SBsinOpt(x,t',p);
+Xopt=fminunc(hackyhandle,X,options);
 
 if doplot
     figure(1)
     clf
     subplot(2,1,1)
     hold on
-    plot(p(1,:),p(2,:),'b')
+    plot(p(1,:),p(2,:),'bx-')
     [f,fp,vparts]=SBsinX(t,X);
     speedX=sqrt(sum(fp.^2));
-    plot(f(1,:),f(2,:),'r')
+    plot(f(1,:),f(2,:),'r.')
+    subplot(2,1,2)
+    hold on
+    plot(t, sqrt(speed),'b')
+    plot(t, speedX,'r.')
+    for k=1:length(vparts)
+        plot(t,sqrt(sum(vparts{k}.^2)),'g')
+    end
+    
+    figure(2)
+    clf
+    subplot(2,1,1)
+    hold on
+    plot(p(1,:),p(2,:),'bx-')
+    [f,fp,vparts]=SBsinX(t,Xopt);
+    speedX=sqrt(sum(fp.^2));
+    plot(f(1,:),f(2,:),'r.')
     subplot(2,1,2)
     hold on
     plot(t, sqrt(speed),'b')
@@ -70,13 +91,17 @@ if doplot
         plot(t,sqrt(sum(vparts{k}.^2)),'g')
     end
 end
-params=X;
+params=Xopt;
+
+
 
 
 function [f,fp]=SBsin(t,pM,vM,t0,tf)
 f=zeros(2,length(t));
 range=find((t>=t0)&(t<=tf));
 f(:,range)=pM*ones(1,length(range))-((tf-t0)/pi)*vM*cos(pi*(t(range)-t0)/(tf-t0));
+f(1,range(end):end)=f(1,range(end));
+f(2,range(end):end)=f(2,range(end));
 if nargout>1
     fp=zeros(2,length(t));
     fp(:,range)=vM*sin(pi*(t(range)-t0)/(tf-t0));
@@ -100,15 +125,40 @@ function [cost,grad]=SBsinOpt(X,t,p)
 % Cost function: .5*sum((fpredicted-freal).^2)
 L=length(X)/6;
 grad=X;
-
-P=zeros(2,length(t));
-V=P;
-for k=1:length(X)/6
-    [p_,v_]=SBsin(t,X((3:4)+6*(k-1)),X((5:6)+6*(k-1)),X(1+6*(k-1)),X(2+6*(k-1)));
+H=length(X)/6;
+if size(t,1)>size(t,2)
+    t=t';
 end
 
-vmp=vals-p;
-cost=.5*sum(vmp.^2);
+P=zeros(2,length(t));
+for k=1:H %First pass, compute frequently used quantities and build error
+    t0=X(1+6*(k-1));
+    tf=X(2+6*(k-1));
+    pM=X((3:4)+6*(k-1));
+    vM=X((5:6)+6*(k-1));
+    hump(k).range=find((t>=t0)&(t<=tf));
+    inner=pi*(t(hump(k).range)-t0)/(tf-t0); %Gather intermediate steps
+    C=cos(inner);
+    S=sin(inner);
+    hump(k).f=pM*ones(1,length(hump(k).range))-((tf-t0)/pi)*vM*C;
+    hump(k).dfdvm=-(tf-t0)/pi*C;
+    hump(k).dfdpm=1; %Placeholder, should never be used since it wastes compy
+    hump(k).dft0=vM/pi*C+vM*((tf-t0)*S.*((t(hump(k).range)-t0)./((tf-t0)^2)-1/(tf-t0)));
+    hump(k).dftf=-vM*(C/pi+S.*(t(hump(k).range)-t0)/(tf-t0));
+    P(:,hump(k).range)=P(:,hump(k).range)+hump(k).f;
+end
+
+error=P-p;
+for k=1:length(X)/6
+    suberror=error(:,hump(k).range);
+    d1suberror=sum(suberror);
+    grad(1+6*(k-1))=sum(hump(k).dft0*d1suberror'); %t0
+    grad(2+6*(k-1))=sum(hump(k).dftf*d1suberror'); %tf
+    grad((3:4)+6*(k-1))=sum(suberror,2); %pm, dfdpm=1, just a sum
+    grad((5:6)+6*(k-1))=suberror*hump(k).dfdvm';
+end
+
+cost=.5*sum(sum(error.^2));
 
 
 function X=extractHumps(t,p,v,mins,maxes,N)
