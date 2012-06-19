@@ -133,7 +133,7 @@ function [cost,grad]=SBsinOpt(X,t,p)
 % if size(t,1)>size(t,2)
 %     t=t';
 % end
-% 
+%
 % P=zeros(2,length(t));
 % for k=1:H %First pass, compute frequently used quantities and build error
 %     t0=X(1+4*(k-1));
@@ -149,7 +149,7 @@ function [cost,grad]=SBsinOpt(X,t,p)
 %     hump(k).dftf=vM/pi*(1-C)-vM/(tf-t0)*(S.*(t(hump(k).range)-t0));
 %     P(:,hump(k).range)=P(:,hump(k).range)+hump(k).f;
 % end
-% 
+%
 % error=P-p;
 % for k=1:length(X)/4
 %     suberror=error(:,hump(k).range);
@@ -203,7 +203,6 @@ for k=length(maxes)+1:N %Make maxima where none can be found.
     X(1+4*(k-1):4*k)=[params(k).t0;params(k).tf;params(k).vM];
     peakv(k)=i_;
 end
-
 
 
 
