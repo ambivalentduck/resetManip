@@ -149,7 +149,7 @@ void ControlWidget::readPending()
 		int s=us->pendingDatagramSize();
 		if(inSize != s) read.resize(s);
 		us->readDatagram(read.data(), read.size());
-		double targetTime=*reinterpret_cast<double*>(in.data());
+		double targetTime=*reinterpret_cast<double*>(read.data());
 		if(targetTime>lastTargetTime)
 		{
 			lastTargetTime=targetTime;

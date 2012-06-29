@@ -36,6 +36,7 @@ private:
 	void unGray() {for(std::vector<QWidget*>::iterator it=grayList.begin();it!=grayList.end();++it) (*it)->setEnabled(true); }
 	point loadTrial(int T);
 	void noConsecutive(bool * array, int n);
+	void processUDP(QByteArray in);
 	
 	QByteArray read,out;
 	int inSize, outSize;
