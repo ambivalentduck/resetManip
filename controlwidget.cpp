@@ -31,6 +31,7 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 	
 	//Snag a UDP Socket and call a function (readPending) every time there's a new packet.
 	ignoreInput=true;
+	lastTargetTime=-1.0;
 	us=new QUdpSocket(this);
 	us->bind(QHostAddress("192.168.1.1"),25000,QUdpSocket::DontShareAddress); //Bind the IP and socket you expect packets to be received from XPC on.
 	connect(us, SIGNAL(readyRead()),this, SLOT(readPending()));
@@ -143,12 +144,23 @@ ControlWidget::ControlWidget(QDesktopWidget * qdw) : QWidget(qdw->screen(qdw->pr
 
 void ControlWidget::readPending()
 {
+	while(us->hasPendingDatagrams())
+	{	
+		int s=us->pendingDatagramSize();
+		if(inSize != s) read.resize(s);
+		us->readDatagram(read.data(), read.size());
+		double targetTime=*reinterpret_cast<double*>(read.data());
+		if(targetTime>lastTargetTime)
+		{
+			lastTargetTime=targetTime;
+			processUDP(read);
+		}
+	}
+}
+	
+void ControlWidget::processUDP(QByteArray in)
+{
 	now=getTime();
-	
-	int s=us->pendingDatagramSize();
-	if(inSize != s) in.resize(s);
-	us->readDatagram(in.data(), in.size());
-	
 	if(ignoreInput) //Send something back out so that XPC doesn't choke/stall/worse
 	{
 		out=QByteArray(in.data(),sizeof(double));//Copy the timestamp from the input

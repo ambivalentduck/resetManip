@@ -36,15 +36,16 @@ private:
 	void unGray() {for(std::vector<QWidget*>::iterator it=grayList.begin();it!=grayList.end();++it) (*it)->setEnabled(true); }
 	point loadTrial(int T);
 	void noConsecutive(bool * array, int n);
+	void processUDP(QByteArray in);
 	
-	QByteArray in,out;
+	QByteArray read,out;
 	int inSize, outSize;
 	QUdpSocket * us;
 	QFile contFile, trialFile;
 	QTextStream outStream, trialStream;
 	
 	double * minJerkParams[6];
-	double viscousity, curl, saddle, inertia, probeDelay, pillowMag, min, probeOn, visualdelay;
+	double lastTargetTime, viscousity, curl, saddle, inertia, probeDelay, pillowMag, min, probeOn, visualdelay;
 	enum stimuli {UNSTIMULATED=0, CURL=1, SADDLE=2} stimulus;
 	enum GameState {acquireTarget=0, inTarget=1} state;
 	enum ProbeType {NONE=0, VISCOUSITY=1, PULSE=2} probe;
