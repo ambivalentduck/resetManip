@@ -107,7 +107,7 @@ for k=1:N
     
     error(k)=sum(sqrt(sum((des-desired).^2,2)));
 end
-[pM,vM,0*vM+1]\error
+coeff=[pM,vM,0*vM+1]\error
 
 T_fixed=T;
 T_fixed(T>.8)=.8;
@@ -119,7 +119,14 @@ axis off
 
 figure(2)
 clf
+hold on
 plot3(pM,vM,error,'k.')
+X=[min(pM) min(vM) 1;max(pM) max(vM) 1];
+Y=X*coeff;
+plot3(X(:,1),X(:,2),Y,'r')
+xlabel(['Position Error Injected, Sensitivity = ',num2str(coeff(1))])
+ylabel(['Velocity Error Injected, Sensitivity = ',num2str(coeff(2))])
+zlabel('Extraction Error')
 
 
 delete('fJ*') %Clean up any and all extra copies of these floating around

@@ -3,7 +3,7 @@ clear all
 
 for k=1:8
     ks=num2str(k)
-   % try
+   %try
         clear distCell indCell
         load(['./Data/',ks,'rta.mat']);
         subcells(k).distCell=distCell;
@@ -14,7 +14,7 @@ for k=1:8
 %             processCount(ks,10*k);
 %         catch
 %             disp('...And count process failed.')
-%             addSubjectPlus(5ks);
+%             addSubjectPlus(ks);
 %             makeParagons(ks);
 %             processCount(ks,10*k);
 %         end
@@ -24,7 +24,7 @@ end
 time=-10*20:10:10*20;
 gains=[.8 1 2 4 8 16];
 subaves=zeros(length(subcells),length(gains),length(time));
-for k=1 %:length(subcells)
+for k=1:length(subcells)
     figure(k)
     clf
 

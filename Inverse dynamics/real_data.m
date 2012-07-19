@@ -100,10 +100,12 @@ for TRIAL=1:length(trialswanted) %trialswanted
     axis off
     legend('Recorded Reach','Recorded Handle Force','Extracted Desired Trajectory')
     subplot(3,1,3)
-    plot(T_,gradient(desired_v(1,:)),T_,gradient(desired_v(2,:)))
+    hold on
+    plot(T_,gradient(desired_v(1,:)),'b-.',T_,gradient(desired_v(2,:)),'b--')
+    plot(pvafTime,pvaf(:,3),'r-.',pvafTime,pvaf(:,4),'r--')
     ylabel('Velocity')
     xlabel('Time')
-    legend('X','Y')
+    legend('Extracted V_X','Extracted V_Y','V_X','V_Y')
 end
 
 delete('fJ*') %Clean up any and all extra copies of these floating around

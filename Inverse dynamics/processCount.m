@@ -1,5 +1,6 @@
-function processCount(name, plotoffset)
+%function processCount(name, plotoffset)
 
+name='1';
 if nargin<2
     plotoffset=0;
 end
@@ -107,6 +108,8 @@ suplabel('Histogram of Submovement Count','t');
 span=20;
 f=find([rawdata.forces]==1);
 dataflaws=0;
+notrigDist=cell(length(data),length(a));
+resetbins=cell(length(data),length(a));
 for k=1:length(data)
     [data(k).completion,data(k).signedError]=reachOrthoRot(data(k).metrics(1).real(:,1:2)',trials(f(k)).target);
     for g=1:length(a)
@@ -114,11 +117,27 @@ for k=1:length(data)
         differenceRhumb=abs(twoNearestNeighbor(data(k).signedError,data(k).completion,data(k).metrics(g).completion)-data(k).metrics(g).signedError);
         realPnn=twoNearestNeighbor(data(k).metrics(g).real(:,1:2),data(k).metrics(g).realT,data(k).metrics(g).intendedT);
         differenceDist=sqrt(sum((realPnn-data(k).metrics(g).intendedP').^2,2));
+        if ~sum(isnan(differenceDist))
+            if ~sum(abs(imag(differenceDist)))
+                notrigDist{k,g}=[differenceDist' zeros(1,40)];
+                trip=1;
+            else
+                notrigDist{k,g}=[];
+                trip=0;
+            end
+        end
+
 
         speed2=sum((data(k).metrics(g).intendedV).^2); %skipping the square root adds speed
         [vals,mins]=findpeaks(1./speed2);
         f2=find(dm((k-1)*length(a)+g).sizes>=.01); %ignore any "reset" less than 1 cm since that's noiseland
         m=mins(f2);
+        if trip
+            resetbins{k,g}=zeros(size(notrigDist{k,g}));
+            resetbins{k,g}(m)=1;
+        else
+            resetbins{k,g}=[];
+        end
         alignedRhumb(g).trial(k).mat=-1*ones(2*span+1,length(m));
         alignedDist(g).trial(k).mat=-1*ones(2*span+1,length(m));
         for kk=1:length(m)
@@ -157,26 +176,72 @@ figure(7+plotoffset)
 clf
 time=-10*span:10:10*span;
 rtaDist=zeros(length(a),2*span+1);
+rtadist=zeros(length(a),2*span+1);
 distCell=cell(length(a),2*span+1);
 indCell=cell(length(a),2*span+1);
 for g=1:length(a)
+    if g~=3
+        continue
+    end
     matDist{g}=[alignedDist(g).trial.mat];
-
+    %subplot(length(a),1,g)
+    subplot(2,1,1)
+    hold on
     for k=1:2*span+1
         temp=matDist{g}(k,:);
         f=find(temp>=0);
         vals=temp(f);
+        s=sort(vals);
+        vals=vals(1:end-5);
         rtaDist(g,k)=mean(vals); %this filters out the -1s
-        distCell{g,k}=vals;
+        distCell{g,k}=rtaDist(g,k);
         indCell{g,k}=f;
+        plot(time(k)*ones(size(vals)),vals,'r.')
     end
+    subplot(2,1,2)
+    hold on
+    for k=1:size(matDist{g},2)
+        f=find(matDist{g}(:,k)>=0);
+        v=matDist{g}(f,k);
+%         v=v-min(v);
+%         v=v/max(v);
+        plot(time(f),v,'r-')
+    end
+    ylabel('Normalized Error')
 
-    subplot(length(a),1,g)
+    subplot(2,1,1)
     plot(time,rtaDist(g,:))
-    ylabel(num2str(exp(a(g))))
+    ylabel('X_D - X Error, m')
 end
 xlabel('Time since Reset, ms');
 suplabel('Kp Gain','y');
 suplabel('Reset-Triggered Distance: Physical and Commanded, cm','t');
+
+figure(8+plotoffset)
+clf
+lT=length(time);
+trip=0;
+for g=3
+    x=[notrigDist{:,g}];
+    X=zeros(lT,length(x));
+    for k=1:lT
+        offset=span-(k-1);
+        X(k,max(1,1+offset):min(end,end+offset))=x(max(1,1-offset):min(end,end-offset));
+    end
+    X=X';
+
+    y=[resetbins{:,g}]';
+    sy=sum(y);
+    hold on
+    plot(time,(X'*y)/sy,time,(X\y)/sy)
+    ylabel('Distance, m')
+    if ~trip
+        trip=1;
+        legend('Standard Triggered Average','Whitened Triggered Average')
+    end
+end
+xlabel('Time since Reset, ms');
+%suplabel('Kp Gain','y');
+title('Reset-Triggered Distance: Physical and Commanded, cm');
 
 save(['./Data/',name,'rta.mat'],'distCell','matDist')

@@ -1,41 +1,45 @@
 clc
 clear all
 
-name='8';
-load(['./Data/',name,'.mat'])
-load(['./Data/',name,'humps.mat'])
-F=find([data.forces]);
+for k=1:8
+    name=num2str(k);
+    load(['./Data/',name,'.mat'])
+    load(['./Data/',name,'humps.mat'])
+    F=find([data.forces]);
 
-range=1:length(F);
+    range=1:length(F);
 
-try
-    load(['./Data/',name,'imfs.mat'])
-    for k=range
-        k
-        v=data(F(k)).metrics(3).intendedV;
-        speed=real(sqrt(sum(v.^2)));
-        speeds{k}=speed;
-    end
-catch
-    for k=range
-        k
-        v=data(F(k)).metrics(3).intendedV;
-        speed=real(sqrt(sum(v.^2)));
-        speeds{k}=speed;
-        %     if k==21
-        %         imfs{k}(1).skip=1;
-        %         continue
-        %     end
-        try
-            imfs{k}=emd(speed,4);
-            imfs{k}(1).skip=0;
-        catch
-            imfs{k}(1).skip=1;
+    try
+        load(['./Data/',name,'imfs.mat'])
+        for k=range
+            k
+            v=data(F(k)).metrics(3).intendedV;
+            speed=real(sqrt(sum(v.^2)));
+            speeds{k}=speed;
         end
-    end
+    catch
+        for k=range
+            k
+            v=data(F(k)).metrics(3).intendedV;
+            speed=real(sqrt(sum(v.^2)));
+            speeds{k}=speed;
+            %     if k==21
+            %         imfs{k}(1).skip=1;
+            %         continue
+            %     end
+            try
+                imfs{k}=emd(speed,4);
+                imfs{k}(1).skip=0;
+            catch
+                imfs{k}(1).skip=1;
+            end
+        end
 
-    save(['./Data/',name,'imfs.mat'],'imfs')
+        save(['./Data/',name,'imfs.mat'],'imfs')
+    end
 end
+
+
 
 for K=1:ceil(range(end)/8)
     for kk=1:8 %tiling my screen
