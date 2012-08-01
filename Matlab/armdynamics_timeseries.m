@@ -1,6 +1,6 @@
 function [dx, p_real, v_real, a_real,f_handle]=armdynamics_timeseries(t,x)
 
-global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB pf getAccel forces_in forces_in_time fJ getAlpha
+global kd kp l1 lc1 lc2 m1 m2 I1 I2 coeffFF coeffFB getAccel forces_in forces_in_time fJ getAlpha
 
 %x(1-2) are joint angle, q
 %x(3-4) are velocity, q dot
@@ -59,16 +59,15 @@ torque_ff=D_expected*alpha+C_expected;
 fJxt=fJ(x(1:2))';
 
 %Add torque due to outside forces
-F=twoNearestNeighbor(forces_in,forces_in_time,t)';
-
+F=interp1(forces_in_time,forces_in,t)';
 torque_outside=fJxt*F;
 
 dx=[x(3);
     x(4);
     D_real\(torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
 
-if nargout>2
-    f_handle=fJxt\(torque_ff+torque_fb);
+if nargout>1
+    f_handle=F;
     p_real=fkin(x(1:2));
     v_real=fJ(x(1:2))*x(3:4);
     a_real=getAccel(x(1:2),x(3:4),dx(3:4));
@@ -76,6 +75,4 @@ end
 
 if(~isreal(dx))
     dx=[0;0;0;0];
-end
-
 end
