@@ -43,5 +43,5 @@ for k=1:input(end,1)
     end
 end
 
-save(['./Data/',name,'.mat'],'trials')
+save(['./Data/',name,'.mat'],'trials');
 %Notice structure array and alignment of data designed for concatenation

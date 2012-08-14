@@ -69,4 +69,4 @@ for k=2:4
 end
 
 save(['./Data/',name,'.mat'],'trials')
-save(['./Data/',name,'reaches.mat'],'reachDirection')
+save(['./Data/',name,'paragons.mat'],'reachDirection')

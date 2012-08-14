@@ -13,6 +13,7 @@ a=kNf(5:6)';
 f=kNf(7:8)';
 
 x=[ikin(p);0;0];
+
 x(3:4)=fJ(x(1:2))\v;
 alpha_real=getAlpha(x(1:2),x(3:4),a);  %Alpha is an angular acceleration, q double dot
 
