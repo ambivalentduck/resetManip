@@ -38,7 +38,7 @@ switch num
         l2=.36;
         shoulder=[.027 .405];
     otherwise
-        l1=.33;
+        l1=.25;
         l2=.34;
         shoulder=[0 .5];
 end

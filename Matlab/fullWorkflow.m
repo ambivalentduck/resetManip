@@ -4,7 +4,7 @@ function fullWorkflow(n, gains, prefix)
 for k=n
     name=[prefix,num2str(k)];
     %% Move from human-readable data files to Matlab structures
-    % API requires structure array with fields q, q dot, q double dot, torques, and time in arrays, an initial condition time index, and a final time index by trial.
+    % API requires structure array with required fields q, qdot, qddot (double dot), torques, and time in arrays, an initial condition time index, and a final time index by trial.
     % Inverse kinematics/joint tracking/etc are paradigm specific, but inversion always occurs in joint space.
     % Should also prevent problems with ode solvers picking values for Cartesian state that cause imaginary inverse kinematics.
     % The prefix-specific loader should sanity check that we do not already have imaginary state.

@@ -20,36 +20,28 @@ end
 
 f=find(input(:,5)>0);
 
-for k=1:input(end,1)
+for k=1:min(45,input(end,1))
     fo=find(output(:,1)==k);
     trials(k).curlMag=input(k,2); %More informative than just hasKick() since this helps with later sorting
     trials(k).time=output(fo,2)';
     trials(k).pos=output(fo,[3 4])';
     trials(k).vel=output(fo,[5 6])';
     trials(k).accel=output(fo,[7 8])';
+    trials(k).force=output(fo,[9 10])';
+
     trials(k).q=trials(k).pos;
     trials(k).qdot=trials(k).q;
     trials(k).qddot=trials(k).q;    
+    trials(k).torque=trials(k).force;
     for kk=1:length(trials(k).time)
        trials(k).q(kk,:)=ikin(trials(k).pos(kk,:));
        trials(k).qdot(kk,:)=(fJ(trials(k).q(kk,:))\(trials(k).v(kk,:)'))';
        trials(k).qddot(kk,:)=getAlpha(trials(k).q(kk,:),trials(k).qdot(kk,:),trials(k).accel(kk,:));
+       trials(k).torque(kk,:)=(fJ(trials(k).q(kk,:))*(trials(k).force(kk,:)'))';
     end
-    trials(k).force=output(fo,[9 10])';
-    trials(k).visualDelay=input(k,7); %The second third for some subjects has 150 ms of visual delay.
 
     trials(k).target=targets(categories(k),:)';
     trials(k).targetCat=categories(k);
-    trials(k).lastForceTrial=k-f(find(f<=k,1,'last'));
-    if isempty(trials(k).lastForceTrial)
-        trials(k).lastForceTrial=inf;
-        trials(k).lastForceTrialSD=inf;
-    else
-        trials(k).lastForceTrialSD=k-f(find((f<=k)&(categories(f)==categories(k)),1,'last'));
-        if isempty(trials(k).lastForceTrialSD)
-            trials(k).lastForceTrialSD=inf;
-        end
-    end
 end
 
 save(['./Data/',name,'.mat'],'trials');
