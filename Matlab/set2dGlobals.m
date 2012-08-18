@@ -1,12 +1,13 @@
-function set2dGlobals(name,origin)
+function set2dGlobals(name, origin, l1_, l2_, shoulder)
 
-global kd kp0 l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha
+global kd l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha
 
 % Common bullshit to anything that uses my ODEs
-kp0=[15 6; 6 16];
 kd=[2.3 .09; .09 2.4];
 
-[l1, l2, shoulder]=getSubjectParams(name);
+l1=l1_;
+l2=l2_;
+
 %%assume two link
 lc1=.165*l1/.33;
 lc2=0.19*l2/.34;
@@ -17,7 +18,7 @@ I1=.0141;
 I2=.0188;
 
 %Shoulder location
-x0=origin+shoulder';
+x0=origin+shoulder;
 %Consequence: Workspace is a circle with center at 0, radius .67
 
 %Dynamic code modification requires random function names

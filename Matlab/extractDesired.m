@@ -1,58 +1,24 @@
 function extractDesired(name, gains)
 
 load(['./Data/',name,'.mat']);
-load(['./Data/',name,'paragons.mat']);
-global paragon
-global kd kp0 l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha pvaf pvafTime
+global kp measuredVals measuredTime
 
-% Common bullshit to anything that uses my ODEs
-kp0=[15 6; 6 16];
-kd=[2.3 .09; .09 2.4];
-
-[l1, l2, shoulder]=getSubjectParams(name);
-%%assume two link
-lc1=.165*l1/.33;
-lc2=0.19*l2/.34;
-m1=1.93;
-m2=1.52;
-%model using parameters from shadmehr and mussa-ivaldi
-I1=.0141;
-I2=.0188;
-
-%Shoulder location
-x0=reachDirection(2).origin+shoulder';
-%Consequence: Workspace is a circle with center at 0, radius .67
-
-%Dynamic code modification requires random function names
-hash=floor(rand(5,1)*20+2);
-hash=char('A'+hash)';
-aName=['getAlpha',hash];
-fName=['fJ',hash];
-%Command torques based on Jacobian, so build one
-[fJ,Jt, getAlpha, getAccel]=makeJacobians(aName,fName);
-pause(.1)
-disp('Jacobians complete.')
-fJ=str2func(fName);
-feval(fName,[5 6])
-getAlpha=str2func(aName);
-feval(aName,[1 2]',[3 4]',[5 6]')
-
-mags=[trials.curlMag];
-f=find(mags);
-
+try
+    fJ([1 1]);
+catch
+    set2dGlobals(name, params.origin, params.l1, params.l2, params.shoulder)
+end
 
 %Do the extraction on trials where forces were on
-for kk=1:length(f)
-    kk/length(f)
-    k=f(kk);
-    pvaf=[trials(k).pos' trials(k).vel' trials(k).accel' trials(k).force'];
-    pvafTime=trials(k).time'-trials(k).time(1);
-    desiredTrajectories(kk,:)=doExtraction(gains);
+lT=length(trials);
+for k=1:lT
+    k/lT
+    measuredVals=[trials(k).q trials(k).qdot trials(k).qddot trials(k).force];
+    measuredTime=trials(k).time-trials(k).time(1);
+    desiredTrajectories(k,:)=doExtraction(gains);
 end
 save(['./Data/',name,'extracted.mat'],'desiredTrajectories');
 
-delete('fJ*') %Clean up any and all extra copies of these floating around
-delete('getAlpha*')
 end
 
 function out=doExtraction(gains)

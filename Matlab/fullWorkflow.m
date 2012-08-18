@@ -45,3 +45,7 @@ for k=n
     %% 
     
 end
+
+
+delete('fJ*') %Clean up any and all extra copies of these floating around
+delete('getAlpha*')
