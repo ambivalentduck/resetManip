@@ -64,7 +64,28 @@ for k=1:min(45,input(end,1))
         end
         x0(2)=x0(2)-.01; %sometimes, the subject shifts in their chair. In any case, it's obvious that their joints never go imaginary.
     end
+
+    speed2=sum(trials(k).vel.^2,2); %skipping the square root adds speed
+    [vals,maxes]=findpeaks(speed2);
+    [vals,mins]=findpeaks(1./speed2);
+
     
+    %The below is really fucking dumb. This might be the first *post* reset
+    %point. The beginning should be the first speed *minimum*. Honestly
+    %probably a smidge after it. Flag and show minima not within the first
+    %50ms.
+    
+    %Find the longest "submovement," which should almost always correspond to
+    %the initial one. We need a starting p,v pair
+    lengths=zeros(length(mins)-1,1);
+    for k=1:length(mins)-1
+        lengths(k)=sum(speed2(mins(k):mins(k+1)));
+    end
+
+    [val,starti]=max(lengths);
+    starti=mins(1); %mins(starti);
+
+
     trials(k).target=targets(categories(K),:)';
     trials(k).targetCat=categories(K);
 end
