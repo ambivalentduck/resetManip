@@ -1,4 +1,4 @@
-function set2dGlobals(name, origin, l1_, l2_, shoulder)
+function set2dGlobals(l1_, l2_, origin, shoulder)
 
 global kd l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha
 

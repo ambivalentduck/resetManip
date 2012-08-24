@@ -27,22 +27,30 @@ params.l1=l1;
 params.l2=l2;
 params.shoulder=shoulder;
 params.origin=origin;
-set2dGlobals(name,origin, l1, l2, shoulder)
+params.dimensions=2;
+set2dGlobals(l1, l2, origin, shoulder)
 x0_=x0;
 
 f=find(input(:,5)>0);
 
-success=zeros(45,4);
+success=zeros(45,5);
 
 for k=1:min(45,input(end,1))
     K=f(k);
     fo=find(output(:,1)==K);
     trials(k).curlMag=input(K,2); %More informative than just hasKick() since this helps with later sorting
-    trials(k).time=output(fo,2);
+    trials(k).time=linspace(output(fo(1),2),output(fo(end),2),length(fo))';
     trials(k).pos=output(fo,[3 4]);
-    trials(k).vel=output(fo,[5 6]);
-    trials(k).accel=output(fo,[7 8]);
+    gT=gradient(trials(k).time);
+    trials(k).vel=[gradient(trials(k).pos(:,1))./gT gradient(trials(k).pos(:,2))./gT];
+    %trials(k).vel=output(fo,[5 6]); %Turns out to be wrong because it came from a predictor
+    trials(k).accel=[gradient(trials(k).vel(:,1))./gT gradient(trials(k).vel(:,2))./gT];
+    %trials(k).accel=output(fo,[7 8]);
     trials(k).force=output(fo,[9 10]);
+
+    trials(k).dist=[0; cumsum(sqrt(sum((trials(k).pos(2:end,:)-trials(k).pos(1:end-1,:)).^2,2)))];
+    trials(k).originDist=sqrt(sum((ones(length(trials(k).time),1)*origin-trials(k).pos).^2,2));
+    trials(k).speed=sqrt(sum(trials(k).vel.^2,2));
 
     trials(k).q=trials(k).pos;
     trials(k).qdot=trials(k).q;
@@ -51,46 +59,48 @@ for k=1:min(45,input(end,1))
 
     flag=1;
     x0=x0_;
+    warning off all
+
+    gT=.01; %gradient(trials(k).time);
+
     while flag
         for kk=1:length(trials(k).time)
             trials(k).q(kk,:)=ikin(trials(k).pos(kk,:));
             trials(k).qdot(kk,:)=(fJ(trials(k).q(kk,:))\(trials(k).vel(kk,:)'))';
             trials(k).qddot(kk,:)=getAlpha(trials(k).q(kk,:)',trials(k).qdot(kk,:)',trials(k).accel(kk,:)');
-            trials(k).torque(kk,:)=(fJ(trials(k).q(kk,:))*(trials(k).force(kk,:)'))';
+            trials(k).torque(kk,:)=((fJ(trials(k).q(kk,:))')*(trials(k).force(kk,:)'))';
         end
-        success(k,:)=[k K isreal(trials(k).q) x0(2)];
+        %trials(k).qdot=[gradient(trials(k).q(:,1))./gT gradient(trials(k).q(:,2))./gT];
+        %trials(k).qddot=[gradient(trials(k).qdot(:,1))./gT gradient(trials(k).qdot(:,2))./gT];
+        success(k,1:4)=[k K isreal(trials(k).q) x0(2)];
         if success(k,3)
             flag=0;
+        else
+            x0(2)=x0(2)-.01; %It's obvious that their joints never go imaginary. Forward shoulder movement is the most likely explaination
         end
-        x0(2)=x0(2)-.01; %sometimes, the subject shifts in their chair. In any case, it's obvious that their joints never go imaginary.
+    end
+    for kk=1:length(trials(k).time)
+        if norm(trials(k).pos(kk,:)-fkin(trials(k).q(kk,:))')>.001
+            [k kk trials(k).pos(kk,:) trials(k).q(kk,:)]
+        end
     end
 
-    speed2=sum(trials(k).vel.^2,2); %skipping the square root adds speed
-    [vals,maxes]=findpeaks(speed2);
-    [vals,mins]=findpeaks(1./speed2);
+    warning on all
 
-    
-    %The below is really fucking dumb. This might be the first *post* reset
-    %point. The beginning should be the first speed *minimum*. Honestly
-    %probably a smidge after it. Flag and show minima not within the first
-    %50ms.
-    
-    %Find the longest "submovement," which should almost always correspond to
-    %the initial one. We need a starting p,v pair
-    lengths=zeros(length(mins)-1,1);
-    for k=1:length(mins)-1
-        lengths(k)=sum(speed2(mins(k):mins(k+1)));
-    end
-
-    [val,starti]=max(lengths);
-    starti=mins(1); %mins(starti);
-
-
+    trials(k).x0=x0;
     trials(k).target=targets(categories(K),:)';
     trials(k).targetCat=categories(K);
+
+    legal=find((trials(k).originDist<.02));
+    legal=legal(legal<40);
+    [trash,minV]=min(trials(k).speed(legal));
+    trials(k).first=legal(minV);
+    trials(k).last=length(trials(k).time);
+
+    success(k,5)=trials(k).first;
 end
 
-success
+success %#ok<NOPRT>
 
 save(['./Data/',name,'.mat'],'trials','params');
 %Notice structure array and alignment of data designed for concatenation
