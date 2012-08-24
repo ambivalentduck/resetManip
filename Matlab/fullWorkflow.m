@@ -43,7 +43,7 @@ for k=n
     % Choose EEMD since mode mixing is not an issue, the math is not exotic, and we don't care about frequency.
     % We elect to decompose in Cartesian speed based on evidence showing speed humps as primitives.
     if ~exist(['./Data/',name,'modes.mat'],'file')
-        %%extractModes(name, gains);
+        %%extractModes(name);
     end
     % We can now load "modeMatrix" which contains a trials-by-gains cell array
     % containing arrays of speed components.
@@ -52,6 +52,8 @@ for k=n
     %%
 
 end
+
+disp('Done')
 
 delete('fJ*') %Clean up any and all extra copies of these floating around
 delete('getAlpha*')
