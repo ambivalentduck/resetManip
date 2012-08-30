@@ -12,7 +12,7 @@ set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
 
 %Do the extraction on trials where forces were on
 lT=length(trials);
-for k=1:5 %lT
+for k=1:lT
     k/lT
 
     inds=trials(k).first:trials(k).last;
@@ -50,7 +50,6 @@ for k=1:5 %lT
             [dx,torque]=armdynamics_inverted(T(kk),X(kk,:)');
             desired.qddotDesired(kk,:)=dx(3:4)';
             desired.xDesired(kk,:)=fkin(desired.qDesired(kk,:));
-            %desired.xDesired(kk,:)=fkin(trials(k).q(kk,:));
             desired.vDesired(kk,:)=(fJ(desired.qDesired(kk,:))*desired.qdotDesired(kk,:)')';
             desired.aDesired(kk,:)=getAccel(desired.qDesired(kk,:)',desired.qdotDesired(kk,:)',desired.qddotDesired(kk,:)');
 

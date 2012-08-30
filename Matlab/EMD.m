@@ -1,4 +1,4 @@
-function cycle=EMD(in,nlim)
+function cycle=EMD(in,nlim,plots)
 %Decompose a signal into IMFS. r is the residual, c is the imf for a given
 %cycle.  If you hate structure arrays, the syntax to get matrices instead is:
 %r=[cycle.r];
@@ -12,6 +12,10 @@ if nargin<2
     nlim=inf;
 end
 
+if nargin<3
+    plots=0;
+end
+
 cycles=1;
 L=length(in);
 one2L=1:L;
@@ -20,10 +24,13 @@ if size(in,1)<size(in,2)
 end
 cycle(1).r=in; %1-indexing instead of zero-indexing, this is the raw signal
 cycle(1).c=0*in; %Zero as the first IMF won't mess up sanity check sums later
-figure(cycles)
-clf
-plot(one2L,cycle(cycles).c,one2L,cycle(cycles).r)
-drawnow
+
+if plots
+    figure(cycles)
+    clf
+    plot(one2L,cycle(cycles).c,one2L,cycle(cycles).r)
+    drawnow
+end
 
 maxes=findpeaks(in);
 mins=findpeaks(-in);
@@ -39,8 +46,10 @@ while (extrema>0)&&(cmag>(fmag/1000))&&(cycles<nlim) %There are still desired IM
     xings=inf;
 
     S=0;
+    sifts=0;
     tic;
     while S<6 %We're still sifting the current IMF
+        sifts=sifts+1;
         if toc>2
             error('This isn''t converging any year soon.')
         end
@@ -64,14 +73,17 @@ while (extrema>0)&&(cmag>(fmag/1000))&&(cycles<nlim) %There are still desired IM
             xings=xing;
         end
     end
+
     cycle(cycles).c=h;
     cycle(cycles).r=cycle(cycles-1).r-h;
     cmag=sum(cycle(cycles).r.^2);
 
-    figure(cycles)
-    clf
-    plot(one2L,cycle(cycles).c,one2L,cycle(cycles).r)
-    drawnow
+    if plots
+        figure(cycles)
+        clf
+        plot(one2L,cycle(cycles).c,one2L,cycle(cycles).r)
+        drawnow
+    end
 end
 
 function n=crossings(in)
