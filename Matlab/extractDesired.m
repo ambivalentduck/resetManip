@@ -1,5 +1,7 @@
 function extractDesired(name, gains, debug)
 
+disp(['Extracting Desired Trajectories for Subject ',name])
+
 if nargin<3
     debug=0;
 end
@@ -50,7 +52,6 @@ for k=1:lT
             [dx,torque]=armdynamics_inverted(T(kk),X(kk,:)');
             desired.qddotDesired(kk,:)=dx(3:4)';
             desired.xDesired(kk,:)=fkin(desired.qDesired(kk,:));
-            %desired.xDesired(kk,:)=fkin(trials(k).q(kk,:));
             desired.vDesired(kk,:)=(fJ(desired.qDesired(kk,:))*desired.qdotDesired(kk,:)')';
             desired.aDesired(kk,:)=getAccel(desired.qDesired(kk,:)',desired.qdotDesired(kk,:)',desired.qddotDesired(kk,:)');
 
