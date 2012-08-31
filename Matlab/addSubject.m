@@ -1,5 +1,7 @@
 function success=addSubject(name)
 
+disp(['Loading Data for Subject ',name])
+
 input=load(['../Data/input',name,'.dat']);
 output=load(['../Data/output',name,'.dat']);
 

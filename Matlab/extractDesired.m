@@ -1,5 +1,7 @@
 function extractDesired(name, gains, debug)
 
+disp(['Extracting Desired Trajectories for Subject ',name])
+
 if nargin<3
     debug=0;
 end
