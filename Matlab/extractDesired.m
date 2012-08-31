@@ -12,7 +12,7 @@ set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
 
 %Do the extraction on trials where forces were on
 lT=length(trials);
-for k=1:5 %lT
+for k=1:lT
     k/lT
 
     inds=trials(k).first:trials(k).last;
