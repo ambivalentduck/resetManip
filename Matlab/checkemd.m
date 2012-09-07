@@ -1,9 +1,12 @@
 clc
 clear all
 load ./Data/1extracted.mat
+load ./Data/1.mat
+
+g=2;
 
 for k=1:length(desiredTrajectories)
-    speed=sqrt(sum(desiredTrajectories(k).vDesired.^2,2))
+    speed=sqrt(sum(desiredTrajectories(k,g).vDesired.^2,2));
     figure(k)
     subplot(2,1,1)
     clf
@@ -14,6 +17,8 @@ for k=1:length(desiredTrajectories)
     plot(t,cycles(2).c,'r')
     plot(t,cycles(3).c,'k')
     
-    
+    pos=twoNearestNeighbor(trials(k).pos,trials(k).time,desiredTrajectories(k,g).time);
+    error=sqrt(sum((pos-desiredTrajectories(k,g).xDesired).^2,2));
+    plot(desiredTrajectories(k,g).time,error,'c')
 end
     
