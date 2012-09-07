@@ -176,8 +176,8 @@ for g=1:smM(2) %For each gain, make attributions across reaches
         end
         p_time=(1/(std_time*sqrt2pi))*exp(-.5*((mean_time-tvals)/std_time).^2);
 
-%         p_time=p_time/max(p_time);
-%         p_error=p_error/max(p_error);
+        %         p_time=p_time/max(p_time);
+        %         p_error=p_error/max(p_error);
 
         p_null=(1-p_error).*(1-p_time);
         if ITER>15000
@@ -189,7 +189,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
         sum(cats==1)
         sum(cats==2)
         sum(cats==3)
-        
+
         if ITER==1
             firstTVals=tvals(fc3);
         end
@@ -203,9 +203,11 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nAll=nAll/sum(nAll);
     nBefore=hist(all_errors([gHump.mode]==2),x);
     nBefore=nBefore/sum(nBefore);
-    bar(x*.01,[nAll' nAfter' nBefore'])
+    bar(x*10,[nAll' nAfter' nBefore'])
     legend('All Humps','After EM','Before EM - Mode 2 Only')
     title('Peak-Peak Error Time Distance')
+    ylabel('Relative Frequency')
+    xlabel('Time, milliseconds')
 
     subplot(2,1,2)
     [nAfter,x]=hist(tvals(fc3));
@@ -214,9 +216,11 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nAll=nAll/sum(nAll);
     nBefore=hist(firstTVals,x);
     nBefore=nBefore/sum(nBefore);
-    bar(x*.01,[nAll' nAfter' nBefore'])
+    bar(x*10,[nAll' nAfter' nBefore'])
     legend('All Humps','After EM','Before EM - Mode 2 Only')
     title('Peak-Peak Period')
+    ylabel('Relative Frequency')
+    xlabel('Time, milliseconds')
 end
 
 
