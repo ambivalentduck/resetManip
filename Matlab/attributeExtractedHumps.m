@@ -203,8 +203,10 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nAll=nAll/sum(nAll);
     nBefore=hist(all_errors([gHump.mode]==2),x);
     nBefore=nBefore/sum(nBefore);
-    bar(x*10,[nAll' nAfter' nBefore'])
-    legend('All Humps','After EM','Before EM - Mode 2 Only')
+    nResidual=hist(all_errors(cats==3),x);
+    nResidual=nResidual/sum(nResidual);
+    bar(x*10,[nAll' nAfter' nBefore' nResidual'])
+    legend('All Humps','After EM','Before EM - Mode 2 Only','Residual')
     title('Peak-Peak Error Time Distance')
     ylabel('Relative Frequency')
     xlabel('Time, milliseconds')
@@ -216,8 +218,10 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nAll=nAll/sum(nAll);
     nBefore=hist(firstTVals,x);
     nBefore=nBefore/sum(nBefore);
-    bar(x*10,[nAll' nAfter' nBefore'])
-    legend('All Humps','After EM','Before EM - Mode 2 Only')
+    nResidual=hist(tvals(cats==2),x);
+    nResidual=nResidual/sum(nResidual);
+    bar(x*10,[nAll' nAfter' nBefore' nResidual'])
+    legend('All Humps','After EM','Before EM - Mode 2 Only','Residual')
     title('Peak-Peak Period')
     ylabel('Relative Frequency')
     xlabel('Time, milliseconds')
