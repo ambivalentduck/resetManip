@@ -1,0 +1,16 @@
+clc
+clear all
+
+syms jti11 jti12 jti21 jti22 vq1 vq2 vkp1 vkp2 ratio x
+
+Jti=[jti11 jti12;jti21 jti22];
+vq=[vq1;vq2];
+vkp=[vkp1;vkp2];
+Tr=vq-x*vkp;
+Fr=Jti*Tr;
+
+solve(Fr(1)-ratio*Fr(2),x)
+
+% x=(jti11*vq1+jti12*vq2-ratio*jti21*vq1-ratio*jti22*vq2)/((jti11-ratio*jti21)*vkp1+jti12*vkp2-ratio*jti22*vkp2)
+ 
+
