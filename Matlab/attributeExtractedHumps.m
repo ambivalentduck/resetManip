@@ -1,4 +1,8 @@
-function attributeExtractedHumps(name)
+function attributeExtractedHumps(name,doplots)
+
+if nargin<2
+    doplots=0;
+end
 
 %try to attribute each area between two minima in the IMF to a frequency,
 %an error threshold, or neither. Assign peaks at random to each group, then
@@ -194,10 +198,8 @@ for g=1:smM(2) %For each gain, make attributions across reaches
             firstTVals=tvals(fc3);
         end
     end
-    figure(g)
-    clf
-    subplot(2,1,1)
-    [nAfter,x]=hist(errors);
+    x=-15.0:3.5:20;
+    [nAfter]=hist(errors,x);
     nAfter=nAfter/sum(nAfter);
     nAll=hist(all_errors,x);
     nAll=nAll/sum(nAll);
@@ -205,14 +207,21 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nBefore=nBefore/sum(nBefore);
     nResidual=hist(all_errors(cats==3),x);
     nResidual=nResidual/sum(nResidual);
-    bar(x*10,[nAll' nAfter' nBefore' nResidual'])
-    legend('All Humps','After EM','Before EM - Mode 2 Only','Residual')
-    title('Peak-Peak Error Time Distance')
-    ylabel('Relative Frequency')
-    xlabel('Time, milliseconds')
-
-    subplot(2,1,2)
-    [nAfter,x]=hist(tvals(fc3));
+    plotme(g).errorcounts=[nAll' nAfter' nBefore' nResidual'];
+    plotme(g).rawErrors=errors;
+    plotme(g).errorBins=x*10;
+    if doplots
+        figure(g)
+        clf
+        subplot(2,1,1)
+        bar(x*10,[nAll' nAfter' nBefore' nResidual'])
+        legend('All Humps','After EM','Before EM - Mode 2 Only','Residual')
+        title('Peak-Peak Error Time Distance')
+        ylabel('Relative Frequency')
+        xlabel('Time, milliseconds')
+    end
+    x=-60:6:0;
+    [nAfter]=hist(tvals(fc3),x);
     nAfter=nAfter/sum(nAfter);
     nAll=hist(tvals,x);
     nAll=nAll/sum(nAll);
@@ -220,12 +229,24 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nBefore=nBefore/sum(nBefore);
     nResidual=hist(tvals(cats==2),x);
     nResidual=nResidual/sum(nResidual);
-    bar(x*10,[nAll' nAfter' nBefore' nResidual'])
-    legend('All Humps','After EM','Before EM - Mode 2 Only','Residual')
-    title('Peak-Peak Period')
-    ylabel('Relative Frequency')
-    xlabel('Time, milliseconds')
+    plotme(g).timecounts=[nAll' nAfter' nBefore' nResidual'];
+    plotme(g).rawTimes=tvals(fc3);
+    plotme(g).timeBins=x*10;
+    if doplots
+        subplot(2,1,2)
+        bar(x*10,[nAll' nAfter' nBefore' nResidual'])
+        legend('All Humps','After EM','Before EM - Mode 2 Only','Residual')
+        title('Peak-Peak Period')
+        ylabel('Relative Frequency')
+        xlabel('Time, milliseconds')
+    end
+    for k=1:lgHump
+        gHump(k).blame=cats(k);
+    end
+    attributedHumps{k}=gHump;
 end
+
+save(['./Data/',name,'humps.mat'],'attributedHumps','plotme')
 
 
 

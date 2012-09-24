@@ -11,7 +11,6 @@ global kp measuredVals measuredTime x0 fJ getAccel desiredVals desiredTime
 
 set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
 
-
 %Do the extraction on trials where forces were on
 lT=length(trials);
 for k=1:lT
@@ -20,6 +19,7 @@ for k=1:lT
     inds=trials(k).first:trials(k).last;
 
     x0=trials(k).x0;
+    target=trials(k).target;
 
     measuredVals=[trials(k).q(inds,:) trials(k).qdot(inds,:) trials(k).qddot(inds,:) trials(k).force(inds,:)];
     measuredTime=trials(k).time(inds)-trials(k).time(trials(k).first);
@@ -27,6 +27,7 @@ for k=1:lT
     if debug
         figure(k)
         clf
+        subplot(8,1,1:7)
         hold on
     end
     for g=1:length(gains)
@@ -59,7 +60,7 @@ for k=1:lT
 
             if debug
                 [x,x1]=fkin(X(kk,1:2)');
-                plot([x0(1),x1(1),x(1)],[x0(2),x1(2),x(2)],'g')
+                %plot([x0(1),x1(1),x(1)],[x0(2),x1(2),x(2)],'g')
             end
         end
 
@@ -70,7 +71,13 @@ for k=1:lT
                 recovered(kk,:)=fkin(X(kk,1:2));
             end
 
-            plot(desired.xDesired(:,1),desired.xDesired(:,2),'bx-',trials(k).pos(:,1),trials(k).pos(:,2),'ro-',recovered(:,1),recovered(:,2),'k.')
+            %plot(desired.xDesired(:,1),desired.xDesired(:,2),'bx-',trials(k).pos(:,1),trials(k).pos(:,2),'ro-',recovered(:,1),recovered(:,2),'k.',[target(1) trials(k).pos(trials(k).first,1)],[target(2) trials(k).pos(trials(k).first,2)],'m')
+            plot(desired.xDesired(:,1),desired.xDesired(:,2),'bx-',trials(k).pos(:,1),trials(k).pos(:,2),'ro-',[target(1) trials(k).pos(trials(k).first,1)],[target(2) trials(k).pos(trials(k).first,2)],'m')
+            subplot(8,1,8)
+            desired.KpGain(kk)
+            plot(T,desired.KpGain)
+            xlabel('Time, seconds')
+            ylabel('Scalar Gain on Shadmehr & Mussa-Ivaldi Kp')
         end
 
         desiredTrajectories(k,g)=desired;

@@ -1,153 +1,76 @@
-function Kpgain=rootfindKp(name)
+clc
+clear all
+name='2';
+close all
 
 load(['./Data/',name,'.mat']);
-load(['./Data/',name,'reaches.mat']);
-global paragon compmin compmax q0 v0
-global kd kp0 l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha pvaf pvafTime
+global kp measuredVals measuredTime x0
 
-% Common bullshit to anything that uses my ODEs
-kp0=[15 6; 6 16];
-kd=[2.3 .09; .09 2.4];
+set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
 
-[l1, l2, shoulder]=getSubjectParams(name);
-%%assume two link
-lc1=.165*l1/.33;
-lc2=0.19*l2/.34;
-m1=1.93;
-m2=1.52;
-%model using parameters from shadmehr and mussa-ivaldi
-I1=.0141;
-I2=.0188;
 
-%Shoulder location
-x0=reachDirection(2).origin+shoulder';
-%Consequence: Workspace is a circle with center at 0, radius .67
+%Do the extraction on trials where forces were on
+lT=length(trials);
 
-%Dynamic code modification requires random function names
-hash=floor(rand(5,1)*20+2);
-hash=char('A'+hash)';
-aName=['getAlpha',hash];
-fName=['fJ',hash];
-%Command torques based on Jacobian, so build one
-[fJ,Jt, getAlpha, getAccel]=makeJacobians(aName,fName);
-pause(.1)
-disp('Jacobians complete.')
-fJ=str2func(fName);
-feval(fName,[5 6])
-getAlpha=str2func(aName);
-feval(aName,[1 2]',[3 4]',[5 6]')
+smKp=[15 6; 6 16];
 
-%Actually do the optimization
-Kpgain=-1*ones(length(trials),1);
-for k=1:811
-    if trials(k).curlMag~=0
-        k
-        pvaf=[trials(k).pos' trials(k).vel' trials(k).accel' trials(k).force'];
-        pvafTime=trials(k).time'-trials(k).time(1);
-        paragon=reachDirection(trials(k).targetCat);
-        outcome=findKp(k)
-        Kpgain(k)=outcome;
-    end
-end
-f=find(Kpgain>=0);
-Kpgain=[f Kpgain(f)];
+recordedbests=zeros(45,1);
 
-function out=findKp(fignum)
-global paragon kp0 kp fJ pvaf pvafTime
-figure(fignum)
-clf
-hold on
+for k=1:45 %lT
+    k/lT
 
-%Get all the maxima and minima from the speed profile
-speed2=sum(pvaf(:,3:4).^2,2); %skipping the square root adds speed
-[vals,maxes]=findpeaks(speed2);
-[vals,mins]=findpeaks(1./speed2);
-plot(pvaf(maxes,1),pvaf(maxes,2),'mx')
-plot(pvaf(mins,1),pvaf(mins,2),'rx')
-plot(paragon.target(1),paragon.target(2),'ko')
+    inds=trials(k).first:trials(k).last;
+    measuredTime=trials(k).time(inds)-trials(k).time(trials(k).first);
 
-%Find the longest "submovement," which should almost always correspond to the initial one.
-lengths=zeros(length(mins)-1,1);
-for k=1:length(mins)-1
-    lengths(k)=sum(speed2(mins(k):mins(k+1)));
-end
-[val,starti]=max(lengths);
-starti=mins(starti);
-plot(pvaf(starti,1),pvaf(starti,2),'ro')
-plot([paragon.target(1) pvaf(starti,1)],[paragon.target(2) pvaf(starti,2)],'m-')
-endi=maxes(find(maxes>starti,1,'first'));
-endi=ceil((endi+starti)/2);
-range=starti:endi;
-
-plot(pvaf(:,1),pvaf(:,2),'k')
-
-p0=pvaf(starti,1:2)';
-q0=ikin(p0);
-v0=pvaf(starti,3:4)';
-qd0=fJ(q0)\v0;
-M=paragon.target-p0;
-unitparallel=M/norm(M);
-unitperp=[unitparallel(2) -unitparallel(1)];
-MdM=dot(M,M);
-
-tic
-tics=[toc];
-%use the secant method to find a reasonable solution for kp IF one exists
-iter=0;
-xn1=0;
-fn1=0;
-nextgain=1;
-%while ((nextgain>0)&&(nextgain<10)&&(iter<20))||(iter<3)
-while iter<20
-    switch iter
-        case 0
-            gain=.5;
-        case 1
-            gain=1.5;
-        otherwise
-            gain=nextgain;
-    end
-            
-    iter=iter+1;
-    kp=kp0*gain;
-
-    [T,X]=ode45(@armdynamics_inverted,pvafTime(starti):.01:pvafTime(endi),[q0;qd0]);
-
-    P=zeros(2,length(T));
-    perpDist=zeros(1,length(T));
-    for k=1:length(T)
-    %for k=length(T)
-        P(:,k)=fkin(X(k,1:2)')';
-        comp=dot(M,(P(:,k)-p0))/MdM;
-        perp=P(:,k)-(p0+M*comp);
-        %plot([P(1,k) (p0(1)+M(1)*comp)],[P(2,k) (p0(2)+M(2)*comp)],'r')
-        perpDist(k)=sign(dot(unitperp,perp))*norm(perp);
-        if isnan(perpDist(k))
-            break
-        end
-    end
-
-    cost=mean(perpDist);
-    %cost=perpDist(end);
-    xn2=xn1;
-    fn2=fn1;
-    xn1=gain;
-    fn1=cost;
-    nextgain=xn1-fn1*(xn1-xn2)/(fn1-fn2);
-    if nextgain<.5
-        nextgain=.5;
-    elseif nextgain>20
-        nextgain=20;
-    end
+    measuredVals=[trials(k).q(inds,:) trials(k).qdot(inds,:) trials(k).qddot(inds,:) trials(k).force(inds,:)];
     
-    plot(P(1,:),P(2,:),'b')
-    text(P(1,end),P(2,end),[num2str(gain),'->',num2str(cost)]);
-    tics(end+1)=toc;
+    x0=trials(k).x0;
+    
+    p0=params.origin;
+    target=trials(k).target;
+    M=target'-p0;
+    unitparallel=M/norm(M);
+    unitperp=[unitparallel(2) -unitparallel(1)];
+    MdM=dot(M,M);
+
+    dist=[0; cumsum(sqrt(sum((trials(k).pos(inds(2:end),:)-trials(k).pos(inds(1:end-1),:)).^2,2)))];
+    FD=find(dist<.015);
+    
+    figure(trials(k).targetCat)
+    hold on
+    plot(p0(1),p0(2),'rx',target(1),target(2),'kx',[p0(1) target(1)],[p0(2) target(2)],'m-')
+
+    gains=logspace(log10(.8),log10(5),10);
+    costs=gains;
+    for kk=1:10
+        kp=gains(kk)*smKp;
+
+        warning off all
+        [T,X]=ode45(@armdynamics_inverted,measuredTime,[trials(k).q(inds(1),:)';trials(k).qdot(inds(1),:)']);
+        warning on all
+
+        perpDist=T;
+        qd=X(:,1:2);
+        xd=qd;
+
+        for kkk=1:length(T)
+            xd(kkk,:)=fkin(qd(kkk,:));
+            comp=dot(M,(xd(kkk,:)-p0))/MdM;
+            perp=xd(kkk,:)-(x0+M*comp);
+            perpDist(kkk)=sign(dot(unitperp,perp))*norm(perp);
+        end
+
+        costs(kk)=mean(perpDist(FD));
+        poses{kk}=xd;
+    end
+    [v,i]=min(costs);
+    plot(poses{i}(:,1),poses{i}(:,2))
+    recordedbests(k)=gains(i);
 end
-axis equal
-mean(diff(tics))
-out=gain;
-
-
+figure(1)
+hist(recordedbests,gains)
+ylabel('Absolute Frequency')
+xlabel('Kp Gain')
+title('Frequency of a given Kp Gain outperforming the Rest')
 
 

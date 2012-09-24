@@ -1,6 +1,6 @@
 function extractModes(name,useEMD)
 if nargin<2
-    useEMD=0;
+    useEMD=1;
 end
 
 disp(['Extracting Modes for Subject ',name])
@@ -29,7 +29,7 @@ for k=1:se(1)
                 modeMatrix{k,g}=0;
             end
         else
-            modeMatrix{k,g}=[zeros(size(speed)) 
+            %modeMatrix{k,g}=[zeros(size(speed)) 
         end
     end
 end
