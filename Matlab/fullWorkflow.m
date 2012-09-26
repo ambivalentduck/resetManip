@@ -52,7 +52,16 @@ for k=n
     % We can now load "modeMatrix" which contains a trials-by-gains cell array
     % containing arrays of speed components.
 
-
+    %% Attribute the humps found via EMD
+    % We use EM and save some extra data for plotting. Now admittedly messy
+    % and not general.
+    if ~exist(['./Data/',name,'humps.mat'],'file')
+        attributeExtractedHumps(name);
+    elseif mfiles(strcmp({mfiles.name},'attributeExtractedHumps.m')).datenum > datafiles(strcmp({datafiles.name},[name,'humps.mat'])).datenum
+        attributeExtractedHumps(name);
+    end
+    % We can now load "modeMatrix" which contains a trials-by-gains cell array
+    % containing arrays of speed components.
     %%
 
 end

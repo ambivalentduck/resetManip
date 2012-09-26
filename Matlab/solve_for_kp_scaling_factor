@@ -1,16 +1,71 @@
 clc
 clear all
 
-syms jti11 jti12 jti21 jti22 vq1 vq2 vkp1 vkp2 ratio x
+syms jti11 jti12 jti21 jti22 vT1 vT2 vKp1 vKp2 vd1 vd2 ratio x x2 real
 
 Jti=[jti11 jti12;jti21 jti22];
-vq=[vq1;vq2];
-vkp=[vkp1;vkp2];
-Tr=vq-x*vkp;
-Fr=Jti*Tr;
+vT=[vT1;vT2];
+vKp=[vKp1;vKp2];
+T=vT-x*vKp;
+F=Jti*T;
 
-solve(Fr(1)-ratio*Fr(2),x)
+solve(F(1)-ratio*F(2),x)
+% x=(jti11*vT1+jti12*vT2-ratio*jti21*vT1-ratio*jti22*vT2)/(jti11*vKp1+jti12*vKp2-ratio*jti21*vKp1-ratio*jti22*vKp2)
 
-% x=(jti11*vq1+jti12*vq2-ratio*jti21*vq1-ratio*jti22*vq2)/((jti11-ratio*jti21)*vkp1+jti12*vkp2-ratio*jti22*vkp2)
- 
+T2=vT-x2*vKp;
+F2=Jti*T2
+x21=simple(solve(F(1)/sqrt(F(1)^2+F(2)^2)+F2(1)/sqrt(F2(1)^2+F2(2)^2),x2));
+x21
+x22=simple(solve(F(2)/sqrt(F(1)^2+F(2)^2)+F2(2)/sqrt(F2(1)^2+F2(2)^2),x2));
+x22
+x21-x22
+% x2=-((jti11*vT2*jti22*vKp1+2*jti11*vT1*vKp1*jti21+jti11*vKp2*jti22*vT1+jti21*jti12*vT2*vKp1+jti21*jti12*vKp2*vT1+2*jti22*vKp2*jti12*vT2)*x-2*jti21*jti12*vT2*vT1-2*jti11*vT2*jti22*vT1-2*jti11*jti21*vT1^2-2*jti22*jti12*vT2^2)/((-2*jti11*vKp1^2*jti21-2*jti22*vKp2^2*jti12-2*jti21*jti12*vKp2*vKp1-2*jti11*jti22*vKp2*vKp1)*x+jti11*vT2*jti22*vKp1+2*jti11*vT1*vKp1*jti21+jti11*vKp2*jti22*vT1+jti21*jti12*vT2*vKp1+jti21*jti12*vKp2*vT1+2*jti22*vKp2*jti12*vT2);
+
+
+x2=simple(solve(1-(F(1)*vd1+F(2)*vd2)/(sqrt(F(1)^2+F(2)^2)*sqrt(vd1^2+vd2^2)),x));
+x2
+xi=inline(vectorize(x2))
+f=[1 2;3 4]*([7;8]-xi(1,2,3,4,5,6,7,8,9,10)*[5;6])
+dot(f,[9;10])/(norm(f)*norm([9;10]))
+fu=simple(solve(1+(F(1)*vd1+F(2)*vd2)/(sqrt(F(1)^2+F(2)^2)*sqrt(vd1^2+vd2^2)),x));
+fu
+x2-fu
+
+clear all
+syms a1 a2 b1 b2 x v1 v2 real
+
+F=[a1;a2]+x*[b1;b2];
+x_=simple(solve(1-(F(1)*v1+F(2)*v2)/(sqrt(F(1)^2+F(2)^2)*sqrt(v1^2+v2^2))))
+xs_=inline(vectorize(x_))
+sum=0;
+for k=1:10000
+    A=rand(2,1);
+    B=rand(2,1);
+    V=rand(2,1);
+    X=xs_(A(1),A(2),B(1),B(2),V(1),V(2));
+    f=A+X*B;
+    sum=sum+dot(f,V)/(norm(V)*norm(f));
+end
+sum
+
+figure(1)
+clf
+for K=1:4
+for KK=1:4
+subplot(4,4,K+(KK-1)*4)
+hold on
+V=randn(2,1);
+nV=norm(V);
+A=randn(2,1);
+B=randn(2,1);
+    
+for k=-20:0.1:20
+    F=A+k*B;
+    plot(k,dot(F,V)/(norm(F)*nV),'r.')
+end
+end
+end
+suplabel('Scalar Kp Gain','x')
+suplabel('Alignment with the Rhumb Line, Cos(error angle), -1 means endpoint force points backwards','y')
+suplabel('Why I was doomed to fail determining the correct scalar Kp gain to always move forward along the rhumb line.','t')
 

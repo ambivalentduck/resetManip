@@ -1,0 +1,12 @@
+*~
+*#
+makefile
+Makefile
+moc*
+*.o
+*.mat
+manipulandumDisplay
+fJ.m
+getAlpha.m
+*.png
+*.jpg

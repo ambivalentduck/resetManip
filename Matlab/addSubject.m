@@ -34,8 +34,11 @@ set2dGlobals(l1, l2, origin, shoulder)
 x0_=x0;
 
 f=find(input(:,5)>0);
+f=[10; f]; %Add a sanity check: unperturbed movements should extract perfectly as themselves.
 
 success=zeros(45,5);
+
+mass=[0.6504,0.1906;0.1924,0.6848];
 
 for k=1:min(45,input(end,1))
     K=f(k);
@@ -43,13 +46,14 @@ for k=1:min(45,input(end,1))
     trials(k).curlMag=input(K,2); %More informative than just hasKick() since this helps with later sorting
     trials(k).time=linspace(output(fo(1),2),output(fo(end),2),length(fo))';
     trials(k).pos=output(fo,[3 4]);
-    gT=gradient(trials(k).time);
+    gT=.01; %gradient(trials(k).time);
     trials(k).vel=[gradient(trials(k).pos(:,1))./gT gradient(trials(k).pos(:,2))./gT];
     %trials(k).vel=output(fo,[5 6]); %Turns out to be wrong because it came from a predictor
     trials(k).accel=[gradient(trials(k).vel(:,1))./gT gradient(trials(k).vel(:,2))./gT];
     %trials(k).accel=output(fo,[7 8]);
-    trials(k).force=output(fo,[9 10]);
-
+    trials(k).rawforce=output(fo,[9 10]); %Since the force on the subject is opposite the force on the handle.
+    trials(k).force=trials(k).rawforce-(mass*trials(k).accel')'; %Remove SOME of the impact of the handle having mass.
+    
     trials(k).dist=[0; cumsum(sqrt(sum((trials(k).pos(2:end,:)-trials(k).pos(1:end-1,:)).^2,2)))];
     trials(k).originDist=sqrt(sum((ones(length(trials(k).time),1)*origin-trials(k).pos).^2,2));
     trials(k).speed=sqrt(sum(trials(k).vel.^2,2));
@@ -94,11 +98,10 @@ for k=1:min(45,input(end,1))
     trials(k).targetCat=categories(K);
 
     legal=find((trials(k).originDist<.02));
-    legal=legal(legal<40);
+    legal=legal(legal<legal(1)+40);
     [trash,minV]=min(trials(k).speed(legal));
     trials(k).first=legal(minV);
     trials(k).last=length(trials(k).time);
-
     success(k,5)=trials(k).first;
 end
 
