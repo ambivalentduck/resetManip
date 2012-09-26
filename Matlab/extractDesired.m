@@ -15,7 +15,7 @@ set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
 %Do the extraction on trials where forces were on
 lT=length(trials);
 for k=1:lT
-    k/lT
+    k/lT %#ok<NOPRT>
 
     inds=trials(k).first:trials(k).last;
 
@@ -73,7 +73,7 @@ for k=1:lT
             plot(desired.xDesired(:,1),desired.xDesired(:,2),'bx-',trials(k).pos(:,1),trials(k).pos(:,2),'ro-',recovered(:,1),recovered(:,2),'k.')
         end
 
-        desiredTrajectories(k,g)=desired;
+        desiredTrajectories(k,g)=desired; %#ok<NASGU>
     end
 
 end

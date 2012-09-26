@@ -18,12 +18,14 @@ for k=n
             elseif mfiles(strcmp({mfiles.name},'addSubject.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
                 addSubject(name);
             end
-        case 'pritesh'
-            addSubjectPritesh(name);
+        case 'r2_'
+            if ~exist(['./Data/',name,'.mat'],'file')
+                addSubjectR2(name);
+            elseif mfiles(strcmp({mfiles.name},'addSubjectR2.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
+                addSubjectR2(name);
+            end
         case 'felix'
             addSubjectFelix(name);
-        case '3d'
-            addSubject3d(name);
     end
 
     % We can now load "trials" containing kinematics for each reach that requires inverse dynamics

@@ -149,7 +149,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
                 peakbegin(k)=(pbBefore+pbAfter)/(before+after);
                 beginbegin(k)=(bbBefore+bbAfter)/(before+after);
             else
-                peakpeak(k)=0;
+                peakpeak(k)=0; %Needs to be fixed.
                 peakbegin(k)=0;
                 beginbegin(k)=0;
             end
