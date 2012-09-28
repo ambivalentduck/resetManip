@@ -126,11 +126,29 @@ for g=1:smM(2) %For each gain, make attributions across reaches
             %             fc3(postc3)
             %             disp('------')
 
-            if (fc3(prec3)<k)&&(reaches(fc3(prec3))==reaches(k))
-                before=1;
-                ppBefore=gHump(fc3(prec3)).peak-gHump(k).peak;
-                pbBefore=gHump(fc3(prec3)).begin-gHump(k).peak;
-                bbBefore=gHump(fc3(prec3)).begin-gHump(k).begin;
+            %             if (fc3(prec3)<k)&&(reaches(fc3(prec3))==reaches(k))
+            %                 before=1;
+            %                 ppBefore=gHump(fc3(prec3)).peak-gHump(k).peak;
+            %                 pbBefore=gHump(fc3(prec3)).begin-gHump(k).peak;
+            %                 bbBefore=gHump(fc3(prec3)).begin-gHump(k).begin;
+            %             else
+            %                 before=0;
+            %                 ppBefore=0;
+            %                 pbBefore=0;
+            %                 bbBefore=0;
+            %             end
+            if k>1
+                if (reaches(k-1)==reaches(k))
+                    before=1;
+                    ppBefore=gHump(k-1).peak-gHump(k).peak;
+                    pbBefore=gHump(k-1).begin-gHump(k).peak;
+                    bbBefore=gHump(k-1).begin-gHump(k).begin;
+                else
+                    before=0;
+                    ppBefore=0;
+                    pbBefore=0;
+                    bbBefore=0;
+                end
             else
                 before=0;
                 ppBefore=0;
@@ -209,7 +227,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nResidual=nResidual/sum(nResidual);
     plotme(g).errorcounts=[nAll' nAfter' nBefore' nResidual'];
     plotme(g).rawErrors=errors;
-    plotme(g).errorBins=x*10;
+    plotme(g).errorBins=x*100;
     if doplots
         figure(g)
         clf
@@ -220,7 +238,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
         ylabel('Relative Frequency')
         xlabel('Time, milliseconds')
     end
-    x=-60:6:0;
+    x=-30:3:0;
     [nAfter]=hist(tvals(fc3),x);
     nAfter=nAfter/sum(nAfter);
     nAll=hist(tvals,x);
@@ -231,7 +249,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nResidual=nResidual/sum(nResidual);
     plotme(g).timecounts=[nAll' nAfter' nBefore' nResidual'];
     plotme(g).rawTimes=tvals(fc3);
-    plotme(g).timeBins=x*10;
+    plotme(g).timeBins=x*100;
     if doplots
         subplot(2,1,2)
         bar(x*10,[nAll' nAfter' nBefore' nResidual'])

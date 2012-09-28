@@ -66,6 +66,8 @@ for k=n
 
 end
 
+plotHumps(n,prefix)
+
 disp('Done')
 
 delete('fJ*') %Clean up any and all extra copies of these floating around
