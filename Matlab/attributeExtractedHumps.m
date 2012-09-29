@@ -51,7 +51,7 @@ for k=1:smM(1)
                 hump(humps).peakError=hump(humps).peakError+mins(kk)-1;
                 hump(humps).errorPPDiff=hump(humps).peakError-hump(humps).peak;
                 hump(humps).errorPBDiff=hump(humps).peakError-hump(humps).begin;
-                hump(humps).raw=dat(mins(kk):mins(kk)+1);
+                hump(humps).raw=dat(mins(kk):mins(kk+1));
                 hump(humps).mode=mode;
                 hump(humps).reach=k;
                 hump(humps).gain=g;
@@ -227,7 +227,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nResidual=nResidual/sum(nResidual);
     plotme(g).errorcounts=[nAll' nAfter' nBefore' nResidual'];
     plotme(g).rawErrors=errors;
-    plotme(g).errorBins=x*100;
+    plotme(g).errorBins=x*10;
     if doplots
         figure(g)
         clf
@@ -249,7 +249,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     nResidual=nResidual/sum(nResidual);
     plotme(g).timecounts=[nAll' nAfter' nBefore' nResidual'];
     plotme(g).rawTimes=tvals(fc3);
-    plotme(g).timeBins=x*100;
+    plotme(g).timeBins=x*10;
     if doplots
         subplot(2,1,2)
         bar(x*10,[nAll' nAfter' nBefore' nResidual'])
@@ -261,7 +261,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
     for k=1:lgHump
         gHump(k).blame=cats(k);
     end
-    attributedHumps{k}=gHump;
+    attributedHumps{g}=gHump;
 end
 
 save(['./Data/',name,'humps.mat'],'attributedHumps','plotme')

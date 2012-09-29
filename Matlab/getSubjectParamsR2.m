@@ -13,4 +13,20 @@ switch num
         l1=.3;
         l2=.34;
         shoulder=[0 .54];
+    case 'r2_4'
+        l1=.28;
+        l2=.37;
+        shoulder=[-.03 .53];
+    case 'r2_5'
+        l1=.32;
+        l2=.34;
+        shoulder=[0 .53];
+    case 'r2_6'
+        l1=.32;
+        l2=.32;
+        shoulder=[0 .53];
+    case 'r2_7'
+        l1=.24;
+        l2=.30;
+        shoulder=[0 .45];
 end
