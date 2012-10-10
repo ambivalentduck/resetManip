@@ -2,8 +2,8 @@ clc
 clear all
 close all
 
-load ./Data/r2_1.mat
-load ./Data/r2_1extracted.mat
+load ./Data/r2_7.mat
+load ./Data/r2_7extracted.mat
 
 for k=1:length(trials)
     figure(k)
