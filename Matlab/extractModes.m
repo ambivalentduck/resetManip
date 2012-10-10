@@ -23,13 +23,15 @@ for k=1:se(1)
         speed=sqrt(sum(desiredTrajectories(k,g).vDesired.^2,2));
         if useEMD
             try
-                temp=EMD(speed,4,0);
+                %warning off all
+                temp=EMD(speed,4,0,1);
+                %warning on all
                 modeMatrix{k,g}=[temp.c];
             catch
                 modeMatrix{k,g}=0;
             end
         else
-            %modeMatrix{k,g}=[zeros(size(speed)) 
+            %modeMatrix{k,g}=[zeros(size(speed))
         end
     end
 end

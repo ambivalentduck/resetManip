@@ -1,4 +1,4 @@
-function cycle=EMD(in,nlim,plots)
+function cycle=EMD(in,nlim,plots,siftsPastCriteria)
 %Decompose a signal into IMFS. r is the residual, c is the imf for a given
 %cycle.  If you hate structure arrays, the syntax to get matrices instead is:
 %r=[cycle.r];
@@ -14,6 +14,10 @@ end
 
 if nargin<3
     plots=0;
+end
+
+if nargin<4
+    siftsPastCriteria=6;
 end
 
 cycles=1;
@@ -48,7 +52,7 @@ while (extrema>0)&&(cmag>(fmag/1000))&&(cycles<nlim) %There are still desired IM
     S=0;
     sifts=0;
     tic;
-    while S<6 %We're still sifting the current IMF
+    while S<siftsPastCriteria %We're still sifting the current IMF
         sifts=sifts+1;
         if toc>2
             error('This isn''t converging any year soon.')
@@ -73,7 +77,6 @@ while (extrema>0)&&(cmag>(fmag/1000))&&(cycles<nlim) %There are still desired IM
             xings=xing;
         end
     end
-
     cycle(cycles).c=h;
     cycle(cycles).r=cycle(cycles-1).r-h;
     cmag=sum(cycle(cycles).r.^2);
