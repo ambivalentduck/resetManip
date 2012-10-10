@@ -10,7 +10,7 @@ for k=n
     % The prefix-specific loader should sanity check that we do not already have imaginary state.
     mfiles=dir('.');
     datafiles=dir('./Data');
-    
+
     switch prefix
         case ''
             if ~exist(['./Data/',name,'.mat'],'file')
@@ -23,6 +23,12 @@ for k=n
                 addSubjectR2(name);
             elseif mfiles(strcmp({mfiles.name},'addSubjectR2.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
                 addSubjectR2(name);
+            end
+        case 'r3_'
+            if ~exist(['./Data/',name,'.mat'],'file')
+                addSubjectR3(name);
+            elseif mfiles(strcmp({mfiles.name},'addSubjectR2.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
+                addSubjectR3(name);
             end
         case 'felix'
             addSubjectFelix(name);

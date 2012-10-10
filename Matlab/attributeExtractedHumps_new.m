@@ -60,6 +60,8 @@ for k=1:smM(1)
     end
 end
 
+winners=[0 0 0];
+
 %% Step2, assign them reasons
 for g=1:smM(2) %For each gain, make attributions across reaches
     gHump=hump([hump.gain]==g);
@@ -90,7 +92,13 @@ for g=1:smM(2) %For each gain, make attributions across reaches
 
     reaches=[gHump.reach];
 
-    while (sum(cats~=oldcats)>10)&&(ITER<1000)
+    gHump(1).first=1;
+    for k=2:length(gHump)
+        gHump(k).first=(reaches(k-1)~=reaches(k));
+    end
+    cats([gHump.first]==1)=1;
+
+    while (sum(cats~=oldcats)>5)&&(ITER<1000)
         ITER=ITER+1 %#ok<NOPRT>
         oldcats=cats;
 
@@ -109,104 +117,45 @@ for g=1:smM(2) %For each gain, make attributions across reaches
         %use the one with the least variance. Pray it's always the same for the paper's sake
         fc3=find(cats==3);
         lfc3=length(fc3);
-        prec3=1;
-        postc3=1;
+
         for k=1:lgHump
-            if prec3<lfc3
-                if (k-1)==fc3(prec3+1)
-                    prec3=prec3+1;
-                end
-            end
-            if (k==fc3(postc3))&&(postc3<lfc3)
-                postc3=postc3+1;
-            end
-
-            %             fc3(prec3)
-            %             k
-            %             fc3(postc3)
-            %             disp('------')
-
-            if (fc3(prec3)<k)&&(reaches(fc3(prec3))==reaches(k))
-                before=1;
-                ppBefore=gHump(fc3(prec3)).peak-gHump(k).peak;
-                pbBefore=gHump(fc3(prec3)).begin-gHump(k).peak;
-                bbBefore=gHump(fc3(prec3)).begin-gHump(k).begin;
-            else
-                before=0;
-                ppBefore=0;
-                pbBefore=0;
-                bbBefore=0;
-            end
-            %             if k>1
-            %                 if (reaches(k-1)==reaches(k))
-            %                     before=1;
-            %                     ppBefore=gHump(k-1).peak-gHump(k).peak;
-            %                     pbBefore=gHump(k-1).begin-gHump(k).peak;
-            %                     bbBefore=gHump(k-1).begin-gHump(k).begin;
-            %                 else
-            %                     before=0;
-            %                     ppBefore=0;
-            %                     pbBefore=0;
-            %                     bbBefore=0;
-            %                 end
-            %             else
-            %                 before=0;
-            %                 ppBefore=0;
-            %                 pbBefore=0;
-            %                 bbBefore=0;
-            %             end
-            if (fc3(postc3)>k)&&(reaches(fc3(postc3))==reaches(k))
-                after=1;
-                ppAfter=gHump(k).peak-gHump(fc3(postc3)).peak;
-                pbAfter=gHump(k).peak-gHump(fc3(postc3)).begin;
-                bbAfter=gHump(k).begin-gHump(fc3(postc3)).begin;
-            else
-                after=0;
-                ppAfter=0;
-                pbAfter=0;
-                bbAfter=0;
-            end
-            if (before||after)
-                peakpeak(k)=(ppBefore+ppAfter)/(before+after);
-                peakbegin(k)=(pbBefore+pbAfter)/(before+after);
-                beginbegin(k)=(bbBefore+bbAfter)/(before+after);
-            else
-                peakpeak(k)=0; %Needs to be fixed.
-                peakbegin(k)=0;
-                beginbegin(k)=0;
+            if ~gHump(k).first
+                peakpeak(k)=gHump(k).peak-gHump(k-1).peak;
+                peakbegin(k)=gHump(k).peak-gHump(k-1).begin;
+                beginbegin(k)=gHump(k).begin-gHump(k-1).begin;
             end
         end
         %Maximize by assigning to each group according to maximum likelihood.
-        stds_time=[std(peakpeak(fc3)) std(peakbegin(fc3)) std(beginbegin(fc3))];
+        nltimes=[peakpeak(fc3)' peakbegin(fc3)' beginbegin(fc3)'];
+        times=log(nltimes);
+        alltimes=[peakpeak' peakbegin' beginbegin'];
+        times(times<0)=-1; %Punishing, but not game-breaking
+        stds_time=std(times);
         [trash,i]=min(stds_time);
+        %i=1;
         switch(i)
             case 1
                 disp('Peak-Peak wins for time')
-                mean_time=mean(peakpeak(fc3));
-                std_time=stds_time(1);
-                tvals=peakpeak;
+                winners(1)=winners(1)+1;
             case 2
-                disp('Peak-Peak wins for time')
-                mean_time=mean(peakbegin(fc3));
-                std_time=stds_time(2);
-                tvals=peakbegin;
+                disp('Peak-Begin wins for time')
+                winners(2)=winners(2)+1;
             case 3
-                disp('Peak-Peak wins for time')
-                mean_time=mean(beginbegin(fc3));
-                std_time=stds_time(3);
-                tvals=beginbegin;
+                disp('Begin-Begin wins for time')
+                winners(3)=winners(3)+1;
         end
-        p_time=(1/(std_time*sqrt2pi))*exp(-.5*((mean_time-tvals)/std_time).^2);
+        tvals=alltimes(:,i);
+        mean_time=mean(times(:,i));
+        std_time=stds_time(i);
+        
+        
+        p_time=(1/(std_time*sqrt2pi))./tvals.*exp(-.5*((mean_time-log(tvals))/std_time).^2);
 
         %         p_time=p_time/max(p_time);
         %         p_error=p_error/max(p_error);
 
-        p_null=(1-p_error).*(1-p_time);
-        if ITER>15000
-            likelihoods=[p_null;p_error;p_time];
-        else
-            likelihoods=[0*p_null;p_error;p_time];
-        end
+        %p_null=(1-p_error).*(1-p_time);
+        likelihoods=[[gHump.first];p_error;p_time'];
         [trash,cats]=max(likelihoods);
         sum(cats==1)
         sum(cats==2)
@@ -238,7 +187,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
         ylabel('Relative Frequency')
         xlabel('Time, milliseconds')
     end
-    x=-30:3:0;
+    x=0:3:30;
     [nAfter]=hist(tvals(fc3),x);
     nAfter=nAfter/sum(nAfter);
     nAll=hist(tvals,x);
@@ -266,7 +215,11 @@ end
 
 save(['./Data/',name,'humps.mat'],'attributedHumps','plotme')
 
-
+if doplots
+    figure(500)
+    clf
+    bar(winners)
+end
 
 
 
