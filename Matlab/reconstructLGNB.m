@@ -1,6 +1,6 @@
 function costs=reconstructLGNB(name,doplots)
 
-doplots=0;
+doplots=1;
 
 load ./Data/1extracted.mat
 load ./Data/1humps.mat
@@ -13,11 +13,12 @@ reaches=[attributedHumps{2}(:).reach];
 
 costs=zeros(length(u),1);
 
-for k=u
+for k=8 %1:10 %u
     f=find(r==k);
     X=zeros(length(desiredTrajectories(k,2).time),length(f));
-    paramMat=zeros(5,length(f));
+    paramMat=zeros(3,length(f));
     kurts=zeros(1,length(f));
+    dists=zeros(1,length(f));
     vals=[0; vecmag(desiredTrajectories(k,2).vDesired(2:end,:)-desiredTrajectories(k,2).vDesired(1:end-1,:))];
     speed=vecmag(desiredTrajectories(k,2).vDesired);
     
@@ -26,6 +27,9 @@ for k=u
     clf
     subplot(2,1,1)
     hold on
+    plot(0,0,'b')
+    plot(0,0,'k')
+    plot(0,0,'g')
     subplot(2,1,2)
     hold on
     end
@@ -36,14 +40,14 @@ for k=u
         begin=attributedHumps{2}(kk).begin;
         finish=attributedHumps{2}(kk).end;
         dist=sum(vals(begin:finish));
-        dur=(finish-begin);
+        dists(kkk)=dist;
         kurt=kurtosis(speed(begin:finish))/2;
         kurts(kkk)=kurt;
         skew=(attributedHumps{:,2}(kk).peak-begin)/(finish-begin)-.5;
         t=begin+1:finish-1;
-        X(begin:finish,kkk)=[0;((dist*dur)./(kurt*sqrt(2*pi)*(t-begin).*(finish-t)).*exp((-.5/(kurt^2))*(log((t-begin)./(finish-t))-skew).^2))';0];
+        X(begin:finish,kkk)=[0;((dist*(finish-begin))./(kurt*sqrt(2*pi)*(t-begin).*(finish-t)).*exp((-.5/(kurt^2))*(log((t-begin)./(finish-t))-skew).^2))';0];
         
-        paramMat(:,kkk)=[begin;finish;dist;dur;skew];
+        paramMat(:,kkk)=[begin;finish;skew];
         
         t=(begin:finish)-1;
         
@@ -69,8 +73,8 @@ for k=u
     A=X\y1;
     B=X\y2;
     
-    kurts=fminunc(@params2humps,kurts);
-    [cost,y1f,y2f]=params2humps(kurts);
+    params=fminunc(@params2humps,[kurts dists]);
+    [cost,y1f,y2f]=params2humps(params);
     costs(k)=cost;
     
     if doplots
@@ -78,10 +82,14 @@ for k=u
     plot(1000*desiredTrajectories(k,2).time,desiredTrajectories(k,2).vDesired(:,1),'b')
     plot(1000*desiredTrajectories(k,2).time,X*A,'k')
     plot(1000*desiredTrajectories(k,2).time,y1f,'g')
+    ylabel('X-Component Velocity, m/s')
+    legend('Measured','Raw Reconstruction','Optimized Reconstruction')
     
     subplot(2,1,2)
     plot(1000*desiredTrajectories(k,2).time,desiredTrajectories(k,2).vDesired(:,2),'b')
     plot(1000*desiredTrajectories(k,2).time,X*B,'k')
     plot(1000*desiredTrajectories(k,2).time,y2f,'g')
+    ylabel('Y-Component Velocity, m/s')
+    xlabel('Time, milliseconds')
     end
 end
