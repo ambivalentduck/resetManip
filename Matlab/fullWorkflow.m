@@ -1,4 +1,4 @@
-function fullWorkflow(n, gains, prefix)
+function fullWorkflow(n, gains, prefix, flag)
 
 % Do the full reset workflow for subjects in the input list
 for k=n
@@ -11,24 +11,36 @@ for k=n
     mfiles=dir('.');
     datafiles=dir('./Data');
 
+    if nargin<4
+        flag=0;
+    else
+        flag=1;
+    end
+
     switch prefix
         case ''
-            if ~exist(['./Data/',name,'.mat'],'file')
+            if (~exist(['./Data/',name,'.mat'],'file'))||flag
                 addSubject(name);
+                flag=1;
             elseif mfiles(strcmp({mfiles.name},'addSubject.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
                 addSubject(name);
+                flag=1;
             end
         case 'r2_'
             if ~exist(['./Data/',name,'.mat'],'file')
                 addSubjectR2(name);
+                flag=1;
             elseif mfiles(strcmp({mfiles.name},'addSubjectR2.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
                 addSubjectR2(name);
+                flag=1;
             end
         case 'r3_'
             if ~exist(['./Data/',name,'.mat'],'file')
                 addSubjectR3(name);
+                flag=1;
             elseif mfiles(strcmp({mfiles.name},'addSubjectR2.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
                 addSubjectR3(name);
+                flag=1;
             end
         case 'felix'
             addSubjectFelix(name);
@@ -38,10 +50,12 @@ for k=n
 
     %% Extract desired trajectories for a set of gains
     % Specify explicitly that gains are cell arrays even if they only have a single member.
-    if ~exist(['./Data/',name,'extracted.mat'],'file')
+    if (~exist(['./Data/',name,'extracted.mat'],'file'))||flag
         extractDesired(name, gains);
+        flag=1;
     elseif mfiles(strcmp({mfiles.name},'extractDesired.m')).datenum > datafiles(strcmp({datafiles.name},[name,'extracted.mat'])).datenum
         extractDesired(name, gains);
+        flag=1;
     end
     % We can now load "desiredTrajectories" which will contain a trials-by-gains structure array containing the extracted desired trajectories.
     % The structure array contains q, q dot, q double dot, time, and forward kinematics to x, v, and a in Cartesian space.
@@ -50,10 +64,12 @@ for k=n
     %% Perform mode extraction on the extracted trajectories
     % Choose EEMD since mode mixing is not an issue, the math is not exotic, and we don't care about frequency.
     % We elect to decompose in Cartesian speed based on evidence showing speed humps as primitives.
-    if ~exist(['./Data/',name,'modes.mat'],'file')
+    if (~exist(['./Data/',name,'modes.mat'],'file'))||flag
         extractModes(name);
+        flag=1;
     elseif mfiles(strcmp({mfiles.name},'extractModes.m')).datenum > datafiles(strcmp({datafiles.name},[name,'modes.mat'])).datenum
         extractModes(name);
+        flag=1;
     end
     % We can now load "modeMatrix" which contains a trials-by-gains cell array
     % containing arrays of speed components.
@@ -61,7 +77,7 @@ for k=n
     %% Attribute the humps found via EMD
     % We use EM and save some extra data for plotting. Now admittedly messy
     % and not general.
-    if ~exist(['./Data/',name,'humps.mat'],'file')
+    if (~exist(['./Data/',name,'humps.mat'],'file'))||flag
         attributeExtractedHumps(name);
     elseif mfiles(strcmp({mfiles.name},'attributeExtractedHumps.m')).datenum > datafiles(strcmp({datafiles.name},[name,'humps.mat'])).datenum
         attributeExtractedHumps(name);
