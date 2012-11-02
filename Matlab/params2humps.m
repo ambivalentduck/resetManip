@@ -1,4 +1,4 @@
-function [out,y1,y2]=params2humps(in)
+function [out,D,X]=params2humps(in)
 
 global y paramMat
 
@@ -19,6 +19,8 @@ B=X\y(:,2);
 
 y1=X*A;
 y2=X*B;
+
+D=[A B];
 
 out=(sum((y(:,1)-y1).^2)+sum((y(:,2)-y2).^2))/((finish-begin)*.01);
 
