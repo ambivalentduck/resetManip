@@ -1,26 +1,32 @@
 clc
 clear all
 
-load ./Data/r2_1.mat
-load ./Data/r2_1extracted.mat
-
 global y paramMat
 
-for RE=4 %1:size(desiredTrajectories,1)
-    figure(RE)
-    clf
+ITS=1;
+figure(99)
+clf
+hold on
 
+for SUBS=1:7
+figure(SUBS)
+clf
+
+load(['./Data/r2_',num2str(SUBS),'.mat']);
+load(['./Data/r2_',num2str(SUBS),'extracted.mat']);
+
+
+for RE=1:size(desiredTrajectories,1)
     t=desiredTrajectories(RE,2).time;
     signal=desiredTrajectories(RE,2).vDesired;
-    %signal=rand(size(
 
     subplot(2,1,1)
-    plot3(t,0*ones(size(t)),signal(:,1));
+    plot3(t,RE*ones(size(t)),signal(:,1));
     hold on
     subplot(2,1,2)
-    plot3(t,0*ones(size(t)),signal(:,2));
-    hold
-    for ITERATIONS=1:10
+    plot3(t,RE*ones(size(t)),signal(:,2));
+    hold on
+    for ITERATIONS=ITS
         y=signal;
         speed=sqrt(sum(y.^2,2));
         vals=[0; vecmag(y(2:end,:)-y(1:end-1,:))];
@@ -34,7 +40,7 @@ for RE=4 %1:size(desiredTrajectories,1)
         IMFs=[temp.c];
         clear hump
         humps=0;
-        for mode=2:3 %Get all of the humps from modes 2 and 3 (which
+        for mode=2:3 %Get all of the humps from modes 2 and 3
             dat=IMFs(:,mode);
             [trash,mins]=findpeaks(-dat);
             if dat(1)<dat(2)
@@ -75,23 +81,47 @@ for RE=4 %1:size(desiredTrajectories,1)
         sort(heights)
         f=find((heights>.05)&(([hump.end]-[hump.begin])>4));
         length(f)
-        signal=X(:,f)*(X(:,f)\y);
+        X=X(:,f);
+        D=(X\y);
+        signal=X*D;
+
         subplot(2,1,1)
-        plot3(t,ITERATIONS*ones(size(t)),signal(:,1));
-        plot3(t(peaks(f)),ITERATIONS*ones(size(peaks(f))),signal(peaks(f),1),'mx');
+        title(num2str(SUBS))
+        depth=RE+(ITERATIONS/(ITS(end)+2));
+        plot3(t,depth*ones(size(t)),signal(:,1));
+        plot3(t(peaks(f)),depth*ones(size(peaks(f))),signal(peaks(f),1),'mx');
         subplot(2,1,2)
-        plot3(t,ITERATIONS*ones(size(t)),signal(:,2));
-        plot3(t(peaks(f)),ITERATIONS*ones(size(peaks(f))),signal(peaks(f),2),'mx');
+        plot3(t,depth*ones(size(t)),signal(:,2));
+        plot3(t(peaks(f)),depth*ones(size(peaks(f))),signal(peaks(f),2),'mx');
         drawnow
     end
-    subplot(2,1,1)
-    xlabel('Time, seconds')
-    ylabel('Iteration')
-    zlabel('Velocity, X-Component, m/s')
-    subplot(2,1,2)
-    xlabel('Time, seconds')
-    ylabel('Iteration')
-    zlabel('Velocity, Y-Component, m/s')
-
+    try
+    hump=hump(f);
+    end
+    [s,i]=sort([hump.begin]);
+    reach(RE).humps=hump(i);
+    reach(RE).directions=D(i,:);
+    reach(RE).X=X(:,i);
 end
 
+subplot(2,1,1)
+xlabel('Time, seconds')
+ylabel('Reach Number')
+zlabel('Velocity, X-Component, m/s')
+subplot(2,1,2)
+xlabel('Time, seconds')
+ylabel('Reach Number')
+zlabel('Velocity, Y-Component, m/s')
+
+figure(99)
+for k=1:length(reach)
+    dir=reach(k).directions(1,:);
+    dir=dir/norm(dir);
+    plot3([0,dir(1)],[SUBS SUBS],[0 dir(2)]);
+end
+end
+axis equal
+xlabel('Robot X, unitless')
+ylabel('Subject number')
+zlabel('Robot Y, unitless')
+title('Direction of first speed lump')
