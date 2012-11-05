@@ -82,6 +82,10 @@ for k=8 %1:10 %u
     plot(1000*desiredTrajectories(k,2).time,desiredTrajectories(k,2).vDesired(:,1),'b')
     plot(1000*desiredTrajectories(k,2).time,X*A,'k')
     plot(1000*desiredTrajectories(k,2).time,y1f,'g')
+    for k=1:length(f)
+        plot(1000*desiredTrajectories(k,2).time',A(k)*X(:,k),'r')
+    end
+    
     ylabel('X-Component Velocity, m/s')
     legend('Measured','Raw Reconstruction','Optimized Reconstruction')
     

@@ -23,6 +23,5 @@ torque_fb=kd*(omega_desired-omega_real)+kp*(theta_desired-theta_real);
 %Update the change in desired state
 dqi=[omega_desired;
     D_expected\(D_real*alpha_real-torque_fb+torque_outside+C_real-C_expected);];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
-%dqi=[omega_real; alpha_real];
 
 end

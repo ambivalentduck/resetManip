@@ -51,8 +51,8 @@ for k=1:min(45,input(end,1))
     %trials(k).vel=output(fo,[5 6]); %Turns out to be wrong because it came from a predictor
     trials(k).accel=[gradient(trials(k).vel(:,1))./gT gradient(trials(k).vel(:,2))./gT];
     %trials(k).accel=output(fo,[7 8]);
-    trials(k).rawforce=-output(fo,[9 10]); %Since the force on the subject is opposite the force on the handle.
-    trials(k).force=trials(k).rawforce; %-(mass*trials(k).accel')'; %Remove SOME of the impact of the handle having mass.
+    trials(k).rawforce=output(fo,[9 10]); %Since the force on the subject is opposite the force on the handle.
+    trials(k).force=[-trials(k).rawforce(:,1) trials(k).rawforce(:,2)]; %-(mass*trials(k).accel')'; %Remove SOME of the impact of the handle having mass.
     
     trials(k).dist=[0; cumsum(sqrt(sum((trials(k).pos(2:end,:)-trials(k).pos(1:end-1,:)).^2,2)))];
     trials(k).originDist=sqrt(sum((ones(length(trials(k).time),1)*origin-trials(k).pos).^2,2));
