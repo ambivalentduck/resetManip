@@ -39,6 +39,7 @@ for k=1:length(a)
     trials(k).vel=[gradient(trials(k).pos(:,1))./gT gradient(trials(k).pos(:,2))./gT];
     trials(k).accel=[gradient(trials(k).vel(:,1))./gT gradient(trials(k).vel(:,2))./gT];
     trials(k).force=output(fo,[9 10]);
+    trials(k).force=[-trials(k).force(:,1) trials(k).force(:,2)];
 
     trials(k).dist=[0; cumsum(sqrt(sum((trials(k).pos(2:end,:)-trials(k).pos(1:end-1,:)).^2,2)))];
     trials(k).speed=sqrt(sum(trials(k).vel.^2,2));
