@@ -1,4 +1,4 @@
-function [mean,std,sem]=weightedAve(x,y,in,scale)
+function [mean,std]=weightedAve(x,y,in,scale)
 mean=in;
 if nargout>1
     std=mean;
@@ -10,7 +10,6 @@ for k=1:length(in)
     mean(k)=sum(y.*dist)/sumd;
     if nargout>1
         std(k)=sqrt(sum(((y-mean(k)).^2).*dist)/sumd);
-        sem(k)=std(k)/(sumd.^2);
     end
 end
 
