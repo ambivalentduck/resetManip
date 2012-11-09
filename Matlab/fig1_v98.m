@@ -114,12 +114,24 @@ suplabel('Perpendicular Dist from Rhumb, m','y')
 
 figure(2)
 clf
+W=.8;
+F=5;
 for S=range
     subplot(2,ceil(length(range)/2),S)
     hold on
     means=SUBDAT(S).means;
     sem=1.96*SUBDAT(S).sem;
-    errorbar(dists(1:end-1),means(1:end-1,1),sem(1:end-1,1),'Color',[0 0 .5])
-    errorbar(dists(1:end-1),means(1:end-1,2),sem(1:end-1,2),'Color',[.5 0 0])
-    errorbar(dists(1:end-1),means(1:end-1,3),sem(1:end-1,3),'Color',[0 .5 0])
+    plot(dists(1:end-1),filter(ones(1,F)/F,1,means(1:end-1,1)),'Color',[0 0 .5])
+    plot(dists(1:end-1),filter(ones(1,F)/F,1,means(1:end-1,2)),'Color',[.5 0 0])
+    plot(dists(1:end-1),filter(ones(1,F)/F,1,means(1:end-1,3)),'Color',[0 .5 0])
+    errorbar(dists(1:end-1),means(1:end-1,1),sem(1:end-1,1),'Color',[W W 1])
+    errorbar(dists(1:end-1),means(1:end-1,2),sem(1:end-1,2),'Color',[1 W W])
+    errorbar(dists(1:end-1),means(1:end-1,3),sem(1:end-1,3),'Color',[W 1 W])
+    plot(dists(1:end-1),filter(ones(1,F)/F,1,means(1:end-1,1)),'Color',[0 0 .5])
+    plot(dists(1:end-1),filter(ones(1,F)/F,1,means(1:end-1,2)),'Color',[.5 0 0])
+    plot(dists(1:end-1),filter(ones(1,F)/F,1,means(1:end-1,3)),'Color',[0 .5 0])
 end
+suplabel('Means +/- 95% Confidence','t');
+suplabel('Normalized Progress, Unitless','x');
+suplabel('Perpendicular Dist from Rhumb, m','y')
+legend('Curl','Extracted','Baseline')

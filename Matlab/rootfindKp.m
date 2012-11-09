@@ -1,6 +1,6 @@
 clc
 clear all
-name='2';
+name='5';
 close all
 
 load(['./Data/',name,'.mat']);
@@ -34,13 +34,13 @@ for k=1:45 %lT
     MdM=dot(M,M);
 
     dist=[0; cumsum(sqrt(sum((trials(k).pos(inds(2:end),:)-trials(k).pos(inds(1:end-1),:)).^2,2)))];
-    FD=find(dist<.015);
+    FD=find(dist<.04);
     
     figure(trials(k).targetCat)
     hold on
     plot(p0(1),p0(2),'rx',target(1),target(2),'kx',[p0(1) target(1)],[p0(2) target(2)],'m-')
 
-    gains=logspace(log10(.8),log10(5),10);
+    gains=logspace(log10(.5),log10(10),20);
     costs=gains;
     for kk=1:10
         kp=gains(kk)*smKp;
@@ -60,7 +60,7 @@ for k=1:45 %lT
             perpDist(kkk)=sign(dot(unitperp,perp))*norm(perp);
         end
 
-        costs(kk)=mean(perpDist(FD));
+        costs(kk)=mean(abs(perpDist(FD)));
         poses{kk}=xd;
     end
     [v,i]=min(costs);
