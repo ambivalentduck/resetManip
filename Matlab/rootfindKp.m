@@ -1,74 +1,101 @@
 clc
 clear all
-name='5';
 close all
 
-load(['./Data/',name,'.mat']);
 global kp measuredVals measuredTime x0
 
-set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
+recordedbests=zeros(7,16);
+
+figure(20)
+clf
+subplot(2,1,1)
+hold on
+
+for S=1:7
+    load(['./Data/r2_',num2str(S),'.mat']);
+    figure(S)
+    clf
+
+    clear plotme
+
+    set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
 
 
-%Do the extraction on trials where forces were on
-lT=length(trials);
+    %Do the extraction on trials where forces were on
+    lT=length(trials);
 
-smKp=[15 6; 6 16];
+    smKp=[15 6; 6 16];
 
-recordedbests=zeros(45,1);
+    for k=1:lT
+        k/lT
 
-for k=1:45 %lT
-    k/lT
+        inds=trials(k).first:trials(k).last;
+        measuredTime=trials(k).time(inds)-trials(k).time(trials(k).first);
 
-    inds=trials(k).first:trials(k).last;
-    measuredTime=trials(k).time(inds)-trials(k).time(trials(k).first);
+        measuredVals=[trials(k).q(inds,:) trials(k).qdot(inds,:) trials(k).qddot(inds,:) trials(k).force(inds,:)];
 
-    measuredVals=[trials(k).q(inds,:) trials(k).qdot(inds,:) trials(k).qddot(inds,:) trials(k).force(inds,:)];
-    
-    x0=trials(k).x0;
-    
-    p0=params.origin;
-    target=trials(k).target;
-    M=target'-p0;
-    unitparallel=M/norm(M);
-    unitperp=[unitparallel(2) -unitparallel(1)];
-    MdM=dot(M,M);
+        x0=trials(k).x0;
 
-    dist=[0; cumsum(sqrt(sum((trials(k).pos(inds(2:end),:)-trials(k).pos(inds(1:end-1),:)).^2,2)))];
-    FD=find(dist<.04);
-    
-    figure(trials(k).targetCat)
-    hold on
-    plot(p0(1),p0(2),'rx',target(1),target(2),'kx',[p0(1) target(1)],[p0(2) target(2)],'m-')
+        p0=params.origin;
+        target=trials(k).target;
+        M=target-p0;
+        unitparallel=M/norm(M);
+        unitperp=[unitparallel(2) -unitparallel(1)];
+        MdM=dot(M,M);
 
-    gains=logspace(log10(.5),log10(10),20);
-    costs=gains;
-    for kk=1:10
-        kp=gains(kk)*smKp;
+        dist=[0; cumsum(sqrt(sum((trials(k).pos(inds(2:end),:)-trials(k).pos(inds(1:end-1),:)).^2,2)))];
+        FD=find(dist<.01);
 
-        warning off all
-        [T,X]=ode45(@armdynamics_inverted,measuredTime,[trials(k).q(inds(1),:)';trials(k).qdot(inds(1),:)']);
-        warning on all
+        %figure(trials(k).targetCat)
+        subplot(2,1,1)
+        hold on
+        %plot(p0(1),p0(2),'rx',target(1),target(2),'kx',[p0(1) target(1)],[p0(2) target(2)],'m-')
 
-        perpDist=T;
-        qd=X(:,1:2);
-        xd=qd;
+        gains=logspace(log10(.01),log10(20),20);
+        costs=gains;
+        for kk=1:length(gains)
+            kp=gains(kk)*smKp;
 
-        for kkk=1:length(T)
-            xd(kkk,:)=fkin(qd(kkk,:));
-            comp=dot(M,(xd(kkk,:)-p0))/MdM;
-            perp=xd(kkk,:)-(x0+M*comp);
-            perpDist(kkk)=sign(dot(unitperp,perp))*norm(perp);
+            warning off all
+            [T,X]=ode45(@armdynamics_inverted,measuredTime,[trials(k).q(inds(1),:)';trials(k).qdot(inds(1),:)']);
+            warning on all
+
+            perpDist=T;
+            qd=X(:,1:2);
+            xd=qd;
+
+            for kkk=1:length(T)
+                xd(kkk,:)=fkin(qd(kkk,:));
+                comp=dot(M,(xd(kkk,:)-p0))/MdM;
+                perp=xd(kkk,:)-(x0+M*comp);
+                perpDist(kkk)=sign(dot(unitperp,perp))*norm(perp);
+            end
+
+            costs(kk)=mean(abs(perpDist(FD)));
+            poses{kk}=xd;
         end
-
-        costs(kk)=mean(abs(perpDist(FD)));
-        poses{kk}=xd;
+        [v,i]=min(costs);
+        plot(poses{i}(:,1)-poses{i}(1,1),poses{i}(:,2)-poses{i}(1,2))
+        plotme(k).x=poses{i}(:,1)-poses{i}(1,1);
+        plotme(k).y=poses{i}(:,2)-poses{i}(1,2);
+        recordedbests(S,k)=gains(i);
     end
-    [v,i]=min(costs);
-    plot(poses{i}(:,1),poses{i}(:,2))
-    recordedbests(k)=gains(i);
+    axis equal
+    subplot(2,1,2)
+    hist(recordedbests(S,:),gains)
+    ylabel('Absolute Frequency')
+    xlabel('Kp Gain')
+    title('Frequency of a given Kp Gain outperforming the Rest')
+
+    figure(20)
+    subplot(2,1,1)
+    for k=1:length(plotme)
+        plot3(S*ones(size(plotme(k).x)),plotme(k).x,plotme(k).y);
+    end
 end
-figure(1)
-hist(recordedbests,gains)
+figure(20)
+subplot(2,1,2)
+hist(recordedbests(:),gains)
 ylabel('Absolute Frequency')
 xlabel('Kp Gain')
 title('Frequency of a given Kp Gain outperforming the Rest')
