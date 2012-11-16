@@ -97,6 +97,8 @@ for S=1:7
         plot3(S*ones(size(plotme(k).x)),plotme(k).x,plotme(k).y);
     end
 end
+axis equal
+
 figure(20)
 subplot(2,1,2)
 hist(recordedbests(:),gains)
