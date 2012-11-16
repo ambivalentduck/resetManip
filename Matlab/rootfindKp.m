@@ -2,7 +2,7 @@ clc
 clear all
 close all
 
-global kp measuredVals measuredTime x0
+global kp measuredVals measuredTime x0 fJ
 
 recordedbests=zeros(7,16);
 
@@ -51,7 +51,7 @@ for S=1:7
         hold on
         %plot(p0(1),p0(2),'rx',target(1),target(2),'kx',[p0(1) target(1)],[p0(2) target(2)],'m-')
 
-        gains=logspace(log10(.01),log10(20),20);
+        gains=logspace(log10(.01),log10(5),10);
         costs=gains;
         for kk=1:length(gains)
             kp=gains(kk)*smKp;
@@ -62,16 +62,20 @@ for S=1:7
 
             perpDist=T;
             qd=X(:,1:2);
+            qdd=X(:,3:4);
             xd=qd;
+            vd=qd;
 
             for kkk=1:length(T)
                 xd(kkk,:)=fkin(qd(kkk,:));
+                vd(kkk,:)=(fJ(qd(kkk,:))*qdd(kkk,:)')';
                 comp=dot(M,(xd(kkk,:)-p0))/MdM;
                 perp=xd(kkk,:)-(x0+M*comp);
                 perpDist(kkk)=sign(dot(unitperp,perp))*norm(perp);
             end
 
-            costs(kk)=mean(abs(perpDist(FD)));
+            pks=findpeaks(vecmag(vd));
+            costs(kk)=length(pks)+sum(vecmag(xd(2:end,:)-xd(1:end-1,:)))/1000;
             poses{kk}=xd;
         end
         [v,i]=min(costs);
