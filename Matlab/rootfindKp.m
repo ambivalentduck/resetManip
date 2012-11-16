@@ -42,7 +42,7 @@ for k=1:45 %lT
 
     gains=logspace(log10(.5),log10(10),20);
     costs=gains;
-    for kk=1:10
+    for kk=1:length(gains)
         kp=gains(kk)*smKp;
 
         warning off all
@@ -60,7 +60,7 @@ for k=1:45 %lT
             perpDist(kkk)=sign(dot(unitperp,perp))*norm(perp);
         end
 
-        costs(kk)=mean(abs(perpDist(FD)));
+        costs(kk)=sum(vecmag(xd(2:end,:)-xd(1:end-1,:)));
         poses{kk}=xd;
     end
     [v,i]=min(costs);
