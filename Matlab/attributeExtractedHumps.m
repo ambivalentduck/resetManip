@@ -216,7 +216,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
             firstTVals=tvals(fc3);
         end
     end
-    x=-15.0:3.5:20;
+    x=-15:3.5:20;
     [nAfter]=hist(errors,x);
     nAfter=nAfter/sum(nAfter);
     nAll=hist(all_errors,x);
@@ -238,7 +238,7 @@ for g=1:smM(2) %For each gain, make attributions across reaches
         ylabel('Relative Frequency')
         xlabel('Time, milliseconds')
     end
-    x=-30:3:0;
+    x=-60:3:0;
     [nAfter]=hist(tvals(fc3),x);
     nAfter=nAfter/sum(nAfter);
     nAll=hist(tvals,x);
