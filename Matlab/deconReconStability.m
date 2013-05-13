@@ -6,7 +6,7 @@ load ./Data/r2_1extracted.mat
 
 global y paramMat
 
-for RE=4 %1:size(desiredTrajectories,1)
+for RE=1:size(desiredTrajectories,1)
     figure(RE)
     clf
 
@@ -20,7 +20,7 @@ for RE=4 %1:size(desiredTrajectories,1)
     subplot(2,1,2)
     plot3(t,0*ones(size(t)),signal(:,2));
     hold
-    for ITERATIONS=1:10
+    for ITERATIONS=1:2
         y=signal;
         speed=sqrt(sum(y.^2,2));
         vals=[0; vecmag(y(2:end,:)-y(1:end-1,:))];

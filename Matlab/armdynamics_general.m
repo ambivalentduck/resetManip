@@ -24,7 +24,7 @@ torque_fb=kd*(omega_desired-omega_real)+kp*(theta_desired-theta_real);
 torque_ff=D_expected*alpha_desired+C_expected;
 
 dx=[omega_real;
-    D_real\(torque_ff+torque_fb+torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
+    D_real\(torque_ff+torque_fb-torque_outside-C_real)];  %If torque_fb and torque_outside=0, and c_real ~ c_expected, alpha = alpha desired.
 
 %dx=[omega_desired;alpha_desired];
 

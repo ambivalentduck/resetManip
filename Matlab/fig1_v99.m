@@ -8,6 +8,9 @@ range=1:7;
 figure(1)
 clf
 
+fudge=.5;
+fudge2=.01;
+
 for S=range
     S
     load(['./Data/',prefix,num2str(S),'.mat'])
@@ -23,8 +26,8 @@ for S=range
         [r(k).dist, r(k).perp]=reachOrthoRot(raw(raw(:,1)==a(k),3:4));
         r(k).dist=r(k).dist';
         r(k).perp=r(k).perp';
-
-        plot(r(k).dist,r(k).perp,'g')
+        r(k).perp=abs(r(k).perp);
+        %plot(r(k).dist,r(k).perp,'g')
     end
 
     for k=1:length(trials)
@@ -34,7 +37,21 @@ for S=range
         x(k).perp=x(k).perp';
         m(k).dist=m(k).dist';
         x(k).dist=x(k).dist';
-
+%         m(k).perp=abs(m(k).perp);
+%         x(k).perp=abs(x(k).perp);
+        m(k).cost=sum(m(k).perp(m(k).dist<fudge));
+        x(k).cost=sum(x(k).perp(m(k).dist<fudge));
+        inds=(m(k).dist>fudge2)&(m(k).dist<fudge);
+        subx=norm(trials(k).target-trials(k).x0)*m(k).dist(inds);
+        suby=m(k).perp(inds);
+        cv=cov(suby,subx);
+        m(k).r2=cv(2,1)/sqrt(var(suby)*var(subx));
+        inds=(x(k).dist>fudge2)&(x(k).dist<fudge);
+        subx=norm(trials(k).target-trials(k).x0)*x(k).dist(inds);
+        suby=x(k).perp(inds);
+        cv=cov(suby,subx);
+        x(k).r2=cv(2,1)/sqrt(var(suby)*var(subx));
+                
         plot(m(k).dist,m(k).perp,x(k).dist,x(k).perp,'r')
     end
     ylabel(num2str(S))
@@ -94,11 +111,30 @@ for S=range
     errorbar(dists(1:end-1),means(1:end-1,1),sem(1:end-1,1),'b')
     errorbar(dists(1:end-1),means(1:end-1,2),sem(1:end-1,2),'r')
     errorbar(dists(1:end-1),means(1:end-1,3),sem(1:end-1,3),'g')
+    
+    costs(S).m=[m([trials.sigGain]>1).r2].^2;
+    costs(S).x=[x([trials.sigGain]>1).r2].^2;
 end
 
 subplot(length(range),2,2)
-legend('Curl','Extracted','Baseline')
+legend('Disturbed','Extracted','Baseline')
 suplabel('Spaghetti','t');
 suplabel('Normalized Progress, Unitless','x');
-suplabel('Perpendicular Dist from Rhumb, m','y')
+suplabel('Perpendicular Dist from Rhumb, m','y');
 
+figure(2)
+clf
+mc=zeros(7,2);
+sdc=mc;
+for k=1:7
+    mc(k,1)=mean(costs(k).m);
+    mc(k,2)=mean(costs(k).x);
+    sdc(k,1)=std(costs(k).m);
+    sdc(k,2)=std(costs(k).x);
+end
+errorbar(mc,sdc)
+xlabel('Subject Number')
+ylabel('Pearson''s R^2') 
+legend('Disturbed','Extracted')
+
+anova1([[costs.m]' [costs.x]'])

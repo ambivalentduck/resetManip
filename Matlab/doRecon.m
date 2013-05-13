@@ -8,7 +8,7 @@ figure(99)
 clf
 hold on
 
-for SUBS=1:7
+for SUBS=1%:7
 figure(SUBS)
 clf
 
@@ -93,6 +93,11 @@ for RE=1:size(desiredTrajectories,1)
         subplot(2,1,2)
         plot3(t,depth*ones(size(t)),signal(:,2));
         plot3(t(peaks(f)),depth*ones(size(peaks(f))),signal(peaks(f),2),'mx');
+        
+        %subplot(4,1,3:4)
+                
+        
+        
         drawnow
     end
     try

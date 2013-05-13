@@ -1,5 +1,5 @@
-#ifndef POINT2D_H
-#define POINT2D_H
+#ifndef POINT3D_H
+#define POINT3D_H
 
 #include <math.h>
 #include <QPoint>

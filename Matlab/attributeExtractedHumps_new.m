@@ -28,6 +28,7 @@ for k=1:smM(1)
         %compute error
         pos=twoNearestNeighbor(trials(k).pos,trials(k).time,desiredTrajectories(k,g).time);
         error=sqrt(sum((pos-desiredTrajectories(k,g).xDesired).^2,2));
+        error=error./gradient(error);
 
         if length(modeMatrix{k,g})==1
             continue %Ie. Extraction failed

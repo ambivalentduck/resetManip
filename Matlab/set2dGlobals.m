@@ -9,13 +9,13 @@ l1=l1_;
 l2=l2_;
 
 %%assume two link
-lc1=.165*l1/.33;
-lc2=0.19*l2/.34;
+lc1=.436*l1;
+lc2=.682*l2;
 m1=1.93;
 m2=1.52;
-%model using parameters from shadmehr and mussa-ivaldi
-I1=.0141;
-I2=.0188;
+%model using parameters from shadmehr and mussa-ivaldi and Winters (1990)
+I1=m1*(.322*l1)^2;
+I2=m2*(.468*l2)^2;
 
 %Shoulder location
 x0=origin+shoulder;
