@@ -12,14 +12,15 @@ TOP=.17;
 BOTTOM=.68;
 origin=[(LEFT+RIGHT)/2,(TOP+BOTTOM)/2];
 
-[l1, l2, shoulder]=getSubjectParamsR2(name);
+[l1, l2, shoulder,mass]=getSubjectParamsR2(name);
 %Seems reasonable to measure arms, placement. Unreasonable to weigh.
 params.l1=l1;
 params.l2=l2;
 params.shoulder=shoulder;
 params.origin=origin;
 params.dimensions=2;
-set2dGlobals(l1, l2, origin, shoulder)
+params.mass=mass;
+set2dGlobals(l1, l2, origin, shoulder,mass)
 x0_=x0;
 
 %trial TAB now-zero TAB cursor.X() TAB cursor.Y() TAB velocity.X() TAB velocity.Y() TAB accel.X() TAB accel.Y() TAB force.X() TAB force.Y() TAB sigGain

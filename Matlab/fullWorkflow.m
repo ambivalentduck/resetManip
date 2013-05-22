@@ -27,7 +27,7 @@ for k=n
                 flag=1;
             end
         case 'r2_'
-            if ~exist(['./Data/',name,'.mat'],'file')
+            if ~exist(['./Data/',name,'.mat'],'file')||flag
                 addSubjectR2(name);
                 flag=1;
             elseif mfiles(strcmp({mfiles.name},'addSubjectR2.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum
@@ -35,7 +35,7 @@ for k=n
                 flag=1;
             end
         case 'r3_'
-            if ~exist(['./Data/',name,'.mat'],'file')
+            if ~exist(['./Data/',name,'.mat'],'file')||flag
                 addSubjectR3(name);
                 flag=1;
             elseif mfiles(strcmp({mfiles.name},'addSubjectR2.m')).datenum > datafiles(strcmp({datafiles.name},[name,'.mat'])).datenum

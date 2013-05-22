@@ -9,7 +9,14 @@ end
 load(['./Data/',name,'.mat']);
 global kp measuredVals measuredTime x0 fJ getAccel desiredVals desiredTime
 
-set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
+params
+
+if 1
+    set2dGlobals(params.l1, params.l2, params.origin, params.shoulder,params.mass)
+    disp('Mass set')
+else
+    set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
+end
 
 %Do the extraction on trials where forces were on
 lT=length(trials);

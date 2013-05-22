@@ -1,4 +1,4 @@
-function set2dGlobals(l1_, l2_, origin, shoulder)
+function set2dGlobals(l1_, l2_, origin, shoulder,mass)
 
 global kd l1 l2 m1 m2 lc1 lc2 I1 I2 x0 getAccel fJ getAlpha
 
@@ -11,8 +11,15 @@ l2=l2_;
 %%assume two link
 lc1=.436*l1;
 lc2=.682*l2;
-m1=1.93;
-m2=1.52;
+
+%model using parameters from shadmehr and mussa-ivaldi and Winters (1990)
+if nargin<5
+    m1=1.93;
+    m2=1.52;
+else
+    m1=.028*mass;
+    m2=.022*mass;
+end
 %model using parameters from shadmehr and mussa-ivaldi and Winters (1990)
 I1=m1*(.322*l1)^2;
 I2=m2*(.468*l2)^2;
