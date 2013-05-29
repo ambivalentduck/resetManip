@@ -1,6 +1,6 @@
 clc
 clear all
-debug=1
+debug=0;
 
 subnum=7;
 name=num2str(subnum);
@@ -16,10 +16,13 @@ set2dGlobals(params.l1, params.l2, params.origin, params.shoulder)
 kp=[15 6; 6 16];
 masses=70:10:250;
 
+r2s=zeros(16,length(masses));
+area=r2s;
+
 %Do the extraction on trials where forces were on
 lT=length(trials);
 for k=1:lT
-    k/lT %#ok<NOPRT>
+    k/lT %#ok<NOPTS,NOPRT>
     
     inds=trials(k).first:trials(k).last;
 
@@ -85,28 +88,34 @@ for k=1:lT
         suby=perp(distInds);
         cv=cov(suby,subx);
         r2s(k,g)=(cv(2,1)/sqrt(var(suby)*var(subx)))^2;
+        area(k,g)=sum(abs((subx(2:end)-subx(1:end-1)).*((suby(2:end)+suby(1:end-1))/2)));
         
         desiredTrajectories(k,g)=desired; %#ok<NASGU>
     end
 
 end
 
-ms=max(r2s');
+ms=mean(area');
 [trash,i]=sort(ms);
 tri=1:lT;
 [X,Y]=meshgrid(masses,tri);
 figure(2)
 clf
-surf(X,Y,1-r2s(i,:))
-zlabel('Pearson''s R^2')
+%metric=log(1-r2s(i,:));
+metric=area(i,:);
+surf(X,Y,metric)
+zlabel('Area, m^2')
 xlabel('Subject Weight, lbs')
 ylabel('Sorted Trial#')
 title(['Subject ',name])
 
-sr2s=sum(r2s)';
+sr2s=sum(area)';
 [masses' sr2s]
-[v,i]=max(sr2s);
+[v,i]=min(log(sr2s));
 [masses(i) sr2s(i)]
+
+hold on
+plot3(masses(i)*ones(size(tri)),tri,metric(:,i),'m-x')
 
 save(['./Data/',name,'extractedM.mat'],'desiredTrajectories');
 

@@ -7,32 +7,32 @@ switch num
     case 'r2_1'
         l1=.26;
         l2=.36;
-        mass=140;
+        mass=100;
         shoulder=[-.02 .57];
     case 'r2_2'
         l1=.25;
         l2=.34;
-        mass=90;
+        mass=110;
         shoulder=[0 .54];
     case 'r2_3'
         l1=.3;
         l2=.34;
-        mass=240;
+        mass=150;
         shoulder=[0 .54];
     case 'r2_4'
         l1=.28;
         l2=.37;
-        mass=190;
+        mass=120;
         shoulder=[-.03 .53];
     case 'r2_5'
         l1=.32;
         l2=.34;
-        mass=90;
+        mass=80;
         shoulder=[0 .53];
     case 'r2_6'
         l1=.32;
         l2=.32;
-        mass=160;
+        mass=90;
         shoulder=[0 .53];
     case 'r2_7'
         l1=.24;
