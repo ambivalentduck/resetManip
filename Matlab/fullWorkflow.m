@@ -64,6 +64,7 @@ for k=n
     %% Perform mode extraction on the extracted trajectories
     % Choose EEMD since mode mixing is not an issue, the math is not exotic, and we don't care about frequency.
     % We elect to decompose in Cartesian speed based on evidence showing speed humps as primitives.
+    continue
     if (~exist(['./Data/',name,'modes.mat'],'file'))||flag
         extractModes(name);
         flag=1;

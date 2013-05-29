@@ -87,6 +87,8 @@ for k=1:length(a)
     f=find((trials(k).time-trials(k).time(1))<.5,1,'last');
     trials(k).first=f;
     trials(k).last=length(trials(k).time);
+    
+    trials(k).force=trials(k).force-ones(length(trials(k).time),1)*mean(trials(k).force(1:trials(k).first,:));
 
     success(k,5)=trials(k).first;
 end

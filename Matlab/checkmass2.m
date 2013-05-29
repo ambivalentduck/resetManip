@@ -1,15 +1,14 @@
 clc
 clear all
 
-prefix='r2_';
+prefix='';
 rawprefix='r2_';
 range=1:7;
 
 figure(1)
 clf
 
-fudge=.5;
-fudge2=.01;
+dists=[-2 linspace(-1,1,100) 2];
 
 for S=range
     S
@@ -21,13 +20,34 @@ for S=range
 
     subplot(length(range),2,S*2-1)
     hold on
-
+    
     for k=1:length(a)
         [r(k).dist, r(k).perp]=reachOrthoRot(raw(raw(:,1)==a(k),3:4));
-        r(k).dist=r(k).dist';
+        if raw(end,1)<0
+            r(k).dist=-r(k).dist';
+        else
+            r(k).dist=r(k).dist';
+        end
         r(k).perp=r(k).perp';
         r(k).perp=abs(r(k).perp);
-        %plot(r(k).dist,r(k).perp,'g')
+    end
+
+    meansBase=zeros(length(dists),1);
+    semBase=zeros(length(dists),1);
+    rPerp=[r.perp];
+    [rDist,i]=sort([r.dist]);
+    rPerp=rPerp(i);
+    LoffsetR=offsetR+1;
+    for k=1:length(dists)-1
+        while rDist(offsetR+1)<dists(k+1)
+            if offsetR==length(rDist)-1
+                break
+            end
+            offsetR=offsetR+1;
+        end
+        dat=rPerp(LoffsetR:offsetR);
+        meansBase(k)=mean(dat);
+        semBase(k)=std(dat)/sqrt(length(dat));
     end
 
     for k=1:length(trials)
@@ -61,7 +81,7 @@ for S=range
     end
     ylabel(num2str(S))
 
-    dists=[linspace(0,1,100) 2];
+
     mPerp=[m.perp];
     [mDist,i]=sort([m.dist]);
     mPerp=mPerp(i);
